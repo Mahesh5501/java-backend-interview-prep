@@ -1,5 +1,4 @@
-
-package Multithreading;
+package MultithreadingConcurrency.Multithreading;
 
 /*
 7. Detect or prevent deadlock

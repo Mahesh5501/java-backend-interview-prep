@@ -1,5 +1,4 @@
-
-package Multithreading;
+package MultithreadingConcurrency.Multithreading;
 
 /*
 9. Use wait() and notify()

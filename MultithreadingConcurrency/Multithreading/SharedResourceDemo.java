@@ -1,4 +1,4 @@
-package Multithreading;
+package MultithreadingConcurrency.Multithreading;
 
 /*
 5. Synchronize access to a shared resource

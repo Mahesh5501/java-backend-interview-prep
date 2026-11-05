@@ -1,5 +1,4 @@
-
-package Multithreading;
+package MultithreadingConcurrency.Multithreading;
 
 import java.util.concurrent.locks.ReentrantLock;
 

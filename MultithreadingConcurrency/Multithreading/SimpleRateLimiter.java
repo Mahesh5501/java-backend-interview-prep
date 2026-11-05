@@ -1,4 +1,4 @@
-package Multithreading;
+package MultithreadingConcurrency.Multithreading;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
