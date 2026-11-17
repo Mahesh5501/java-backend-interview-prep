@@ -1,0 +1,135 @@
+Areas to Evaluate
+1. Core Java (Java 17/21)
+*    Java coding and problem-solving skills
+*    Collections, Generics, Streams, Optional
+*    Concurrency and Multithreading
+*    Memory Management and Garbage Collection
+*    Exception Handling
+*    Modern Java features and Design Patterns
+2. Spring & Spring Boot
+*    Dependency Injection
+*    Bean Lifecycle and Scopes
+*    Spring Boot Auto Configuration
+*    REST Controllers
+*    Validation and Exception Handling
+*    Transaction Management
+*    AOP and Configuration Management
+
+3. Debugging & Troubleshooting
+*    Root Cause Analysis (RCA)
+*    Log Analysis
+*    Production Support Experience
+*    Performance Troubleshooting
+*    Structured Debugging Approach
+
+4. Payment Domain Knowledge
+*    Payment Processing Lifecycle
+*    Authorization, Capture, Settlement
+*    Payment Gateway Integrations
+*    Tokenization Concepts
+*    PCI-DSS Awareness
+*    Card Provisioning and Digital Wallets
+
+5. Security & Cryptography
+*    Encryption and Decryption
+*    Symmetric vs Asymmetric Encryption
+*    Hashing
+*    TLS/SSL
+*    JWT/JWE
+*    Key Rotation
+*    HSM Concepts
+*    Secure Data Handling
+______________
+6. REST API Design
+*    RESTful Principles
+*    API Versioning
+*    Error Handling
+*    Validation
+*    Idempotency
+*    API Security
+
+7. Database & Persistence
+*    SQL Proficiency
+*    Query Optimization
+*    Indexing
+*    Transactions
+*    JPA/Hibernate
+*    Liquibase Concepts
+*    Oracle/PostgreSQL
+
+8. Caching
+*    Redis or Similar Distributed Caching Solutions
+*    TTL Strategies
+*    Cache Invalidation
+*    Distributed Locking
+*    Cache Consistency Challenges
+
+9. Kafka & Event-Driven Architecture
+*    Topics and Partitions
+*    Consumer Groups
+*    Ordering Guarantees
+*    Retry Handling
+*    Dead Letter Queues
+*    Exactly-Once vs At-Least-Once Processing
+
+10. Low-Level Design (LLD)
+*    OOP Principles
+*    SOLID Principles
+*    Design Patterns
+*    Extensibility and Maintainability
+Design Exercises
+*    Token Service
+*    Cache Manager
+*    Payment Routing Engine
+______________
+11. High-Level Design (HLD)
+*    Scalability
+*    Reliability
+*    Security
+*    Fault Tolerance
+*    Distributed Systems Design
+Design Exercises
+*    Payment Processing Platform
+*    Tokenization Platform
+*    Event-Driven Architecture using Kafka
+*    Multi-Tenant SaaS Application
+______________
+12. Unit Testing & Quality
+*    JUnit
+*    Mockito
+*    Test Coverage
+*    Integration Testing
+*    Mocking Strategies
+*    Edge Cases
+______________
+13. Engineering Excellence & Collaboration
+*    Clean Coding Practices
+*    Ownership and Accountability
+*    Communication Skills
+*    Code Reviews
+*    Technical Leadership
+*    Problem-Solving Mindset
+*    Architectural knowledge 
+*    Distributed Systems
+*    Payments Domain Expertise
+*    Security & Cryptography
+*    Scalability & Reliability
+*    Debugging Complex Production Issues
+Strong Hire Indicators
+*    Excellent Java and Spring Boot fundamentals
+*    Strong debugging and root-cause analysis skills
+*    Good system design and architectural thinking
+*    Security-first mindset
+*    Experience with payment integrations
+*    Strong ownership and communication
+*    Ability to explain trade-offs and make sound engineering decisions
+Recommended Focus Areas
+P3 (Senior Software Engineer)
+*    Java & Spring Boot
+*    Coding & Problem Solving
+*    Debugging & RCA
+*    Databases
+*    APIs
+*    Kafka
+*    Security Fundamentals
+*    Payment Integration Awareness
