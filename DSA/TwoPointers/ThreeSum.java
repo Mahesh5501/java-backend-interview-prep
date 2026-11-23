@@ -17,8 +17,7 @@ public class ThreeSum {
 
     public static List<List<Integer>> threeSumBruteForce(int[] nums) {
 
-        // A set stores unique sorted triplets.
-        Set<List<Integer>> uniqueTriplets = new HashSet<>();
+        Set<List<Integer>> uniqueTriplets = new HashSet<>(); // A set stores unique sorted triplets.
 
         // Choose the first value.
         for (int i = 0; i < nums.length; i++) {
@@ -31,24 +30,15 @@ public class ThreeSum {
 
                     // Check whether these three values sum to zero.
                     if (nums[i] + nums[j] + nums[k] == 0) {
-
-                        // Build one candidate triplet.
-                        List<Integer> triplet = Arrays.asList(
-                                nums[i], nums[j], nums[k]
-                        );
-
-                        // Sort so that order differences do not create duplicates.
-                        Collections.sort(triplet);
-
-                        // The set discards duplicate triplets automatically.
-                        uniqueTriplets.add(triplet);
+                        List<Integer> triplet = Arrays.asList(nums[i], nums[j], nums[k]); // Build one candidate triplet.
+                        Collections.sort(triplet); // Sort so that order differences do not create duplicates.
+                        uniqueTriplets.add(triplet); // The set discards duplicate triplets automatically.
                     }
                 }
             }
         }
 
-        // Convert the set into a list for the required return type.
-        return new ArrayList<>(uniqueTriplets);
+        return new ArrayList<>(uniqueTriplets); // Convert the set into a list for the required return type.
     }
 
 
@@ -60,11 +50,8 @@ public class ThreeSum {
 
     public static List<List<Integer>> threeSumHashSet(int[] nums) {
 
-        // Sorting groups duplicates and makes skip logic easy.
-        Arrays.sort(nums);
-
-        // A set of sorted triplets avoids duplicate answers cleanly.
-        Set<List<Integer>> uniqueTriplets = new HashSet<>();
+        Arrays.sort(nums); // Sorting groups duplicates and makes skip logic easy.
+        Set<List<Integer>> uniqueTriplets = new HashSet<>(); // A set of sorted triplets avoids duplicate answers cleanly.
 
         // Fix the first number of the triplet.
         for (int i = 0; i < nums.length; i++) {
@@ -74,11 +61,8 @@ public class ThreeSum {
                 continue;
             }
 
-            // We need two numbers that sum to -nums[i].
-            int needed = -nums[i];
-
-            // Store values seen in the remaining subarray.
-            Set<Integer> seen = new HashSet<>();
+            int needed = -nums[i]; // We need two numbers that sum to -nums[i].
+            Set<Integer> seen = new HashSet<>();  // Store values seen in the remaining subarray.
 
             // Scan the remaining numbers after i.
             for (int j = i + 1; j < nums.length; j++) {
@@ -87,15 +71,12 @@ public class ThreeSum {
 
                 // If the complement was already seen, we found a pair.
                 if (seen.contains(complement)) {
-                    List<Integer> triplet = Arrays.asList(
-                            nums[i], complement, nums[j]
-                    );
+                    List<Integer> triplet = Arrays.asList(nums[i], complement, nums[j]);
                     Collections.sort(triplet);
                     uniqueTriplets.add(triplet);
                 }
 
-                // Remember the current value for later complements.
-                seen.add(nums[j]);
+                seen.add(nums[j]); // Remember the current value for later complements.
             }
         }
 
@@ -111,8 +92,7 @@ public class ThreeSum {
 
     public static List<List<Integer>> threeSumTwoPointers(int[] nums) {
 
-        // Sorting enables two-pointer search and duplicate skipping.
-        Arrays.sort(nums);
+        Arrays.sort(nums); // Sorting enables two-pointer search and duplicate skipping.
 
         List<List<Integer>> result = new ArrayList<>();
 
@@ -140,10 +120,7 @@ public class ThreeSum {
 
                 if (sum == needed) {
 
-                    // Record one unique triplet.
-                    result.add(Arrays.asList(
-                            nums[i], nums[left], nums[right]
-                    ));
+                    result.add(Arrays.asList(nums[i], nums[left], nums[right])); // Record one unique triplet.
 
                     // Move both pointers inward after a successful match.
                     left++;
@@ -160,14 +137,9 @@ public class ThreeSum {
                     }
 
                 } else if (sum < needed) {
-
-                    // Current pair is too small, so increase it.
-                    left++;
-
+                    left++; // Current pair is too small, so increase it.
                 } else {
-
-                    // Current pair is too large, so decrease it.
-                    right--;
+                    right--;  // Current pair is too large, so decrease it.
                 }
             }
         }
@@ -188,14 +160,8 @@ public class ThreeSum {
         System.out.println("Input: " + Arrays.toString(nums));
 
         // Clone so sorting in later approaches does not affect earlier ones.
-        System.out.println(
-                "Brute Force:  " + threeSumBruteForce(nums.clone())
-        );
-        System.out.println(
-                "HashSet:      " + threeSumHashSet(nums.clone())
-        );
-        System.out.println(
-                "Two Pointers: " + threeSumTwoPointers(nums.clone())
-        );
+        System.out.println("Brute Force:  " + threeSumBruteForce(nums.clone()));
+        System.out.println("HashSet:      " + threeSumHashSet(nums.clone()));
+        System.out.println("Two Pointers: " + threeSumTwoPointers(nums.clone()));
     }
 }
