@@ -5,79 +5,88 @@ import java.util.Arrays;
 public class MergeSortedArray {
 
     // =====================================================
-    // APPROACH 1: BRUTE FORCE (merge into helper, copy back)
-    // Time Complexity: O(m + n)
-    // Auxiliary Space: O(m + n)
+    // SIMPLE PROBLEM: merge two sorted arrays
+    //
+    // Input:  a = [1, 2, 3]
+    //         b = [2, 5, 6]
+    // Output:     [1, 2, 2, 3, 5, 6]
+    //
+    // Just two sorted arrays → one sorted result.
     // =====================================================
 
-    public static void mergeBruteForce(int[] nums1, int m, int[] nums2, int n) {
 
-        int[] merged = new int[m + n];
-        int i = 0;
-        int j = 0;
-        int k = 0;
+    // =====================================================
+    // APPROACH 1: BRUTE FORCE
+    // Copy both arrays into one big array, then sort it.
+    // Time Complexity: O((a+b) log(a+b))
+    // Auxiliary Space: O(a + b)
+    // =====================================================
 
-        // Standard merge of two sorted arrays into a fresh array.
-        while (i < m && j < n) {
-            if (nums1[i] <= nums2[j]) {
-                merged[k++] = nums1[i++];
-            } else {
-                merged[k++] = nums2[j++];
-            }
+    public static int[] mergeBruteForce(int[] a, int[] b) {
+
+        int[] result = new int[a.length + b.length]; // Create one array big enough for both inputs.
+
+        // Copy every value from a into the result.
+        for (int i = 0; i < a.length; i++) {
+            result[i] = a[i];
         }
 
-        while (i < m) {
-            merged[k++] = nums1[i++];
+        // Copy every value from b after a's values.
+        for (int i = 0; i < b.length; i++) {
+            result[a.length + i] = b[i];
         }
 
-        while (j < n) {
-            merged[k++] = nums2[j++];
-        }
+        Arrays.sort(result); // Sort the combined array.
 
-        // Copy the merged result back into nums1.
-        for (int index = 0; index < m + n; index++) {
-            nums1[index] = merged[index];
-        }
+        return result;
     }
 
 
     // =====================================================
-    // APPROACH 2: TWO POINTERS FROM THE END (OPTIMAL)
-    // Time Complexity: O(m + n)
-    // Auxiliary Space: O(1)
+    // APPROACH 2: TWO POINTERS (OPTIMAL for sorted inputs)
+    // Compare the current heads of both arrays.
+    // Always take the smaller one into the result.
+    // Time Complexity: O(a + b)
+    // Auxiliary Space: O(a + b) for the result array
     // =====================================================
 
-    public static void mergeTwoPointersFromEnd(int[] nums1, int m, int[] nums2, int n) {
+    public static int[] mergeTwoPointers(int[] a, int[] b) {
 
-        // Last real element of the original nums1 part.
-        int i = m - 1;
+       
+        int[] result = new int[a.length + b.length];  // Final merged array.
+        int i = 0;  // i reads from array a.
+        int j = 0;  // j reads from array b.
+        int k = 0; // k writes into the result.
 
-        // Last element of nums2.
-        int j = n - 1;
+        // While both arrays still have unread numbers.
+        while (i < a.length && j < b.length) {
 
-        // Last slot of nums1 (includes the trailing empty buffer).
-        int write = m + n - 1;
-
-        // Fill from the back so we never overwrite unread nums1 values.
-        while (i >= 0 && j >= 0) {
-
-            if (nums1[i] > nums2[j]) {
-                nums1[write] = nums1[i];
-                i--;
+            // Take the smaller current number.
+            if (a[i] <= b[j]) {
+                result[k] = a[i];
+                i++;
             } else {
-                nums1[write] = nums2[j];
-                j--;
+                result[k] = b[j];
+                j++;
             }
-
-            write--;
+            k++; // Move to the next free write slot.
         }
 
-        // If nums2 still has values, copy them (nums1 leftovers are already in place).
-        while (j >= 0) {
-            nums1[write] = nums2[j];
-            j--;
-            write--;
+        // If a still has leftover numbers, copy them.
+        while (i < a.length) {
+            result[k] = a[i];
+            i++;
+            k++;
         }
+
+        // If b still has leftover numbers, copy them.
+        while (j < b.length) {
+            result[k] = b[j];
+            j++;
+            k++;
+        }
+
+        return result;
     }
 
 
@@ -87,20 +96,16 @@ public class MergeSortedArray {
 
     public static void main(String[] args) {
 
-        int[] nums1 = { 1, 2, 3, 0, 0, 0 };
-        int m = 3;
-        int[] nums2 = { 2, 5, 6 };
-        int n = 3;
+        int[] a = { 1, 2, 3 };
+        int[] b = { 2, 5, 6 };
 
-        System.out.println("nums1 (before): " + Arrays.toString(nums1));
-        System.out.println("nums2:          " + Arrays.toString(nums2));
+        System.out.println("Array a: " + Arrays.toString(a));
+        System.out.println("Array b: " + Arrays.toString(b));
 
-        int[] nums1Brute = nums1.clone();
-        mergeBruteForce(nums1Brute, m, nums2, n);
-        System.out.println("Brute Force:      " + Arrays.toString(nums1Brute));
+        int[] bruteForceAnswer = mergeBruteForce(a, b);
+        System.out.println("Brute Force:  " + Arrays.toString(bruteForceAnswer));
 
-        int[] nums1Optimal = nums1.clone();
-        mergeTwoPointersFromEnd(nums1Optimal, m, nums2, n);
-        System.out.println("Two Pointers:     " + Arrays.toString(nums1Optimal));
+        int[] twoPointersAnswer = mergeTwoPointers(a, b);
+        System.out.println("Two Pointers: " + Arrays.toString(twoPointersAnswer));
     }
 }

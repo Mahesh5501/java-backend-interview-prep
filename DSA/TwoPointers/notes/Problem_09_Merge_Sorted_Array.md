@@ -1,294 +1,308 @@
-# Problem 09 — Merge Sorted Array
+# Problem 09 — Merge Two Sorted Arrays
 
-> **Pattern:** Two pointers from the **end** (in-place backward merge)  
-> **Goal:** Understand why merging from the front destroys data, and why `write` starts at `m + n - 1`.
+> **Pattern:** Two pointers across two sorted arrays  
+> **Goal:** Learn the simple merge first. Forget `m` and `n` for now.
 
 ---
 
-## 1. Problem statement
+## 1. Problem statement (simple version)
 
-You are given two integer arrays `nums1` and `nums2`, sorted in **non-decreasing** order.
-
-`nums1` has length `m + n`, where the first `m` elements are the real data and the last `n` slots are `0` placeholders with extra space.
-
-`nums2` has length `n`.
-
-Merge `nums2` into `nums1` as one sorted array **in-place**. The final sorted order must live inside `nums1`.
-
-### Example
+You are given **two sorted arrays**:
 
 ```text
-Input:
-  nums1 = [1,2,3,0,0,0], m = 3
-  nums2 = [2,5,6],       n = 3
-
-Output:
-  nums1 = [1,2,2,3,5,6]
+a = [1, 2, 3]
+b = [2, 5, 6]
 ```
 
-### Example 2
+Merge them into **one sorted array**.
 
 ```text
-Input:
-  nums1 = [1], m = 1
-  nums2 = [],  n = 0
-
-Output:
-  nums1 = [1]
+Output: [1, 2, 2, 3, 5, 6]
 ```
 
-### Example 3
+That is the whole problem.
+
+### More examples
 
 ```text
-Input:
-  nums1 = [0], m = 0
-  nums2 = [1], n = 1
+a = [1, 4, 7]
+b = [2, 3, 8]
+Output: [1, 2, 3, 4, 7, 8]
 
-Output:
-  nums1 = [1]
+a = [1, 2]
+b = []
+Output: [1, 2]
+
+a = []
+b = [5]
+Output: [5]
 ```
 
-### Constraints
-
-- `nums1.length == m + n`
-- `nums2.length == n`
-- `0 <= m, n <= 200`
-- `1 <= m + n <= 200`
-- `-10^9 <= nums1[i], nums2[j] <= 10^9`
+No trailing zeros.  
+No `m`.  
+No `n`.  
+Just two arrays.
 
 ---
 
 ## 2. Mental picture — one picture to keep in mind
 
-`nums1` is a bookshelf with books already on the left and **empty space** on the right:
+Think of two sorted queues:
 
 ```text
-nums1:  [ 1 | 2 | 3 | _ | _ | _ ]
-         ^^^^^ m=3 real data ^   ^ n=3 free space at end
+a:  1  2  3
+    ^
+    i
 
-nums2:  [ 2 | 5 | 6 ]
+b:  2  5  6
+    ^
+    j
+
+result:  _  _  _  _  _  _
+         ^
+         k
 ```
 
-You must place all numbers into one sorted row **inside nums1 only**.
+At every step:
 
-Bad idea: start filling from the **left** — you would overwrite `2` or `3` before you read them.
+1. Look at `a[i]` and `b[j]`.
+2. Put the **smaller** one into `result[k]`.
+3. Move that pointer forward.
+4. Move `k` forward.
 
-Good idea: fill from the **right end**, where the empty slots already are.
-
-```text
-write --> starts at the last index (m+n-1)
-         fill largest values first into the empty tail
-```
-
-> **Read it as:** “Pack the merged answer from the back like sliding the biggest books into the open space on the right.”
+> **Read it as:** “Always pick the smaller front value from the two arrays.”
 
 ---
 
-## 3. How to start thinking about the solution
+## 3. How to start thinking
 
-1. **What is merged output?** The same multiset of values, sorted.
-2. **Why not sort all of `nums1` after appending?** Works, but ignores that inputs are already sorted — and may need extra steps.
-3. **Why not merge forward into a new array?** Correct, but uses `O(m+n)` extra space; problem asks in-place in `nums1`.
-4. **Where is safe empty space?** The last `n` cells of `nums1`.
-5. **What do we compare?** The current largest not-yet-placed values from `nums1` and `nums2`.
+Ask yourself:
 
-That leads to **three indices walking backward**.
+1. Are both arrays already sorted? Yes.
+2. Can I just join them and sort again? Yes, but that ignores the sorted order.
+3. Can I build the answer in one pass? Yes — compare the current values from both sides.
+4. What if one array finishes early? Copy the leftovers from the other array.
 
 ---
 
-## 4. Approach 1 — Brute force (merge to helper array)
+## 4. Approach 1 — Brute force (copy + sort)
 
 ### Idea
 
-1. Use standard forward merge into a new array `merged` of size `m + n`
-2. Copy `merged` back into `nums1`
+1. Make a new array of size `a.length + b.length`.
+2. Copy all values from `a`.
+3. Copy all values from `b`.
+4. Sort the new array.
 
-### Why we mention it
+### Why it works
 
-It is the **easiest proof** that you understand merging. Interviewers accept it as a stepping stone, then ask for `O(1)` extra space.
+Sorting always produces a sorted result. It does not use the fact that `a` and `b` were already sorted.
 
 ### Java
 
 ```java
-public void mergeBruteForce(int[] nums1, int m, int[] nums2, int n) {
-    int[] merged = new int[m + n];
-    int i = 0, j = 0, k = 0;
+public static int[] mergeBruteForce(int[] a, int[] b) {
 
-    while (i < m && j < n) {
-        if (nums1[i] <= nums2[j]) {
-            merged[k++] = nums1[i++];
-        } else {
-            merged[k++] = nums2[j++];
-        }
-    }
-    while (i < m) merged[k++] = nums1[i++];
-    while (j < n) merged[k++] = nums2[j++];
+    int[] result = new int[a.length + b.length];
 
-    for (int t = 0; t < m + n; t++) {
-        nums1[t] = merged[t];
+    for (int i = 0; i < a.length; i++) {
+        result[i] = a[i];
     }
+
+    for (int i = 0; i < b.length; i++) {
+        result[a.length + i] = b[i];
+    }
+
+    Arrays.sort(result);
+    return result;
 }
 ```
 
-### Dry run — main example
+### Dry run
 
 ```text
-nums1: [1,2,3], nums2: [2,5,6]
+a = [1, 2, 3]
+b = [2, 5, 6]
 
-i,j forward:
-  1 vs 2 -> merged [1]
-  2 vs 2 -> merged [1,2]
-  3 vs 2 -> merged [1,2,2]
-  done i, take 5,6 -> [1,2,2,3,5,6]
+after copy: [1, 2, 3, 2, 5, 6]
+after sort: [1, 2, 2, 3, 5, 6]
 ```
 
 ### Complexity
 
-| | Value |
-|---|---|
-| Time | `O(m + n)` |
-| Space | `O(m + n)` helper |
+- **Time:** `O((a + b) log(a + b))`
+- **Space:** `O(a + b)` for the result
 
 ### Limitation
 
-Extra array. LeetCode wants in-place constant extra space.
-
-### Alternate brute: “sort the tail”
-
-Append mentally, then `Arrays.sort(nums1, 0, m+n)` — `O((m+n) log(m+n))`, ignores sorted structure. Mention briefly, do not prefer it.
+It works, but it is slower than needed because both inputs are already sorted.
 
 ---
 
-## 5. Approach 2 — Optimal: two pointers from the end
+## 5. Approach 2 — Two pointers (best for this problem)
 
-### Step-by-step
+### Idea
 
-1. `i = m - 1` — last real element in `nums1`
-2. `j = n - 1` — last element in `nums2`
-3. `write = m + n - 1` — last slot of `nums1`
-4. While `i >= 0` **and** `j >= 0`:
-   - If `nums1[i] > nums2[j]` → place `nums1[i]` at `write`, `i--`
-   - Else → place `nums2[j]` at `write`, `j--`
-   - Always `write--`
-5. If `j >= 0`, copy remaining `nums2` into the front part (nums1 leftovers already sit correctly)
+Use three indexes:
 
-### Visual frames
+- `i` → current position in `a`
+- `j` → current position in `b`
+- `k` → current write position in `result`
+
+Compare `a[i]` and `b[j]`.  
+Put the smaller value into `result[k]`.  
+Move that pointer and `k`.
+
+When one array is finished, copy the rest of the other array.
+
+### Why this works
+
+Because both arrays are sorted:
+
+- the next unused value in `a` is the smallest remaining value from `a`
+- the next unused value in `b` is the smallest remaining value from `b`
+
+So the smaller of those two is the next value for the merged answer.
+
+### Java
+
+```java
+public static int[] mergeTwoPointers(int[] a, int[] b) {
+
+    int[] result = new int[a.length + b.length];
+
+    int i = 0; // reads a
+    int j = 0; // reads b
+    int k = 0; // writes result
+
+    while (i < a.length && j < b.length) {
+
+        if (a[i] <= b[j]) {
+            result[k] = a[i];
+            i++;
+        } else {
+            result[k] = b[j];
+            j++;
+        }
+
+        k++;
+    }
+
+    while (i < a.length) {
+        result[k] = a[i];
+        i++;
+        k++;
+    }
+
+    while (j < b.length) {
+        result[k] = b[j];
+        j++;
+        k++;
+    }
+
+    return result;
+}
+```
+
+---
+
+## 6. The hardest part explained carefully
+
+### What confuses beginners?
+
+People often try to merge “in place” too early, or introduce `m` and `n` before understanding the basic idea.
+
+For learning, keep it simple:
+
+```text
+two sorted arrays → one new sorted array
+```
+
+### Before / after of one step
+
+```text
+a: 1  2  3
+   i
+
+b: 2  5  6
+   j
+
+Compare 1 and 2.
+1 is smaller.
+Put 1 into result.
+```
+
+After that step:
+
+```text
+result: 1  _  _  _  _  _
+        k moves here ^
+
+a: 1  2  3
+      i
+
+b: 2  5  6
+   j
+```
+
+Next compare `2` and `2`.  
+They are equal. Using `<=` takes from `a` first. That is fine.
+
+---
+
+## 7. Detailed dry run
+
+```text
+a = [1, 2, 3]
+b = [2, 5, 6]
+```
+
+| Step | i | j | a[i] | b[j] | Choose | result so far |
+|---:|---:|---:|---:|---:|---|---|
+| 1 | 0 | 0 | 1 | 2 | 1 from a | `[1]` |
+| 2 | 1 | 0 | 2 | 2 | 2 from a | `[1, 2]` |
+| 3 | 2 | 0 | 3 | 2 | 2 from b | `[1, 2, 2]` |
+| 4 | 2 | 1 | 3 | 5 | 3 from a | `[1, 2, 2, 3]` |
+| 5 | 3 | 1 | — | 5 | a finished | copy rest of b |
+| 6 | 3 | 1 | — | 5 | 5 | `[1, 2, 2, 3, 5]` |
+| 7 | 3 | 2 | — | 6 | 6 | `[1, 2, 2, 3, 5, 6]` |
+
+Final answer:
+
+```text
+[1, 2, 2, 3, 5, 6]
+```
+
+### Visual for the first three picks
 
 ```text
 Start:
-nums1: [ 1, 2, 3, _, _, _ ]
-        i=2              write=5
-nums2: [ 2, 5, 6 ]
-              j=2
+a: [1, 2, 3]     b: [2, 5, 6]     result: []
+    i                 j
 
-Compare 3 vs 6 -> write 6
-nums1: [ 1, 2, 3, _, _, 6 ]
+Pick 1:
+a: [1, 2, 3]     b: [2, 5, 6]     result: [1]
+       i              j
 
-Compare 3 vs 5 -> write 5
-nums1: [ 1, 2, 3, _, 5, 6 ]
+Pick 2:
+a: [1, 2, 3]     b: [2, 5, 6]     result: [1, 2]
+          i           j
 
-Compare 3 vs 2 -> write 3
-nums1: [ 1, 2, 3, 3, 5, 6 ]  // index 3 got 3 (write was 3)
-
-... continue until done ...
-```
-
-Final: `[1,2,2,3,5,6]`
-
-### Why pointer moves this way
-
-- We always pick the **larger** of the two current values because we fill **from the end** (descending order).
-- We move the pointer that supplied the placed value — that value is “used”.
-- When `nums1[i]` wins, it was already in `nums1`, so overwriting `write` does not lose unread data **if** `write > i`.
-
-```text
-Safe zone:
-...  [ unread nums1 ]  |  empty or already-written larger values  |
-                      i                         write
-     only true while write > i (or we copy nums2 only)
+Pick 2 from b:
+a: [1, 2, 3]     b: [2, 5, 6]     result: [1, 2, 2]
+          i              j
 ```
 
 ---
 
-## 6. The hardest part — why forward merge breaks in-place
+## 8. Why this never misses a value
 
-### Before (broken forward merge)
+- Every value from `a` is written exactly once.
+- Every value from `b` is written exactly once.
+- At each step we always take the next smallest available value.
+- Leftover values are copied at the end.
 
-```text
-nums1: [1, 2, 3, 0, 0, 0]
-        ^
-        i and write both at 0
-
-Put 1 -> ok
-Compare 2 vs 2 -> put 2 at index 1 (ok)
-Compare 3 vs 2 -> need to put 2 before 3...
-If you write at i=2 with nums2's 2, you still have trouble shifting 3 right.
-```
-
-Forward in-place merge needs **shifting** — expensive and messy.
-
-### After (backward merge)
-
-```text
-Largest values go to indices 5, 4, 3 ... first
-Those slots were empty (zeros) — no unread data destroyed
-```
-
-**Before / after table**
-
-| Strategy | Overwrites unread nums1? | Extra space |
-|---|---|---|
-| Forward in nums1 | Yes — dangerous | — |
-| Helper array merge | No | `O(m+n)` |
-| **Backward in nums1** | No — uses tail buffer | `O(1)` |
-
-Edge insight: when `m = 0`, all of `nums1` is “empty”; loop only copies `nums2` backward — still works.
-
----
-
-## 7. Detailed dry run with role diagram
-
-Input: `nums1 = [1,2,3,0,0,0], m=3`, `nums2 = [2,5,6], n=3`
-
-```text
-Roles:
-  i    = cursor in nums1 real part
-  j    = cursor in nums2
-  W    = write index
-```
-
-| step | nums1[i] | nums2[j] | action | W | nums1 after (conceptual) |
-|---:|---:|---:|---|---:|---|
-| 1 | 3 | 6 | place 6 | 5 | `[?,?,?, ?,?,6]` |
-| 2 | 3 | 5 | place 5 | 4 | `[?,?,?, ?,5,6]` |
-| 3 | 3 | 2 | place 3 | 3 | `[?,?,3, ?,5,6]` |
-| 4 | 2 | 2 | place 2 (from nums2) | 2 | `[?,2,3, ?,5,6]` |
-| 5 | 2 | - | place 2 | 1 | `[2,2,3, ?,5,6]` |
-| 6 | 1 | - | place 1 | 0 | `[1,2,2,3,5,6]` |
-
-ASCII roles at step 3:
-
-```text
-nums1:  1   2   3   ?   5   6
-                i       W
-nums2:  2   5   6
-            j
-```
-
----
-
-## 8. Why the algorithm is correct
-
-**Invariant:** All positions `> write` already contain the correct largest elements of the final merged array.
-
-**Each step:** We place the largest among `nums1[i]` and `nums2[j]`, which must appear at the end of the not-yet-written suffix. Decrementing the source pointer removes exactly that element from the remaining pool.
-
-**Termination:**
-
-- If `i < 0`, remaining `nums2` values are all smaller than everything written — copy them leftward.
-- If `j < 0`, remaining `nums1` values are already in place at the front — no action needed.
-
-Thus `nums1` becomes a sorted merge of the two inputs.
+So the result contains all values, and they stay sorted.
 
 ---
 
@@ -296,179 +310,207 @@ Thus `nums1` becomes a sorted merge of the two inputs.
 
 | Approach | Time | Extra space | Notes |
 |---|---:|---:|---|
-| Helper merge | `O(m + n)` | `O(m + n)` | Teaching baseline |
-| Sort entire nums1 | `O((m+n) log(m+n))` | `O(1)` | Ignores sorted input |
-| **Backward two pointers** | `O(m + n)` | `O(1)` | Interview answer |
+| Copy + sort | `O((a+b) log(a+b))` | `O(a+b)` | Easy, but slower |
+| Two pointers | `O(a + b)` | `O(a+b)` for result | Best for two sorted arrays |
+
+**Interview choice for this version:** two pointers.
 
 ---
 
 ## 10. Edge cases
 
-| nums1 / m | nums2 / n | Result | What it checks |
-|---|---|---|
-| `[1,2,3,0,0,0]` / 3 | `[2,5,6]` / 3 | `[1,2,2,3,5,6]` | Standard |
-| `[1]` / 1 | `[]` / 0 | `[1]` | Empty nums2 |
-| `[0]` / 0 | `[1]` / 1 | `[1]` | Empty nums1 part |
-| `[2,0]` / 1 | `[1]` / 1 | `[1,2]` | m=1, n=1 |
-| `[4,5,6,0,0,0]` / 3 | `[1,2,3]` / 3 | `[1,2,3,4,5,6]` | All nums2 smaller |
-| `[1,2,3,0,0,0]` / 3 | `[4,5,6]` / 3 | `[1,2,3,4,5,6]` | All nums2 larger |
+| a | b | Output | What it checks |
+|---|---|---|---|
+| `[1, 2, 3]` | `[2, 5, 6]` | `[1, 2, 2, 3, 5, 6]` | Normal merge |
+| `[1, 2]` | `[]` | `[1, 2]` | Empty second array |
+| `[]` | `[5]` | `[5]` | Empty first array |
+| `[1, 1]` | `[1, 1]` | `[1, 1, 1, 1]` | Duplicates |
+| `[4, 5]` | `[1, 2]` | `[1, 2, 4, 5]` | All of b smaller than a |
 
 ---
 
 ## 11. Common mistakes
 
-1. **Starting `write` at `m` instead of `m + n - 1`** — writes into middle too early.
-2. **Starting `i` at `m` instead of `m - 1`** — treats placeholder `0` as real data.
-3. **Using `>` vs `>=` wrong** — `>=` on `nums2` side is fine for stability; be consistent.
-4. **Forgetting to copy leftover nums2** — when `i` finishes first, remaining nums2 must still be written.
-5. **Trying to copy leftover nums1** — already in correct positions; extra copy can scramble.
-6. **Forward merge without shifting** — overwrites unread values.
+1. **Forgetting leftovers:** after one array ends, still copy the other array.
+2. **Using `a.length` wrong:** result size must be `a.length + b.length`.
+3. **Sorting again in the optimal solution:** not needed if two pointers are used correctly.
+4. **Jumping to LeetCode `m` and `n` too early:** learn the simple two-array merge first.
 
 ---
 
-## 12. How to recognise the pattern
+## 12. How to recognise this pattern
 
-**Clues:**
+Clues:
 
-- Two sorted sequences
-- Merge into one
-- Extra buffer at the **end** of the first array
-- “In-place” with `O(1)` space
-
-**Compared to earlier problems**
-
-| Problem | Pointer direction | Why |
-|---|---|---|
-| Two Sum II | Ends → inward | Sum steering |
-| Trapping Rain Water | Ends → inward | Running max |
-| **Merge Sorted Array** | Ends → inward **writing backward** | Free space at tail |
+- You have two sequences.
+- Both are already sorted.
+- You need one combined sorted sequence.
 
 Reusable sentence:
 
-> **If the free buffer is at the end, merge from the end.**
+> Compare the current values of both arrays and always take the smaller one.
 
 ---
 
 ## 13. Interview explanation — say this aloud
 
-“The arrays are sorted. I could merge forward into a helper array in `O(m+n)` time and space, then copy back. For `O(1)` extra space, I merge backward: `i` at the last real element of `nums1`, `j` at the end of `nums2`, and `write` at the last index of `nums1`. I repeatedly place the larger of `nums1[i]` and `nums2[j]` at `write` and move pointers backward. This never overwrites unread `nums1` values because I only write into positions that were empty or already filled with larger final values. If `nums2` still has elements when `i` is exhausted, I copy them. Leftover `nums1` elements are already correct. Time `O(m+n)`, space `O(1)`.”
+“I have two sorted arrays. I create a result array of size `a.length + b.length`. I keep one pointer in each input array. At every step I compare the two current values and write the smaller one into the result. When one array is finished, I copy the remaining values from the other array. This takes linear time because each element is visited once.”
 
 ---
 
-## 14. Interview follow-up Q&A
+## 14. Interview follow-up questions
 
-**Q1. Why not merge forward?**  
-Forward writes clash with unread `nums1` values unless you shift.
+### Q1. Why not just concatenate and sort?
 
-**Q2. Why is time still `O(m+n)`?**  
-Each index written once; each pointer moves monotonically.
+That works, but it is slower: `O((a+b) log(a+b))`. Two pointers use the sorted order and run in `O(a+b)`.
 
-**Q3. Do we need stable merge?**  
-Either tie-break works; explain your choice.
+### Q2. What if one array is empty?
 
-**Q4. What if `m = 0`?**  
-Only copy `nums2` from the back forward.
+The first while loop never runs, and the leftover loop copies the non-empty array.
 
-**Q5. Related problems?**  
-Merge two linked lists (forward), merge k lists, merge intervals (different pattern).
+### Q3. Does `<=` or `<` matter?
 
-**Q6. Can we use two pointers from the start with extra space at end?**  
-That is still backward filling logic — the write index moves left.
+Both can work. With `<=`, equal values from `a` are taken first. The final array is still sorted.
+
+### Q4. Is extra space required?
+
+For this simple version, yes — we return a new array. That is normal and clear.
 
 ---
 
 ## 15. Complete runnable Java class
 
-Save as **`MergeSortedArray.java`** (lives in `java/`).
+Save as **`MergeSortedArray.java`**.
 
 ```java
-
+package DSA.TwoPointers;
 
 import java.util.Arrays;
 
 public class MergeSortedArray {
 
-  public static void mergeBruteForce(int[] nums1, int m, int[] nums2, int n) {
-    int[] merged = new int[m + n];
-    int i = 0, j = 0, k = 0;
-    while (i < m && j < n) {
-      if (nums1[i] <= nums2[j]) merged[k++] = nums1[i++];
-      else merged[k++] = nums2[j++];
-    }
-    while (i < m) merged[k++] = nums1[i++];
-    while (j < n) merged[k++] = nums2[j++];
-    for (int t = 0; t < m + n; t++) nums1[t] = merged[t];
-  }
+    public static int[] mergeBruteForce(int[] a, int[] b) {
 
-  public static void mergeTwoPointersFromEnd(int[] nums1, int m, int[] nums2, int n) {
-    int i = m - 1;
-    int j = n - 1;
-    int write = m + n - 1;
-    while (i >= 0 && j >= 0) {
-      if (nums1[i] > nums2[j]) {
-        nums1[write--] = nums1[i--];
-      } else {
-        nums1[write--] = nums2[j--];
-      }
-    }
-    while (j >= 0) nums1[write--] = nums2[j--];
-  }
+        int[] result = new int[a.length + b.length];
 
-  public static void main(String[] args) {
-    int[] nums1 = {1, 2, 3, 0, 0, 0};
-    int m = 3;
-    int[] nums2 = {2, 5, 6};
-    int n = 3;
-    System.out.println("Before: " + Arrays.toString(nums1));
-    mergeTwoPointersFromEnd(nums1, m, nums2, n);
-    System.out.println("After:  " + Arrays.toString(nums1));
-  }
+        for (int i = 0; i < a.length; i++) {
+            result[i] = a[i];
+        }
+
+        for (int i = 0; i < b.length; i++) {
+            result[a.length + i] = b[i];
+        }
+
+        Arrays.sort(result);
+        return result;
+    }
+
+    public static int[] mergeTwoPointers(int[] a, int[] b) {
+
+        int[] result = new int[a.length + b.length];
+        int i = 0;
+        int j = 0;
+        int k = 0;
+
+        while (i < a.length && j < b.length) {
+            if (a[i] <= b[j]) {
+                result[k] = a[i];
+                i++;
+            } else {
+                result[k] = b[j];
+                j++;
+            }
+            k++;
+        }
+
+        while (i < a.length) {
+            result[k] = a[i];
+            i++;
+            k++;
+        }
+
+        while (j < b.length) {
+            result[k] = b[j];
+            j++;
+            k++;
+        }
+
+        return result;
+    }
+
+    public static void main(String[] args) {
+
+        int[] a = { 1, 2, 3 };
+        int[] b = { 2, 5, 6 };
+
+        System.out.println("Array a: " + Arrays.toString(a));
+        System.out.println("Array b: " + Arrays.toString(b));
+        System.out.println("Brute Force:  " + Arrays.toString(mergeBruteForce(a, b)));
+        System.out.println("Two Pointers: " + Arrays.toString(mergeTwoPointers(a, b)));
+    }
 }
+```
+
+### Expected output
+
+```text
+Array a: [1, 2, 3]
+Array b: [2, 5, 6]
+Brute Force:  [1, 2, 2, 3, 5, 6]
+Two Pointers: [1, 2, 2, 3, 5, 6]
 ```
 
 ---
 
 ## 16. Independent IDE practice
 
-- [ ] Implement helper-array merge
-- [ ] Implement backward merge
-- [ ] Trace `m=0, n=1` by hand
-- [ ] Trace main example with `i`, `j`, `write`
-- [ ] Explain why leftover nums1 needs no copy
-- [ ] Run `../MergeSortedArray.java` main
+- [ ] Implement copy + sort.
+- [ ] Implement two-pointer merge.
+- [ ] Trace `[1, 2, 3]` and `[2, 5, 6]` by hand.
+- [ ] Test one empty array.
+- [ ] Explain why leftovers must be copied.
 
 ### Small challenge
 
-Predict the result without code:
+Trace:
 
 ```text
-nums1 = [4,5,6,0,0,0], m = 3
-nums2 = [1,2,3],       n = 3
+a = [1, 4, 7]
+b = [2, 3, 8]
 ```
 
-Then predict:
-
-```text
-nums1 = [1], m = 1
-nums2 = [2], n = 1  (note: nums1 length is 2 → [1,0])
-```
+Write each chosen value in order.
 
 ---
 
 ## 17. Quick revision
 
-1. Buffer is at the **tail** of `nums1`.
-2. `i = m-1`, `j = n-1`, `write = m+n-1`.
-3. Place the **larger** value at `write`, move `write` left.
-4. Copy remaining `nums2` only.
-5. `O(m+n)` time, `O(1)` space.
+Remember only this:
+
+1. `i` reads first array.
+2. `j` reads second array.
+3. Always take the smaller current value.
+4. Copy leftovers at the end.
+
+Reusable sentence:
+
+> **Merge two sorted arrays by always picking the smaller front value.**
 
 ---
 
-## 18. Pattern used in this problem + next problem
+## 18. Optional later topic (do this only after the simple version is clear)
 
-**Backward two pointers / in-place merge from the end.**
+LeetCode 88 adds a twist:
 
-> **Merge Sorted Array = merge from the back into free tail space.**
+- `nums1` already has extra empty space at the end
+- you must merge **into `nums1`**
+- that is where `m` and `n` appear
 
-**Next:** **Problem 10 — Squares of a Sorted Array** (compare absolute values at both ends; fill answer from the end).
+Ignore that until the simple two-array merge feels easy.
+
+---
+
+## 19. Next problem
+
+**Problem 10 — Squares of a Sorted Array**  
+Main concept: compare absolute values at both ends

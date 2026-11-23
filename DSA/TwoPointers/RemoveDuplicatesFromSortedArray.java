@@ -16,8 +16,7 @@ public class RemoveDuplicatesFromSortedArray {
 
     public static int removeDuplicatesBruteForce(int[] nums) {
 
-        // LinkedHashSet keeps insertion order and removes duplicates.
-        Set<Integer> uniqueValues = new LinkedHashSet<>();
+        Set<Integer> uniqueValues = new LinkedHashSet<>(); // LinkedHashSet keeps insertion order and removes duplicates.
 
         for (int value : nums) {
             uniqueValues.add(value);
@@ -30,8 +29,7 @@ public class RemoveDuplicatesFromSortedArray {
             index++;
         }
 
-        // The new logical length is the number of unique values.
-        return uniqueValues.size();
+        return uniqueValues.size(); // The new logical length is the number of unique values.
     }
 
 
@@ -48,8 +46,7 @@ public class RemoveDuplicatesFromSortedArray {
             return 0;
         }
 
-        // writeIndex always points at the last confirmed unique value.
-        int writeIndex = 0;
+        int writeIndex = 0; // writeIndex always points at the last confirmed unique value.
 
         // readIndex scans the entire array.
         for (int readIndex = 1; readIndex < nums.length; readIndex++) {
@@ -61,8 +58,7 @@ public class RemoveDuplicatesFromSortedArray {
             }
         }
 
-        // Unique items occupy indices 0 through writeIndex inclusive.
-        return writeIndex + 1;
+        return writeIndex + 1; // Unique items occupy indices 0 through writeIndex inclusive.
     }
 
 

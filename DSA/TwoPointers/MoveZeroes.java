@@ -12,18 +12,11 @@ public class MoveZeroes {
 
     public static void moveZeroesBruteForce(int[] nums) {
 
-        // Step 1: Count how many non-zero values exist.
-        int nonZeroCount = 0;
-        for (int value : nums) {
-            if (value != 0) {
-                nonZeroCount++;
-            }
-        }
-
-        // Step 2: Build a temporary array.
+        // Step 1: Build a temporary array.
+        // New int[] slots are already filled with 0 by default.
         int[] temp = new int[nums.length];
 
-        // Step 3: Copy every non-zero value in original order.
+        // Step 2: Copy every non-zero value in original order.
         int tempIndex = 0;
         for (int value : nums) {
             if (value != 0) {
@@ -32,8 +25,7 @@ public class MoveZeroes {
             }
         }
 
-        // Step 4: The remaining slots are already zero in a new int[].
-        // Step 5: Copy the result back into the original array.
+        // Step 3: Copy the result back into the original array.
         for (int i = 0; i < nums.length; i++) {
             nums[i] = temp[i];
         }

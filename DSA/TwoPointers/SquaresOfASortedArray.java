@@ -66,11 +66,7 @@ public class SquaresOfASortedArray {
         int[] nums = { -4, -1, 0, 3, 10 };
 
         System.out.println("Input:      " + Arrays.toString(nums));
-        System.out.println(
-                "Brute:      " + Arrays.toString(sortedSquaresBruteForce(nums.clone()))
-        );
-        System.out.println(
-                "Two Ptrs:   " + Arrays.toString(sortedSquaresTwoPointers(nums.clone()))
-        );
+        System.out.println("Brute:      " + Arrays.toString(sortedSquaresBruteForce(nums.clone())));
+        System.out.println("Two Ptrs:   " + Arrays.toString(sortedSquaresTwoPointers(nums.clone())));
     }
 }
