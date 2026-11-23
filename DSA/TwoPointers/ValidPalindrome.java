@@ -1,4 +1,4 @@
-package DSA.TwoPointers.TwoPointers;
+package DSA.TwoPointers;
 
 public class ValidPalindrome {
 
