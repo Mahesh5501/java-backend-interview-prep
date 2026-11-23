@@ -52,7 +52,7 @@ import java.io.IOException;
  * A maximum attempt limit prevents endless retries.
  */
 
-public class RetryService {
+public class SimpleRetry {
 
     private static final int MAX_ATTEMPTS = 4;
     private static final long INITIAL_WAIT = 1000;

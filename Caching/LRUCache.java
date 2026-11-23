@@ -45,7 +45,7 @@ import java.util.LinkedHashMap;
  * This simple implementation is not thread-safe.
  */
 
-public class SimpleLRUCache {
+public class LRUCache {
 
     int capacity = 3;
 
@@ -66,7 +66,7 @@ public class SimpleLRUCache {
     }
 
     public static void main(String[] args) {
-        SimpleLRUCache lru = new SimpleLRUCache();
+        LRUCache lru = new LRUCache();
         lru.put("A", "Apple");
         lru.put("B", "Banana");
         lru.put("C", "Cherry");

@@ -46,7 +46,7 @@ package RateLimiter;
  * - Sliding Window reduces fixed-window boundary problems.
  */
 
-public class SimpleRateLimiter {
+public class RateLimiter {
 
     private int requestCount = 0;
     private final int requestLimit = 3;
@@ -78,7 +78,7 @@ public class SimpleRateLimiter {
 
     public static void main(String[] args) {
 
-        SimpleRateLimiter limiter = new SimpleRateLimiter();
+        RateLimiter limiter = new RateLimiter();
 
         for (int i = 1; i <= 5; i++) {
             System.out.println("Request " + i);

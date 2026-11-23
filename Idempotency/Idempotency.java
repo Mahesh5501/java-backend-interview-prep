@@ -36,7 +36,7 @@ import java.util.Map;
  */
 
 
-public class SimpleIdempotency {
+public class Idempotency {
 
     private final Map<String, String> processedPayments = new HashMap<>();
 
@@ -60,7 +60,7 @@ public class SimpleIdempotency {
 
     public static void main(String[] args) {
 
-        SimpleIdempotency payment = new SimpleIdempotency();
+        Idempotency payment = new Idempotency();
 
         System.out.println(payment.makePayment("PAY101", 500));
         System.out.println(payment.makePayment("PAY101", 500));

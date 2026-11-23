@@ -35,7 +35,7 @@ package CircuitBreaker;
  * - A timeout limits how long we wait for a slow service.
  */
 
-public class SimpleCircuitBreaker {
+public class CircuitBreaker {
 
     String state = "CLOSED";
 
@@ -92,7 +92,7 @@ public class SimpleCircuitBreaker {
 
     public static void main(String[] args) throws InterruptedException {
 
-        SimpleCircuitBreaker breaker = new SimpleCircuitBreaker();
+        CircuitBreaker breaker = new CircuitBreaker();
 
         breaker.callService(true);
         breaker.callService(true);

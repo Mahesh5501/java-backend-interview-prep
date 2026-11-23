@@ -49,7 +49,7 @@ package RateLimiter;
  * token updates, for example through Redis.
  */
 
-public class SimpleTokenBucket {
+public class RateLimiterTokenBucket {
 
     int tokens = 3;
 
@@ -67,7 +67,7 @@ public class SimpleTokenBucket {
 
     public static void main(String[] args) {
 
-        SimpleTokenBucket bucket = new SimpleTokenBucket();
+        RateLimiterTokenBucket bucket = new RateLimiterTokenBucket();
 
         bucket.allowRequest();
         bucket.allowRequest();
