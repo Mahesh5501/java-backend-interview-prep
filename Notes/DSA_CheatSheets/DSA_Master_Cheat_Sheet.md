@@ -1,8 +1,16 @@
-
 # JAVA DSA MASTER CHEAT SHEET
 ## Understand the Problem → Recognize the Pattern → Choose the Algorithm → Write Java Code
 
 **Goal:** Learn how to solve unfamiliar DSA interview problems, not just memorize solutions.
+
+### How to use this simply
+
+1. Read **Part 1** once (how to approach any problem).  
+2. Use the pattern table to guess the pattern.  
+3. Practise matching problems in `../../DSA/<Pattern>/`.  
+4. Come back here only to revise “why this pattern”.  
+
+Do **not** try to memorise this whole file in one day.
 
 ---
 
