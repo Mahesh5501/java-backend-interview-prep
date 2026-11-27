@@ -216,6 +216,41 @@ Run `main` after implementing from memory.
 
 ---
 
+---
+
+## Depth addendum — extended workbook
+
+### Mental picture (second angle)
+
+Sketch input on paper and mark **what changes each loop iteration**. If the pattern uses a stack, queue, heap, or map, write its contents as a column beside the array/tree.
+
+### Brute force reminder
+
+State the naive approach in one sentence, its time/space, and **one sentence why** the optimal pattern beats it.
+
+### Hardest-part drill
+
+| Before coding | After understanding |
+|---|---|
+| Unsure what moves | Name the invariant pointers/stack maintain |
+| Edge case worry | Check empty, single, duplicates |
+
+### Extended dry-run columns
+
+| iter | key variables | container snapshot | output so far |
+|---:|---|---|---|
+
+Fill five rows from the matching Java main example in the sibling .java file.
+
+### Interview say-aloud (30s)
+
+> I recognize the pattern, use the right structure for the invariant, avoid brute time because each element is handled once.
+
+### Follow-up Q&A
+
+**Q: In-place?** Only if allowed.  
+**Q: Unsorted input?** State preprocessing.
+
 ## 16. Quick revision
 
 One line: **Valid Anagram = Frequency count + optimal method in `ValidAnagram.java`.**
@@ -231,3 +266,67 @@ See **`Arrays_Hashing_Common_Patterns.md`**.
 ## 18. Next problem
 
 **Problem 04 — Group Anagrams**
+
+---
+
+---
+
+## Repository Java (full)
+
+Align with `../ValidAnagram.java`.
+
+```java
+package DSA.ArraysHashing;
+
+import java.util.Arrays;
+
+/*
+Problem: Valid Anagram
+
+Given strings s and t, return true if t is an anagram of s.
+
+Examples:
+  s = "anagram", t = "nagaram" → true
+  s = "rat", t = "car"         → false
+
+Approach: Count characters (int[26] or sort)
+Time: O(n)   Space: O(1) alphabet fixed
+*/
+
+public class ValidAnagram {
+
+    public static boolean isAnagramSort(String s, String t) {
+        if (s.length() != t.length()) {
+            return false;
+        }
+        char[] a = s.toCharArray();
+        char[] b = t.toCharArray();
+        Arrays.sort(a);
+        Arrays.sort(b);
+        return Arrays.equals(a, b);
+    }
+
+    public static boolean isAnagram(String s, String t) {
+        if (s.length() != t.length()) {
+            return false;
+        }
+        int[] count = new int[26];
+        for (int i = 0; i < s.length(); i++) {
+            count[s.charAt(i) - 'a']++;
+            count[t.charAt(i) - 'a']--;
+        }
+        for (int c : count) {
+            if (c != 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(isAnagram("anagram", "nagaram"));
+        System.out.println(isAnagram("rat", "car"));
+        System.out.println(isAnagramSort("listen", "silent"));
+    }
+}
+```

@@ -231,6 +231,41 @@ Run `main` after implementing from memory.
 
 ---
 
+---
+
+## Depth addendum — extended workbook
+
+### Mental picture (second angle)
+
+Sketch input on paper and mark **what changes each loop iteration**. If the pattern uses a stack, queue, heap, or map, write its contents as a column beside the array/tree.
+
+### Brute force reminder
+
+State the naive approach in one sentence, its time/space, and **one sentence why** the optimal pattern beats it.
+
+### Hardest-part drill
+
+| Before coding | After understanding |
+|---|---|
+| Unsure what moves | Name the invariant pointers/stack maintain |
+| Edge case worry | Check empty, single, duplicates |
+
+### Extended dry-run columns
+
+| iter | key variables | container snapshot | output so far |
+|---:|---|---|---|
+
+Fill five rows from the matching Java main example in the sibling .java file.
+
+### Interview say-aloud (30s)
+
+> I recognize the pattern, use the right structure for the invariant, avoid brute time because each element is handled once.
+
+### Follow-up Q&A
+
+**Q: In-place?** Only if allowed.  
+**Q: Unsorted input?** State preprocessing.
+
 ## 16. Quick revision
 
 One line: **Koko Eating Bananas = BS on answer + optimal method in `KokoEatingBananas.java`.**
@@ -246,3 +281,82 @@ See **`Binary_Search_Common_Patterns.md`**.
 ## 18. Next problem
 
 **Problem 09 — Find Peak Element**
+
+---
+
+---
+
+## Repository Java (full)
+
+Align with `../KokoEatingBananas.java`.
+
+```java
+package DSA.BinarySearch;
+
+/*
+Problem: Koko Eating Bananas (binary search on answer)
+
+piles[i] = bananas in pile i. h = hours to finish. Each hour eat at most k bananas from one pile.
+Return minimum integer k so Koko can finish within h hours.
+
+Example:
+  piles = [3,6,7,11], h = 8  →  k = 4
+
+Approach: BS on k from 1 to max(piles); feasible(k) = sum of ceil(pile/k) <= h
+Time: O(n log M), M = max pile   Space: O(1)
+*/
+
+public class KokoEatingBananas {
+
+    private static long hoursNeeded(int[] piles, int speed) {
+        long hours = 0;
+        for (int pile : piles) {
+            hours += (pile + speed - 1) / speed;
+        }
+        return hours;
+    }
+
+    public static int minEatingSpeedBrute(int[] piles, int h) {
+        int maxPile = 0;
+        for (int p : piles) {
+            maxPile = Math.max(maxPile, p);
+        }
+        for (int k = 1; k <= maxPile; k++) {
+            if (hoursNeeded(piles, k) <= h) {
+                return k;
+            }
+        }
+        return maxPile;
+    }
+
+    public static int minEatingSpeed(int[] piles, int h) {
+        int low = 1;
+        int high = 0;
+        for (int p : piles) {
+            high = Math.max(high, p);
+        }
+        int best = high;
+
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+            if (hoursNeeded(piles, mid) <= h) {
+                best = mid;
+                high = mid - 1;
+            } else {
+                low = mid + 1;
+            }
+        }
+        return best;
+    }
+
+    public static void main(String[] args) {
+        int[] piles = { 3, 6, 7, 11 };
+        int h = 8;
+        System.out.println("Brute: " + minEatingSpeedBrute(piles, h));
+        System.out.println("BS:    " + minEatingSpeed(piles, h));
+
+        int[] p2 = { 30, 11, 23, 4, 20 };
+        System.out.println("BS:    " + minEatingSpeed(p2, 5));
+    }
+}
+```

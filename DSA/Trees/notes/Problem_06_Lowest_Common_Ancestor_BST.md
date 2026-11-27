@@ -254,6 +254,41 @@ java -cp . DSA.Trees.LowestCommonAncestorBST
 
 ---
 
+---
+
+## Depth addendum — extended workbook
+
+### Mental picture (second angle)
+
+Sketch input on paper and mark **what changes each loop iteration**. If the pattern uses a stack, queue, heap, or map, write its contents as a column beside the array/tree.
+
+### Brute force reminder
+
+State the naive approach in one sentence, its time/space, and **one sentence why** the optimal pattern beats it.
+
+### Hardest-part drill
+
+| Before coding | After understanding |
+|---|---|
+| Unsure what moves | Name the invariant pointers/stack maintain |
+| Edge case worry | Check empty, single, duplicates |
+
+### Extended dry-run columns
+
+| iter | key variables | container snapshot | output so far |
+|---:|---|---|---|
+
+Fill five rows from the matching Java main example in the sibling .java file.
+
+### Interview say-aloud (30s)
+
+> I recognize the pattern, use the right structure for the invariant, avoid brute time because each element is handled once.
+
+### Follow-up Q&A
+
+**Q: In-place?** Only if allowed.  
+**Q: Unsorted input?** State preprocessing.
+
 ## 16. Quick revision
 
 Pattern: **Pattern D — BST navigation**.
@@ -277,3 +312,72 @@ One line:
 
 **Problem 07 — Diameter of Binary Tree**
 Continue in order through the folder.
+
+---
+
+---
+
+## Repository Java (full)
+
+Align with `../LowestCommonAncestorBST.java`.
+
+```java
+package DSA.Trees;
+
+/*
+Problem: Lowest Common Ancestor of a BST (LeetCode 235)
+
+Given a BST and two nodes p and q, return their lowest common ancestor
+(lowest node that has both p and q as descendants).
+
+Example:
+    tree = [6, 2, 8, 0, 4, 7, 9, null, null, 3, 5], p = 2, q = 8
+    Output: LCA value = 6
+*/
+
+public class LowestCommonAncestorBST {
+
+    public static TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if (root == null) {
+            return null;
+        }
+
+        if (p.val < root.val && q.val < root.val) {
+            return lowestCommonAncestor(root.left, p, q);
+        }
+        if (p.val > root.val && q.val > root.val) {
+            return lowestCommonAncestor(root.right, p, q);
+        }
+        return root;
+    }
+
+  /** Find first node with target value (for demos). */
+    public static TreeNode findNode(TreeNode root, int target) {
+        if (root == null) {
+            return null;
+        }
+        if (root.val == target) {
+            return root;
+        }
+        TreeNode left = findNode(root.left, target);
+        if (left != null) {
+            return left;
+        }
+        return findNode(root.right, target);
+    }
+
+    public static void main(String[] args) {
+        TreeNode root = TreeNode.buildLevelOrder(new Integer[] { 6, 2, 8, 0, 4, 7, 9, null, null, 3, 5 });
+
+        TreeNode p = findNode(root, 2);
+        TreeNode q = findNode(root, 8);
+        TreeNode lca = lowestCommonAncestor(root, p, q);
+        System.out.println("LCA of 2 and 8: " + lca.val); // 6
+
+        p = findNode(root, 2);
+        q = findNode(root, 4);
+        lca = lowestCommonAncestor(root, p, q);
+        System.out.println("LCA of 2 and 4: " + lca.val); // 2
+    }
+}
+```

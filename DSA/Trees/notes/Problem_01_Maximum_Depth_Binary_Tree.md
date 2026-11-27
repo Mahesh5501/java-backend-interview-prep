@@ -250,6 +250,41 @@ java -cp . DSA.Trees.MaximumDepthBinaryTree
 
 ---
 
+---
+
+## Depth addendum — extended workbook
+
+### Mental picture (second angle)
+
+Sketch input on paper and mark **what changes each loop iteration**. If the pattern uses a stack, queue, heap, or map, write its contents as a column beside the array/tree.
+
+### Brute force reminder
+
+State the naive approach in one sentence, its time/space, and **one sentence why** the optimal pattern beats it.
+
+### Hardest-part drill
+
+| Before coding | After understanding |
+|---|---|
+| Unsure what moves | Name the invariant pointers/stack maintain |
+| Edge case worry | Check empty, single, duplicates |
+
+### Extended dry-run columns
+
+| iter | key variables | container snapshot | output so far |
+|---:|---|---|---|
+
+Fill five rows from the matching Java main example in the sibling .java file.
+
+### Interview say-aloud (30s)
+
+> I recognize the pattern, use the right structure for the invariant, avoid brute time because each element is handled once.
+
+### Follow-up Q&A
+
+**Q: In-place?** Only if allowed.  
+**Q: Unsorted input?** State preprocessing.
+
 ## 16. Quick revision
 
 Pattern: **Pattern A — DFS**.
@@ -273,3 +308,50 @@ One line:
 
 **Problem 02 — Invert Binary Tree**
 Continue in order through the folder.
+
+---
+
+---
+
+## Repository Java (full)
+
+Align with `../MaximumDepthBinaryTree.java`.
+
+```java
+package DSA.Trees;
+
+/*
+Problem: Maximum Depth of Binary Tree (LeetCode 104)
+
+Given the root of a binary tree, return its maximum depth
+(the number of nodes along the longest root-to-leaf path).
+
+Example:
+    root = [3, 9, 20, null, null, 15, 7]
+    Output: 3
+*/
+
+public class MaximumDepthBinaryTree {
+
+    // DFS: depth of empty tree is 0; otherwise 1 + best of subtrees.
+    // Time O(n), space O(h) for recursion.
+    public static int maxDepthDFS(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        int leftDepth = maxDepthDFS(root.left);
+        int rightDepth = maxDepthDFS(root.right);
+        return 1 + Math.max(leftDepth, rightDepth);
+    }
+
+    public static void main(String[] args) {
+        TreeNode root = TreeNode.buildLevelOrder(new Integer[] { 3, 9, 20, null, null, 15, 7 });
+        System.out.println("Maximum depth: " + maxDepthDFS(root)); // 3
+
+        TreeNode single = new TreeNode(1);
+        System.out.println("Single node depth: " + maxDepthDFS(single)); // 1
+
+        System.out.println("Empty tree depth: " + maxDepthDFS(null)); // 0
+    }
+}
+```

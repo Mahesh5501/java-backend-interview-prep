@@ -254,6 +254,41 @@ java -cp . DSA.Heap.KthLargestElement
 
 ---
 
+---
+
+## Depth addendum — extended workbook
+
+### Mental picture (second angle)
+
+Sketch input on paper and mark **what changes each loop iteration**. If the pattern uses a stack, queue, heap, or map, write its contents as a column beside the array/tree.
+
+### Brute force reminder
+
+State the naive approach in one sentence, its time/space, and **one sentence why** the optimal pattern beats it.
+
+### Hardest-part drill
+
+| Before coding | After understanding |
+|---|---|
+| Unsure what moves | Name the invariant pointers/stack maintain |
+| Edge case worry | Check empty, single, duplicates |
+
+### Extended dry-run columns
+
+| iter | key variables | container snapshot | output so far |
+|---:|---|---|---|
+
+Fill five rows from the matching Java main example in the sibling .java file.
+
+### Interview say-aloud (30s)
+
+> I recognize the pattern, use the right structure for the invariant, avoid brute time because each element is handled once.
+
+### Follow-up Q&A
+
+**Q: In-place?** Only if allowed.  
+**Q: Unsorted input?** State preprocessing.
+
 ## 16. Quick revision
 
 Pattern: **Pattern A — Min-heap of size K**.
@@ -277,3 +312,56 @@ One line:
 
 **Problem 02 — Top K Frequent Elements**
 Continue in order through the folder.
+
+---
+
+---
+
+## Repository Java (full)
+
+Align with `../KthLargestElement.java`.
+
+```java
+package DSA.Heap;
+
+import java.util.Arrays;
+import java.util.PriorityQueue;
+
+/*
+Problem: Kth Largest Element in an Array (LeetCode 215)
+
+Note: "kth largest" is not the same as sorting in ascending order and picking index k.
+
+Example:
+    nums = [3, 2, 1, 5, 6, 4], k = 2 -> 5
+*/
+
+public class KthLargestElement {
+
+    // Min-heap of size k — root is the kth largest among kept elements.
+    public static int findKthLargest(int[] nums, int k) {
+        PriorityQueue<Integer> minHeap = new PriorityQueue<>();
+        for (int value : nums) {
+            minHeap.offer(value);
+            if (minHeap.size() > k) {
+                minHeap.poll();
+            }
+        }
+        return minHeap.peek();
+    }
+
+    public static int findKthLargestSort(int[] nums, int k) {
+        Arrays.sort(nums);
+        return nums[nums.length - k];
+    }
+
+    public static void main(String[] args) {
+        int[] nums = { 3, 2, 1, 5, 6, 4 };
+        System.out.println("k=2 (heap):  " + findKthLargest(nums.clone(), 2)); // 5
+        System.out.println("k=2 (sort):  " + findKthLargestSort(nums.clone(), 2)); // 5
+
+        int[] nums2 = { 3, 2, 3, 1, 2, 4, 5, 5, 6 };
+        System.out.println("k=4 (heap):  " + findKthLargest(nums2, 4)); // 4
+    }
+}
+```

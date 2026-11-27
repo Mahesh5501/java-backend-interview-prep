@@ -256,6 +256,41 @@ java -cp . DSA.Heap.FindMedianFromDataStream
 
 ---
 
+---
+
+## Depth addendum — extended workbook
+
+### Mental picture (second angle)
+
+Sketch input on paper and mark **what changes each loop iteration**. If the pattern uses a stack, queue, heap, or map, write its contents as a column beside the array/tree.
+
+### Brute force reminder
+
+State the naive approach in one sentence, its time/space, and **one sentence why** the optimal pattern beats it.
+
+### Hardest-part drill
+
+| Before coding | After understanding |
+|---|---|
+| Unsure what moves | Name the invariant pointers/stack maintain |
+| Edge case worry | Check empty, single, duplicates |
+
+### Extended dry-run columns
+
+| iter | key variables | container snapshot | output so far |
+|---:|---|---|---|
+
+Fill five rows from the matching Java main example in the sibling .java file.
+
+### Interview say-aloud (30s)
+
+> I recognize the pattern, use the right structure for the invariant, avoid brute time because each element is handled once.
+
+### Follow-up Q&A
+
+**Q: In-place?** Only if allowed.  
+**Q: Unsorted input?** State preprocessing.
+
 ## 16. Quick revision
 
 Pattern: **Pattern C — Dual heap**.
@@ -279,3 +314,77 @@ One line:
 
 **Problem 05 — K Closest Points to Origin**
 Continue in order through the folder.
+
+---
+
+---
+
+## Repository Java (full)
+
+Align with `../FindMedianFromDataStream.java`.
+
+```java
+package DSA.Heap;
+
+import java.util.PriorityQueue;
+
+/*
+Problem: Find Median from Data Stream (LeetCode 295)
+
+Support addNum(int) and findMedian() on a growing stream.
+
+Example:
+    add 1, add 2 -> median 1.5
+    add 3 -> median 2
+*/
+
+public class FindMedianFromDataStream {
+
+    /** Lower half — max-heap (largest of the lows on top). */
+    private final PriorityQueue<Integer> lowHalf;
+
+    /** Upper half — min-heap (smallest of the highs on top). */
+    private final PriorityQueue<Integer> highHalf;
+
+    public FindMedianFromDataStream() {
+        lowHalf = new PriorityQueue<>((a, b) -> Integer.compare(b, a));
+        highHalf = new PriorityQueue<>();
+    }
+
+    public void addNum(int num) {
+        if (lowHalf.isEmpty() || num <= lowHalf.peek()) {
+            lowHalf.offer(num);
+        } else {
+            highHalf.offer(num);
+        }
+
+        if (lowHalf.size() > highHalf.size() + 1) {
+            highHalf.offer(lowHalf.poll());
+        } else if (highHalf.size() > lowHalf.size()) {
+            lowHalf.offer(highHalf.poll());
+        }
+    }
+
+    public double findMedian() {
+        if (lowHalf.size() > highHalf.size()) {
+            return lowHalf.peek();
+        }
+        return (lowHalf.peek() + highHalf.peek()) / 2.0;
+    }
+
+    public static void main(String[] args) {
+        FindMedianFromDataStream medianFinder = new FindMedianFromDataStream();
+
+        medianFinder.addNum(1);
+        medianFinder.addNum(2);
+        System.out.println("Median after 1, 2: " + medianFinder.findMedian()); // 1.5
+
+        medianFinder.addNum(3);
+        System.out.println("Median after 1, 2, 3: " + medianFinder.findMedian()); // 2.0
+
+        medianFinder.addNum(4);
+        medianFinder.addNum(5);
+        System.out.println("Median after 1..5: " + medianFinder.findMedian()); // 3.0
+    }
+}
+```

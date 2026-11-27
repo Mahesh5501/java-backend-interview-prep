@@ -210,6 +210,41 @@ Run `main` after implementing from memory.
 
 ---
 
+---
+
+## Depth addendum — extended workbook
+
+### Mental picture (second angle)
+
+Sketch input on paper and mark **what changes each loop iteration**. If the pattern uses a stack, queue, heap, or map, write its contents as a column beside the array/tree.
+
+### Brute force reminder
+
+State the naive approach in one sentence, its time/space, and **one sentence why** the optimal pattern beats it.
+
+### Hardest-part drill
+
+| Before coding | After understanding |
+|---|---|
+| Unsure what moves | Name the invariant pointers/stack maintain |
+| Edge case worry | Check empty, single, duplicates |
+
+### Extended dry-run columns
+
+| iter | key variables | container snapshot | output so far |
+|---:|---|---|---|
+
+Fill five rows from the matching Java main example in the sibling .java file.
+
+### Interview say-aloud (30s)
+
+> I recognize the pattern, use the right structure for the invariant, avoid brute time because each element is handled once.
+
+### Follow-up Q&A
+
+**Q: In-place?** Only if allowed.  
+**Q: Unsorted input?** State preprocessing.
+
 ## 16. Quick revision
 
 One line: **Group Anagrams = Map + canonical key + optimal method in `GroupAnagrams.java`.**
@@ -225,3 +260,61 @@ See **`Arrays_Hashing_Common_Patterns.md`**.
 ## 18. Next problem
 
 **Problem 05 — Top K Frequent Elements**
+
+---
+
+---
+
+## Repository Java (full)
+
+Align with `../GroupAnagrams.java`.
+
+```java
+package DSA.ArraysHashing;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/*
+Problem: Group Anagrams
+
+Group strings that are anagrams of each other.
+
+Example:
+  ["eat","tea","tan","ate","nat","bat"]
+  → [["bat"],["nat","tan"],["ate","eat","tea"]]  (order within groups may vary)
+
+Approach: Map canonical key → list of words
+Time: O(n * k log k) with sorted key, k = max word length
+*/
+
+public class GroupAnagrams {
+
+    private static String sortedKey(String word) {
+        char[] chars = word.toCharArray();
+        Arrays.sort(chars);
+        return new String(chars);
+    }
+
+    public static List<List<String>> groupAnagrams(String[] strs) {
+        Map<String, List<String>> groups = new HashMap<>();
+
+        for (String word : strs) {
+            String key = sortedKey(word);
+            groups.computeIfAbsent(key, k -> new ArrayList<>()).add(word);
+        }
+        return new ArrayList<>(groups.values());
+    }
+
+    public static void main(String[] args) {
+        String[] input = { "eat", "tea", "tan", "ate", "nat", "bat" };
+        List<List<String>> result = groupAnagrams(input);
+        for (List<String> group : result) {
+            System.out.println(group);
+        }
+    }
+}
+```

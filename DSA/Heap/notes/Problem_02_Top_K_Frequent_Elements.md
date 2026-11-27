@@ -256,6 +256,41 @@ java -cp . DSA.Heap.TopKFrequent
 
 ---
 
+---
+
+## Depth addendum — extended workbook
+
+### Mental picture (second angle)
+
+Sketch input on paper and mark **what changes each loop iteration**. If the pattern uses a stack, queue, heap, or map, write its contents as a column beside the array/tree.
+
+### Brute force reminder
+
+State the naive approach in one sentence, its time/space, and **one sentence why** the optimal pattern beats it.
+
+### Hardest-part drill
+
+| Before coding | After understanding |
+|---|---|
+| Unsure what moves | Name the invariant pointers/stack maintain |
+| Edge case worry | Check empty, single, duplicates |
+
+### Extended dry-run columns
+
+| iter | key variables | container snapshot | output so far |
+|---:|---|---|---|
+
+Fill five rows from the matching Java main example in the sibling .java file.
+
+### Interview say-aloud (30s)
+
+> I recognize the pattern, use the right structure for the invariant, avoid brute time because each element is handled once.
+
+### Follow-up Q&A
+
+**Q: In-place?** Only if allowed.  
+**Q: Unsorted input?** State preprocessing.
+
 ## 16. Quick revision
 
 Pattern: **Pattern A — Top-K**.
@@ -279,3 +314,74 @@ One line:
 
 **Problem 03 — Merge K Sorted Lists**
 Continue in order through the folder.
+
+---
+
+---
+
+## Repository Java (full)
+
+Align with `../TopKFrequent.java`.
+
+```java
+package DSA.Heap;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.PriorityQueue;
+
+/*
+Problem: Top K Frequent Elements (LeetCode 347)
+
+Return the k most frequent integers (any order).
+
+Example:
+    nums = [1, 1, 1, 2, 2, 3], k = 2 -> [1, 2] (order may vary)
+*/
+
+public class TopKFrequent {
+
+    static class FrequencyPair {
+        int value;
+        int count;
+
+        FrequencyPair(int value, int count) {
+            this.value = value;
+            this.count = count;
+        }
+    }
+
+    public static List<Integer> topKFrequent(int[] nums, int k) {
+        Map<Integer, Integer> frequency = new HashMap<>();
+        for (int num : nums) {
+            frequency.put(num, frequency.getOrDefault(num, 0) + 1);
+        }
+
+        PriorityQueue<FrequencyPair> minHeap = new PriorityQueue<>(
+                (a, b) -> Integer.compare(a.count, b.count));
+
+        for (Map.Entry<Integer, Integer> entry : frequency.entrySet()) {
+            minHeap.offer(new FrequencyPair(entry.getKey(), entry.getValue()));
+            if (minHeap.size() > k) {
+                minHeap.poll();
+            }
+        }
+
+        List<Integer> result = new ArrayList<>();
+        while (!minHeap.isEmpty()) {
+            result.add(minHeap.poll().value);
+        }
+        return result;
+    }
+
+    public static void main(String[] args) {
+        int[] nums = { 1, 1, 1, 2, 2, 3 };
+        System.out.println("Top 2 frequent: " + topKFrequent(nums, 2));
+
+        int[] nums2 = { 4, 4, 4, 6, 6, 6, 6, 7 };
+        System.out.println("Top 2 frequent: " + topKFrequent(nums2, 2));
+    }
+}
+```

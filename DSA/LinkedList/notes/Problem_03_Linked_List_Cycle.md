@@ -256,6 +256,41 @@ java -cp . DSA.LinkedList.LinkedListCycle
 
 ---
 
+---
+
+## Depth addendum — extended workbook
+
+### Mental picture (second angle)
+
+Sketch input on paper and mark **what changes each loop iteration**. If the pattern uses a stack, queue, heap, or map, write its contents as a column beside the array/tree.
+
+### Brute force reminder
+
+State the naive approach in one sentence, its time/space, and **one sentence why** the optimal pattern beats it.
+
+### Hardest-part drill
+
+| Before coding | After understanding |
+|---|---|
+| Unsure what moves | Name the invariant pointers/stack maintain |
+| Edge case worry | Check empty, single, duplicates |
+
+### Extended dry-run columns
+
+| iter | key variables | container snapshot | output so far |
+|---:|---|---|---|
+
+Fill five rows from the matching Java main example in the sibling .java file.
+
+### Interview say-aloud (30s)
+
+> I recognize the pattern, use the right structure for the invariant, avoid brute time because each element is handled once.
+
+### Follow-up Q&A
+
+**Q: In-place?** Only if allowed.  
+**Q: Unsorted input?** State preprocessing.
+
 ## 16. Quick revision
 
 Pattern: **Pattern B — Fast & slow**.
@@ -279,3 +314,73 @@ One line:
 
 **Problem 04 — Merge Two Sorted Lists**
 Continue in order through the folder.
+
+---
+
+---
+
+## Repository Java (full)
+
+Align with `../LinkedListCycle.java`.
+
+```java
+package DSA.LinkedList;
+
+import java.util.HashSet;
+import java.util.Set;
+
+/**
+ * LeetCode 141 — Linked List Cycle
+ * Pattern: Fast & slow (Floyd); alternative hash set
+ */
+public class LinkedListCycle {
+
+  // APPROACH 1: BRUTE / HASH SET — track visited nodes
+  // Time: O(n), Space: O(n)
+  public static boolean hasCycleHashSet(ListNode head) {
+    Set<ListNode> seen = new HashSet<>();
+    ListNode current = head;
+    while (current != null) {
+      if (!seen.add(current)) {
+        return true;
+      }
+      current = current.next;
+    }
+    return false;
+  }
+
+  // APPROACH 2: FLOYD — fast and slow meet if cycle exists
+  // Time: O(n), Space: O(1)
+  public static boolean hasCycle(ListNode head) {
+    ListNode slow = head;
+    ListNode fast = head;
+    while (fast != null && fast.next != null) {
+      slow = slow.next;
+      fast = fast.next.next;
+      if (slow == fast) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public static void main(String[] args) {
+    ListNode noCycle = ListNode.of(1, 2, 3, 4);
+    ListNode withCycle = ListNode.withCycle(new int[] {1, 2, 3, 4}, 1);
+
+    System.out.println("No cycle:");
+    ListNode.print(noCycle);
+    System.out.println("  HashSet: " + hasCycleHashSet(noCycle));
+    System.out.println("  Floyd:   " + hasCycle(noCycle));
+
+    System.out.println("\nCycle (tail -> node at index 1):");
+    System.out.println("  HashSet: " + hasCycleHashSet(withCycle));
+    System.out.println("  Floyd:   " + hasCycle(withCycle));
+
+    System.out.println();
+    System.out.println("Interview script:");
+    System.out.println(
+        "HashSet stores nodes O(n) space. Floyd moves slow 1 and fast 2; meeting inside cycle => true.");
+  }
+}
+```

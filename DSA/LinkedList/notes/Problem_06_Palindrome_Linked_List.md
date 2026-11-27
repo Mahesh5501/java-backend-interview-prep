@@ -261,6 +261,41 @@ java -cp . DSA.LinkedList.PalindromeLinkedList
 
 ---
 
+---
+
+## Depth addendum — extended workbook
+
+### Mental picture (second angle)
+
+Sketch input on paper and mark **what changes each loop iteration**. If the pattern uses a stack, queue, heap, or map, write its contents as a column beside the array/tree.
+
+### Brute force reminder
+
+State the naive approach in one sentence, its time/space, and **one sentence why** the optimal pattern beats it.
+
+### Hardest-part drill
+
+| Before coding | After understanding |
+|---|---|
+| Unsure what moves | Name the invariant pointers/stack maintain |
+| Edge case worry | Check empty, single, duplicates |
+
+### Extended dry-run columns
+
+| iter | key variables | container snapshot | output so far |
+|---:|---|---|---|
+
+Fill five rows from the matching Java main example in the sibling .java file.
+
+### Interview say-aloud (30s)
+
+> I recognize the pattern, use the right structure for the invariant, avoid brute time because each element is handled once.
+
+### Follow-up Q&A
+
+**Q: In-place?** Only if allowed.  
+**Q: Unsorted input?** State preprocessing.
+
 ## 16. Quick revision
 
 Pattern: **Pattern E — Combine patterns**.
@@ -284,3 +319,98 @@ One line:
 
 **Problem 07 — Add Two Numbers**
 Continue in order through the folder.
+
+---
+
+---
+
+## Repository Java (full)
+
+Align with `../PalindromeLinkedList.java`.
+
+```java
+package DSA.LinkedList;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * LeetCode 234 — Palindrome Linked List
+ * Pattern: Find middle, reverse second half, compare
+ */
+public class PalindromeLinkedList {
+
+  // APPROACH 1: BRUTE — copy values to list, two indices
+  public static boolean bruteForce(ListNode head) {
+    List<Integer> values = ListNode.toList(head);
+    int left = 0;
+    int right = values.size() - 1;
+    while (left < right) {
+      if (!values.get(left).equals(values.get(right))) {
+        return false;
+      }
+      left++;
+      right--;
+    }
+    return true;
+  }
+
+  // APPROACH 2: O(1) space — slow/fast, reverse second half, compare
+  public static boolean isPalindrome(ListNode head) {
+    if (head == null || head.next == null) {
+      return true;
+    }
+
+    ListNode slow = head;
+    ListNode fast = head;
+    while (fast != null && fast.next != null) {
+      slow = slow.next;
+      fast = fast.next.next;
+    }
+    if (fast != null) {
+      slow = slow.next;
+    }
+
+    ListNode secondHalf = reverse(slow);
+    ListNode left = head;
+    ListNode right = secondHalf;
+    while (right != null) {
+      if (left.val != right.val) {
+        return false;
+      }
+      left = left.next;
+      right = right.next;
+    }
+    return true;
+  }
+
+  private static ListNode reverse(ListNode head) {
+    ListNode prev = null;
+    ListNode curr = head;
+    while (curr != null) {
+      ListNode next = curr.next;
+      curr.next = prev;
+      prev = curr;
+      curr = next;
+    }
+    return prev;
+  }
+
+  public static void main(String[] args) {
+    ListNode pal = ListNode.of(1, 2, 2, 1);
+    ListNode notPal = ListNode.of(1, 2, 3);
+    ListNode oddPal = ListNode.of(1, 2, 3, 2, 1);
+
+    for (ListNode h : new ListNode[] {pal, notPal, oddPal}) {
+      ListNode.print(h);
+      System.out.println("  Brute:  " + bruteForce(h));
+      System.out.println("  Optimal: " + isPalindrome(h));
+      System.out.println("-------------------------");
+    }
+
+    System.out.println("Interview script:");
+    System.out.println(
+        "Brute uses array. Optimal finds mid with fast/slow, reverses second half, compares, O(1) space.");
+  }
+}
+```

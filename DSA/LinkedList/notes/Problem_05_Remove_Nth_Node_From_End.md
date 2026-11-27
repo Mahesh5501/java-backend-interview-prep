@@ -254,6 +254,41 @@ java -cp . DSA.LinkedList.RemoveNthNode
 
 ---
 
+---
+
+## Depth addendum — extended workbook
+
+### Mental picture (second angle)
+
+Sketch input on paper and mark **what changes each loop iteration**. If the pattern uses a stack, queue, heap, or map, write its contents as a column beside the array/tree.
+
+### Brute force reminder
+
+State the naive approach in one sentence, its time/space, and **one sentence why** the optimal pattern beats it.
+
+### Hardest-part drill
+
+| Before coding | After understanding |
+|---|---|
+| Unsure what moves | Name the invariant pointers/stack maintain |
+| Edge case worry | Check empty, single, duplicates |
+
+### Extended dry-run columns
+
+| iter | key variables | container snapshot | output so far |
+|---:|---|---|---|
+
+Fill five rows from the matching Java main example in the sibling .java file.
+
+### Interview say-aloud (30s)
+
+> I recognize the pattern, use the right structure for the invariant, avoid brute time because each element is handled once.
+
+### Follow-up Q&A
+
+**Q: In-place?** Only if allowed.  
+**Q: Unsorted input?** State preprocessing.
+
 ## 16. Quick revision
 
 Pattern: **Pattern D — N-gap pointers**.
@@ -277,3 +312,74 @@ One line:
 
 **Problem 06 — Palindrome Linked List**
 Continue in order through the folder.
+
+---
+
+## Repository Java (full)
+
+Align with `../RemoveNthNode.java`.
+
+```java
+package DSA.LinkedList;
+
+/**
+ * LeetCode 19 — Remove Nth Node From End of List
+ * Pattern: Dummy + fast ahead by n, then move together
+ */
+public class RemoveNthNode {
+
+  // APPROACH 1: BRUTE — count length L, remove node at index L - n
+  public static ListNode bruteForce(ListNode head, int n) {
+    int len = ListNode.length(head);
+    if (n == len) {
+      return head.next;
+    }
+    ListNode current = head;
+    for (int i = 0; i < len - n - 1; i++) {
+      current = current.next;
+    }
+    current.next = current.next.next;
+    return head;
+  }
+
+  // APPROACH 2: TWO POINTERS with dummy
+  public static ListNode removeNthFromEnd(ListNode head, int n) {
+    ListNode dummy = new ListNode(0, head);
+    ListNode slow = dummy;
+    ListNode fast = dummy;
+
+    for (int i = 0; i < n; i++) {
+      fast = fast.next;
+    }
+    while (fast.next != null) {
+      slow = slow.next;
+      fast = fast.next;
+    }
+    slow.next = slow.next.next;
+    return dummy.next;
+  }
+
+  /**
+   * Dry run: 1-2-3-4-5, n=2
+   * fast moves to node 2; then both advance until fast at tail
+   * slow before 4 -> skip 4 -> 1-2-3-5
+   */
+  public static void main(String[] args) {
+    System.out.println("Remove 2nd from end:");
+    ListNode head = ListNode.of(1, 2, 3, 4, 5);
+    ListNode.print(head);
+    ListNode result = removeNthFromEnd(ListNode.of(1, 2, 3, 4, 5), 2);
+    System.out.print("Two pointers: ");
+    ListNode.print(result);
+
+    ListNode brute = bruteForce(ListNode.of(1, 2, 3), 3);
+    System.out.print("Brute (remove 3rd from 3 nodes): ");
+    ListNode.print(brute);
+
+    System.out.println();
+    System.out.println("Interview script:");
+    System.out.println(
+        "Dummy handles deleting head. Move fast n steps, then lock-step; slow.next is target.");
+  }
+}
+```

@@ -251,6 +251,41 @@ java -cp . DSA.Trees.SameTree
 
 ---
 
+---
+
+## Depth addendum — extended workbook
+
+### Mental picture (second angle)
+
+Sketch input on paper and mark **what changes each loop iteration**. If the pattern uses a stack, queue, heap, or map, write its contents as a column beside the array/tree.
+
+### Brute force reminder
+
+State the naive approach in one sentence, its time/space, and **one sentence why** the optimal pattern beats it.
+
+### Hardest-part drill
+
+| Before coding | After understanding |
+|---|---|
+| Unsure what moves | Name the invariant pointers/stack maintain |
+| Edge case worry | Check empty, single, duplicates |
+
+### Extended dry-run columns
+
+| iter | key variables | container snapshot | output so far |
+|---:|---|---|---|
+
+Fill five rows from the matching Java main example in the sibling .java file.
+
+### Interview say-aloud (30s)
+
+> I recognize the pattern, use the right structure for the invariant, avoid brute time because each element is handled once.
+
+### Follow-up Q&A
+
+**Q: In-place?** Only if allowed.  
+**Q: Unsorted input?** State preprocessing.
+
 ## 16. Quick revision
 
 Pattern: **Pattern A — DFS**.
@@ -274,3 +309,51 @@ One line:
 
 **Problem 04 — Level Order Traversal**
 Continue in order through the folder.
+
+---
+
+---
+
+## Repository Java (full)
+
+Align with `../SameTree.java`.
+
+```java
+package DSA.Trees;
+
+/*
+Problem: Same Tree (LeetCode 100)
+
+Two trees are the same if structure and node values match everywhere.
+
+Example:
+    p = [1, 2, 3], q = [1, 2, 3]  -> true
+    p = [1, 2],    q = [1, null, 2] -> false
+*/
+
+public class SameTree {
+
+    public static boolean isSameTree(TreeNode p, TreeNode q) {
+        if (p == null && q == null) {
+            return true;
+        }
+        if (p == null || q == null) {
+            return false;
+        }
+        if (p.val != q.val) {
+            return false;
+        }
+        return isSameTree(p.left, q.left) && isSameTree(p.right, q.right);
+    }
+
+    public static void main(String[] args) {
+        TreeNode p = TreeNode.buildLevelOrder(new Integer[] { 1, 2, 3 });
+        TreeNode q = TreeNode.buildLevelOrder(new Integer[] { 1, 2, 3 });
+        System.out.println("Same structure: " + isSameTree(p, q)); // true
+
+        TreeNode p2 = TreeNode.buildLevelOrder(new Integer[] { 1, 2 });
+        TreeNode q2 = TreeNode.buildLevelOrder(new Integer[] { 1, null, 2 });
+        System.out.println("Different shape: " + isSameTree(p2, q2)); // false
+    }
+}
+```

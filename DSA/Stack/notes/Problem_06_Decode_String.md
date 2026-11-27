@@ -262,6 +262,41 @@ java -cp . DSA.Stack.DecodeString
 
 ---
 
+---
+
+## Depth addendum — extended workbook
+
+### Mental picture (second angle)
+
+Sketch input on paper and mark **what changes each loop iteration**. If the pattern uses a stack, queue, heap, or map, write its contents as a column beside the array/tree.
+
+### Brute force reminder
+
+State the naive approach in one sentence, its time/space, and **one sentence why** the optimal pattern beats it.
+
+### Hardest-part drill
+
+| Before coding | After understanding |
+|---|---|
+| Unsure what moves | Name the invariant pointers/stack maintain |
+| Edge case worry | Check empty, single, duplicates |
+
+### Extended dry-run columns
+
+| iter | key variables | container snapshot | output so far |
+|---:|---|---|---|
+
+Fill five rows from the matching Java main example in the sibling .java file.
+
+### Interview say-aloud (30s)
+
+> I recognize the pattern, use the right structure for the invariant, avoid brute time because each element is handled once.
+
+### Follow-up Q&A
+
+**Q: In-place?** Only if allowed.  
+**Q: Unsorted input?** State preprocessing.
+
 ## 16. Quick revision
 
 Pattern: **Pattern D — Multi-stack state**.
@@ -285,3 +320,112 @@ One line:
 
 **Problem 07 — Evaluate RPN**
 Continue in order through the folder.
+
+---
+
+---
+
+## Repository Java (full)
+
+Align with `../DecodeString.java`.
+
+```java
+package DSA.Stack;
+
+import java.util.ArrayDeque;
+import java.util.Deque;
+
+/**
+ * LeetCode 394 — Decode String
+ * Pattern: Stack of (prefix string, repeat count) states
+ */
+public class DecodeString {
+
+  // APPROACH 1: RECURSIVE — treat '[' as subproblem boundary
+  public static String decodeBruteRecursive(String s) {
+    int[] index = {0};
+    return decodeSegment(s, index);
+  }
+
+  private static String decodeSegment(String s, int[] index) {
+    StringBuilder current = new StringBuilder();
+    int repeat = 0;
+
+    while (index[0] < s.length()) {
+      char c = s.charAt(index[0]);
+      if (Character.isDigit(c)) {
+        repeat = repeat * 10 + (c - '0');
+        index[0]++;
+      } else if (c == '[') {
+        index[0]++;
+        String inner = decodeSegment(s, index);
+        for (int k = 0; k < repeat; k++) {
+          current.append(inner);
+        }
+        repeat = 0;
+      } else if (c == ']') {
+        index[0]++;
+        return current.toString();
+      } else {
+        current.append(c);
+        index[0]++;
+      }
+    }
+    return current.toString();
+  }
+
+  // APPROACH 2: STACK — push counts and strings; build on ']'
+  // Time: O(n * max repeat) output size, Space: O(n)
+  public static String decodeString(String s) {
+    Deque<Integer> counts = new ArrayDeque<>();
+    Deque<StringBuilder> strings = new ArrayDeque<>();
+
+    StringBuilder current = new StringBuilder();
+    int repeat = 0;
+
+    for (int i = 0; i < s.length(); i++) {
+      char c = s.charAt(i);
+      if (Character.isDigit(c)) {
+        repeat = repeat * 10 + (c - '0');
+      } else if (c == '[') {
+        counts.push(repeat);
+        strings.push(current);
+        current = new StringBuilder();
+        repeat = 0;
+      } else if (c == ']') {
+        StringBuilder decoded = strings.pop();
+        int times = counts.pop();
+        for (int t = 0; t < times; t++) {
+          decoded.append(current);
+        }
+        current = decoded;
+      } else {
+        current.append(c);
+      }
+    }
+    return current.toString();
+  }
+
+  /**
+   * Dry run: "3[a2[c]]"
+   * read 3, '[', push count 3 and "", current="a"
+   * read 2, '[', push 2 and "a", current="c"
+   * ']' -> pop repeat 2, merge "cc" into "a" -> "acc"
+   * ']' -> pop repeat 3, merge -> "accaccacc"
+   */
+  public static void main(String[] args) {
+    String[] tests = {"3[a]2[bc]", "3[a2[c]]", "2[abc]3[cd]ef", "abc", "10[a]"};
+
+    for (String s : tests) {
+      System.out.println("Input:  " + s);
+      System.out.println("Recursive: " + decodeBruteRecursive(s));
+      System.out.println("Stack:     " + decodeString(s));
+      System.out.println("-------------------------");
+    }
+
+    System.out.println("Interview script:");
+    System.out.println(
+        "Digits build k; '[' saves k and current string on stacks; on ']' pop and repeat substring.");
+  }
+}
+```

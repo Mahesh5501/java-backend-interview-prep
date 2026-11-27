@@ -240,6 +240,41 @@ Run `main` after implementing from memory.
 
 ---
 
+---
+
+## Depth addendum — extended workbook
+
+### Mental picture (second angle)
+
+Sketch input on paper and mark **what changes each loop iteration**. If the pattern uses a stack, queue, heap, or map, write its contents as a column beside the array/tree.
+
+### Brute force reminder
+
+State the naive approach in one sentence, its time/space, and **one sentence why** the optimal pattern beats it.
+
+### Hardest-part drill
+
+| Before coding | After understanding |
+|---|---|
+| Unsure what moves | Name the invariant pointers/stack maintain |
+| Edge case worry | Check empty, single, duplicates |
+
+### Extended dry-run columns
+
+| iter | key variables | container snapshot | output so far |
+|---:|---|---|---|
+
+Fill five rows from the matching Java main example in the sibling .java file.
+
+### Interview say-aloud (30s)
+
+> I recognize the pattern, use the right structure for the invariant, avoid brute time because each element is handled once.
+
+### Follow-up Q&A
+
+**Q: In-place?** Only if allowed.  
+**Q: Unsorted input?** State preprocessing.
+
 ## 16. Quick revision
 
 One line: **Capacity To Ship Packages = BS on answer + optimal method in `CapacityToShipPackages.java`.**
@@ -255,3 +290,91 @@ See **`Binary_Search_Common_Patterns.md`**.
 ## 18. Next problem
 
 **Next topic in DSA_Interview_Pattern_Roadmap.md**
+
+---
+
+---
+
+## Repository Java (full)
+
+Align with `../CapacityToShipPackages.java`.
+
+```java
+package DSA.BinarySearch;
+
+/*
+Problem: Capacity To Ship Packages Within D Days (binary search on answer)
+
+weights[i] = weight of package on day-order. Ship in order; each day total load <= capacity.
+Return minimum capacity to ship all within days days.
+
+Example:
+  weights = [1,2,3,4,5,6,7,8,9,10], days = 5  →  15
+
+Approach: BS on capacity between max(weights) and sum(weights);
+feasible(cap) = greedy days to ship <= days
+Time: O(n log sum)   Space: O(1)
+*/
+
+public class CapacityToShipPackages {
+
+    private static int daysNeeded(int[] weights, int capacity) {
+        int days = 1;
+        int current = 0;
+        for (int w : weights) {
+            if (current + w > capacity) {
+                days++;
+                current = 0;
+            }
+            current += w;
+        }
+        return days;
+    }
+
+    public static int shipWithinDaysBrute(int[] weights, int days) {
+        int low = 0;
+        int high = 0;
+        for (int w : weights) {
+            low = Math.max(low, w);
+            high += w;
+        }
+        for (int cap = low; cap <= high; cap++) {
+            if (daysNeeded(weights, cap) <= days) {
+                return cap;
+            }
+        }
+        return high;
+    }
+
+    public static int shipWithinDays(int[] weights, int days) {
+        int low = 0;
+        int high = 0;
+        for (int w : weights) {
+            low = Math.max(low, w);
+            high += w;
+        }
+        int best = high;
+
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+            if (daysNeeded(weights, mid) <= days) {
+                best = mid;
+                high = mid - 1;
+            } else {
+                low = mid + 1;
+            }
+        }
+        return best;
+    }
+
+    public static void main(String[] args) {
+        int[] w = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+        int days = 5;
+        System.out.println("Brute: " + shipWithinDaysBrute(w, days));
+        System.out.println("BS:    " + shipWithinDays(w, days));
+
+        int[] w2 = { 3, 2, 2, 4, 1, 4 };
+        System.out.println("BS:    " + shipWithinDays(w2, 3));
+    }
+}
+```

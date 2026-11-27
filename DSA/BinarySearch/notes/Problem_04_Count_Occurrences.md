@@ -205,6 +205,41 @@ Run `main` after implementing from memory.
 
 ---
 
+---
+
+## Depth addendum — extended workbook
+
+### Mental picture (second angle)
+
+Sketch input on paper and mark **what changes each loop iteration**. If the pattern uses a stack, queue, heap, or map, write its contents as a column beside the array/tree.
+
+### Brute force reminder
+
+State the naive approach in one sentence, its time/space, and **one sentence why** the optimal pattern beats it.
+
+### Hardest-part drill
+
+| Before coding | After understanding |
+|---|---|
+| Unsure what moves | Name the invariant pointers/stack maintain |
+| Edge case worry | Check empty, single, duplicates |
+
+### Extended dry-run columns
+
+| iter | key variables | container snapshot | output so far |
+|---:|---|---|---|
+
+Fill five rows from the matching Java main example in the sibling .java file.
+
+### Interview say-aloud (30s)
+
+> I recognize the pattern, use the right structure for the invariant, avoid brute time because each element is handled once.
+
+### Follow-up Q&A
+
+**Q: In-place?** Only if allowed.  
+**Q: Unsorted input?** State preprocessing.
+
 ## 16. Quick revision
 
 One line: **Count Occurrences = First + last + optimal method in `CountOccurrences.java`.**
@@ -220,3 +255,56 @@ See **`Binary_Search_Common_Patterns.md`**.
 ## 18. Next problem
 
 **Problem 05 — Search in Rotated Sorted Array**
+
+---
+
+---
+
+## Repository Java (full)
+
+Align with `../CountOccurrences.java`.
+
+```java
+package DSA.BinarySearch;
+
+/*
+Problem: Count Occurrences of Target
+
+Return how many times target appears in sorted nums.
+
+Example:
+  [1,2,2,2,3,4], target=2 → 3
+
+Approach: first + last index, count = last - first + 1
+Time: O(log n)   Space: O(1)
+*/
+
+public class CountOccurrences {
+
+    public static int countOccurrencesBrute(int[] nums, int target) {
+        int count = 0;
+        for (int x : nums) {
+            if (x == target) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public static int countOccurrences(int[] nums, int target) {
+        int first = FirstOccurrence.searchFirst(nums, target);
+        if (first == -1) {
+            return 0;
+        }
+        int last = LastOccurrence.searchLast(nums, target);
+        return last - first + 1;
+    }
+
+    public static void main(String[] args) {
+        int[] nums = { 1, 2, 2, 2, 3, 4 };
+        System.out.println("Brute: " + countOccurrencesBrute(nums, 2));
+        System.out.println("BS:    " + countOccurrences(nums, 2));
+        System.out.println("Zero:  " + countOccurrences(nums, 6));
+    }
+}
+```

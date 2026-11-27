@@ -206,6 +206,41 @@ Run `main` after implementing from memory.
 
 ---
 
+---
+
+## Depth addendum — extended workbook
+
+### Mental picture (second angle)
+
+Sketch input on paper and mark **what changes each loop iteration**. If the pattern uses a stack, queue, heap, or map, write its contents as a column beside the array/tree.
+
+### Brute force reminder
+
+State the naive approach in one sentence, its time/space, and **one sentence why** the optimal pattern beats it.
+
+### Hardest-part drill
+
+| Before coding | After understanding |
+|---|---|
+| Unsure what moves | Name the invariant pointers/stack maintain |
+| Edge case worry | Check empty, single, duplicates |
+
+### Extended dry-run columns
+
+| iter | key variables | container snapshot | output so far |
+|---:|---|---|---|
+
+Fill five rows from the matching Java main example in the sibling .java file.
+
+### Interview say-aloud (30s)
+
+> I recognize the pattern, use the right structure for the invariant, avoid brute time because each element is handled once.
+
+### Follow-up Q&A
+
+**Q: In-place?** Only if allowed.  
+**Q: Unsorted input?** State preprocessing.
+
 ## 16. Quick revision
 
 One line: **Last Occurrence = BS bias right + optimal method in `LastOccurrence.java`.**
@@ -221,3 +256,57 @@ See **`Binary_Search_Common_Patterns.md`**.
 ## 18. Next problem
 
 **Problem 04 — Count Occurrences**
+
+---
+
+---
+
+## Repository Java (full)
+
+Align with `../LastOccurrence.java`.
+
+```java
+package DSA.BinarySearch;
+
+/*
+Problem: Last Occurrence of Target
+
+Sorted nums may contain duplicates. Return index of last occurrence of target, or -1.
+
+Example:
+  [1,2,2,2,3,4], target=2 → 3
+
+Approach: Binary search — on match, save index and go right
+Time: O(log n)   Space: O(1)
+*/
+
+public class LastOccurrence {
+
+    public static int searchLast(int[] nums, int target) {
+        int left = 0;
+        int right = nums.length - 1;
+        int ans = -1;
+
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+
+            if (nums[mid] == target) {
+                ans = mid;
+                left = mid + 1;
+            } else if (nums[mid] < target) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        return ans;
+    }
+
+    public static void main(String[] args) {
+        int[] nums = { 1, 2, 2, 2, 3, 4 };
+        System.out.println("Last: " + searchLast(nums, 2));
+        System.out.println("Miss: " + searchLast(nums, 6));
+        System.out.println("All2: " + searchLast(new int[] { 2, 2, 2, 2 }, 2));
+    }
+}
+```

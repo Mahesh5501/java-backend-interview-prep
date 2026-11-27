@@ -255,6 +255,41 @@ java -cp . DSA.Trees.DiameterOfBinaryTree
 
 ---
 
+---
+
+## Depth addendum — extended workbook
+
+### Mental picture (second angle)
+
+Sketch input on paper and mark **what changes each loop iteration**. If the pattern uses a stack, queue, heap, or map, write its contents as a column beside the array/tree.
+
+### Brute force reminder
+
+State the naive approach in one sentence, its time/space, and **one sentence why** the optimal pattern beats it.
+
+### Hardest-part drill
+
+| Before coding | After understanding |
+|---|---|
+| Unsure what moves | Name the invariant pointers/stack maintain |
+| Edge case worry | Check empty, single, duplicates |
+
+### Extended dry-run columns
+
+| iter | key variables | container snapshot | output so far |
+|---:|---|---|---|
+
+Fill five rows from the matching Java main example in the sibling .java file.
+
+### Interview say-aloud (30s)
+
+> I recognize the pattern, use the right structure for the invariant, avoid brute time because each element is handled once.
+
+### Follow-up Q&A
+
+**Q: In-place?** Only if allowed.  
+**Q: Unsorted input?** State preprocessing.
+
 ## 16. Quick revision
 
 Pattern: **Pattern A — DFS aggregate**.
@@ -278,3 +313,55 @@ One line:
 
 **Problem 08 — Binary Tree Right Side View**
 Continue in order through the folder.
+
+---
+
+---
+
+## Repository Java (full)
+
+Align with `../DiameterOfBinaryTree.java`.
+
+```java
+package DSA.Trees;
+
+/*
+Problem: Diameter of Binary Tree (LeetCode 543)
+
+The diameter is the length of the longest path between any two nodes
+(edge count). The path may or may not pass through the root.
+
+Example:
+    [1, 2, 3, 4, 5] -> diameter = 3 (path 4-2-1-3 or 5-2-1-3)
+*/
+
+public class DiameterOfBinaryTree {
+
+    private static int bestDiameter;
+
+    public static int diameterOfBinaryTree(TreeNode root) {
+        bestDiameter = 0;
+        height(root);
+        return bestDiameter;
+    }
+
+    /** Returns height in edges; updates global best diameter through this node. */
+    private static int height(TreeNode node) {
+        if (node == null) {
+            return 0;
+        }
+        int left = height(node.left);
+        int right = height(node.right);
+        bestDiameter = Math.max(bestDiameter, left + right);
+        return 1 + Math.max(left, right);
+    }
+
+    public static void main(String[] args) {
+        TreeNode root = TreeNode.buildLevelOrder(new Integer[] { 1, 2, 3, 4, 5 });
+        System.out.println("Diameter: " + diameterOfBinaryTree(root)); // 3
+
+        TreeNode line = TreeNode.buildLevelOrder(new Integer[] { 1, 2, null, 3, null, 4 });
+        System.out.println("Skewed diameter: " + diameterOfBinaryTree(line)); // 3
+    }
+}
+```

@@ -257,6 +257,41 @@ java -cp . DSA.Trees.RightSideView
 
 ---
 
+---
+
+## Depth addendum — extended workbook
+
+### Mental picture (second angle)
+
+Sketch input on paper and mark **what changes each loop iteration**. If the pattern uses a stack, queue, heap, or map, write its contents as a column beside the array/tree.
+
+### Brute force reminder
+
+State the naive approach in one sentence, its time/space, and **one sentence why** the optimal pattern beats it.
+
+### Hardest-part drill
+
+| Before coding | After understanding |
+|---|---|
+| Unsure what moves | Name the invariant pointers/stack maintain |
+| Edge case worry | Check empty, single, duplicates |
+
+### Extended dry-run columns
+
+| iter | key variables | container snapshot | output so far |
+|---:|---|---|---|
+
+Fill five rows from the matching Java main example in the sibling .java file.
+
+### Interview say-aloud (30s)
+
+> I recognize the pattern, use the right structure for the invariant, avoid brute time because each element is handled once.
+
+### Follow-up Q&A
+
+**Q: In-place?** Only if allowed.  
+**Q: Unsorted input?** State preprocessing.
+
 ## 16. Quick revision
 
 Pattern: **Pattern B — BFS**.
@@ -280,3 +315,68 @@ One line:
 
 **Problem 09 — Construct Binary Tree from Preorder and Inorder**
 Continue in order through the folder.
+
+---
+
+---
+
+## Repository Java (full)
+
+Align with `../RightSideView.java`.
+
+```java
+package DSA.Trees;
+
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Queue;
+
+/*
+Problem: Binary Tree Right Side View (LeetCode 199)
+
+Return values visible when looking from the right
+(rightmost node at each level).
+
+Example:
+    [1, 2, 3, null, 5, null, 4] -> [1, 3, 4]
+*/
+
+public class RightSideView {
+
+    public static List<Integer> rightSideView(TreeNode root) {
+        List<Integer> view = new ArrayList<>();
+        if (root == null) {
+            return view;
+        }
+
+        Queue<TreeNode> queue = new ArrayDeque<>();
+        queue.add(root);
+
+        while (!queue.isEmpty()) {
+            int levelSize = queue.size();
+            for (int i = 0; i < levelSize; i++) {
+                TreeNode node = queue.poll();
+                if (i == levelSize - 1) {
+                    view.add(node.val);
+                }
+                if (node.left != null) {
+                    queue.add(node.left);
+                }
+                if (node.right != null) {
+                    queue.add(node.right);
+                }
+            }
+        }
+        return view;
+    }
+
+    public static void main(String[] args) {
+        TreeNode root = TreeNode.buildLevelOrder(new Integer[] { 1, 2, 3, null, 5, null, 4 });
+        System.out.println("Right side view: " + rightSideView(root)); // [1, 3, 4]
+
+        TreeNode single = new TreeNode(7);
+        System.out.println("Single node: " + rightSideView(single)); // [7]
+    }
+}
+```

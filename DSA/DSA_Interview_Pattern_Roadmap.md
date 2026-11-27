@@ -17,14 +17,14 @@ DSA/<Pattern>/
 | 2 | Sliding Window | `SlidingWindow/` | 12 | Done |
 | 3 | Binary Search | `BinarySearch/` | 10 | Done |
 | 4 | Stack / Monotonic Stack | `Stack/` | 8 | Done |
-| 5 | Linked List | `LinkedList/` | 8 | Done |
+| 5 | Linked List | `LinkedList/` | 9 | Done |
 | 6 | Trees / BST | `Trees/` | 10 | Done |
 | 7 | Heap / Top-K | `Heap/` | 8 | Done |
 | 8 | Graphs | `Graphs/` | 10 | Done |
 | 9 | Dynamic Programming | `DynamicProgramming/` | 10 | Done |
 | 10 | Trie / Union-Find | `TrieUnionFind/` | 6 | Done |
 
-**Total problem notes:** 100 (+ shared helpers: `ListNode.java`, `TreeNode.java`, `UnionFind.java`)
+**Total problem notes:** 101 (+ shared helpers: `ListNode.java`, `TreeNode.java`, `UnionFind.java`)
 
 ## How to study each pattern
 
@@ -40,7 +40,7 @@ DSA/<Pattern>/
 - **SlidingWindow** — 12 problems + common patterns
 - **BinarySearch** — 10 problems + common patterns
 - **Stack** — 8 problems + common patterns
-- **LinkedList** — 8 problems + `ListNode.java` + common patterns
+- **LinkedList** — 9 problems + `ListNode.java` + common patterns
 - **Trees** — 10 problems + `TreeNode.java` + common patterns
 - **Heap** — 8 problems + common patterns
 - **Graphs** — 10 problems + common patterns
@@ -58,3 +58,11 @@ DSA/<Pattern>/
 - `.gitignore` already ignores `*.class` and `out/`
 
 DSA now contains only the main interview track folders + this roadmap.
+
+## Related prep tracks (outside DSA)
+
+| Track | Folder | Note |
+|---|---|---|
+| Java Concurrency / Multithreading | `../MultithreadingConcurrency/` | Your existing demos (keep as-is; package matches folder name) |
+
+**Happy Number** lives under Linked List as Problem 09 — same **fast/slow (Floyd)** pattern as Linked List Cycle.

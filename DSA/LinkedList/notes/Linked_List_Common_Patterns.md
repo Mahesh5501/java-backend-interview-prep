@@ -76,8 +76,13 @@ return prev; // new head
 | Middle             | `fast == null` or no `next` | `slow` at middle                |
 | Cycle detection    | `fast` hits null or meet    | meet ⇒ cycle                    |
 | Palindrome         | find middle, then reverse   | compare halves                  |
+| Happy Number (202) | `slow == fast`              | meet at `1` ⇒ happy; else cycle |
 
 **Why cycle works:** inside a cycle, fast gains 1 node per step on slow ⇒ eventual meet.
+
+**Happy Number (not a `ListNode`, same pattern):** each integer is a node; `next` =
+`sumSquares(digits)`. Unhappy numbers fall into a fixed cycle; Floyd detects it with `O(1)` space.
+See `HappyNumber.java` and Problem 09 notes.
 
 ------------------------------------------------------------------------
 
@@ -201,5 +206,6 @@ jump to other head; they meet at intersection or both null after at most `lenA+l
 6. Palindrome Linked List --- middle + reverse + compare.
 7. Add Two Numbers --- digit carry walk.
 8. Intersection of Two Linked Lists --- align lengths or two-pointer swap.
+9. Happy Number --- Floyd on the digit-square chain (implicit linked list).
 
 Study one class at a time; close the file and explain from memory.

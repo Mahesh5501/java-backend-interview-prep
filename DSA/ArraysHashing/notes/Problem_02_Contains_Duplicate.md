@@ -226,6 +226,41 @@ Run `main` after implementing from memory.
 
 ---
 
+---
+
+## Depth addendum — extended workbook
+
+### Mental picture (second angle)
+
+Sketch input on paper and mark **what changes each loop iteration**. If the pattern uses a stack, queue, heap, or map, write its contents as a column beside the array/tree.
+
+### Brute force reminder
+
+State the naive approach in one sentence, its time/space, and **one sentence why** the optimal pattern beats it.
+
+### Hardest-part drill
+
+| Before coding | After understanding |
+|---|---|
+| Unsure what moves | Name the invariant pointers/stack maintain |
+| Edge case worry | Check empty, single, duplicates |
+
+### Extended dry-run columns
+
+| iter | key variables | container snapshot | output so far |
+|---:|---|---|---|
+
+Fill five rows from the matching Java main example in the sibling .java file.
+
+### Interview say-aloud (30s)
+
+> I recognize the pattern, use the right structure for the invariant, avoid brute time because each element is handled once.
+
+### Follow-up Q&A
+
+**Q: In-place?** Only if allowed.  
+**Q: Unsorted input?** State preprocessing.
+
 ## 16. Quick revision
 
 One line: **Contains Duplicate = HashSet + optimal method in `ContainsDuplicate.java`.**
@@ -241,3 +276,77 @@ See **`Arrays_Hashing_Common_Patterns.md`**.
 ## 18. Next problem
 
 **Problem 03 — Valid Anagram**
+
+---
+
+---
+
+## Repository Java (full)
+
+Align with `../ContainsDuplicate.java`.
+
+```java
+package DSA.ArraysHashing;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+/*
+Problem: Contains Duplicate
+
+Return true if any value appears at least twice in nums.
+
+Examples:
+  [1,2,3,1]     → true
+  [1,2,3,4]     → false
+  [1,1,1,3,3,4] → true
+
+Approaches: Sort adjacent compare | HashSet | Frequency map
+Time: O(n) optimal   Space: O(n)
+*/
+
+public class ContainsDuplicate {
+
+    public static boolean containsDuplicateSort(int[] nums) {
+        Arrays.sort(nums);
+        for (int i = 1; i < nums.length; i++) {
+            if (nums[i] == nums[i - 1]) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean containsDuplicateSet(int[] nums) {
+        Set<Integer> seen = new HashSet<>();
+        for (int x : nums) {
+            if (!seen.add(x)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean containsDuplicateFreq(int[] nums) {
+        Map<Integer, Integer> freq = new HashMap<>();
+        for (int x : nums) {
+            int count = freq.getOrDefault(x, 0) + 1;
+            if (count > 1) {
+                return true;
+            }
+            freq.put(x, count);
+        }
+        return false;
+    }
+
+    public static void main(String[] args) {
+        int[] a = { 1, 2, 3, 1 };
+        int[] b = { 1, 2, 3, 4 };
+        System.out.println("Set:  " + containsDuplicateSet(a) + " / " + containsDuplicateSet(b));
+        System.out.println("Sort: " + containsDuplicateSort(a) + " / " + containsDuplicateSort(b));
+    }
+}
+```

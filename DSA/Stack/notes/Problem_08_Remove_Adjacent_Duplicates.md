@@ -256,6 +256,41 @@ java -cp . DSA.Stack.RemoveAdjacentDuplicates
 
 ---
 
+---
+
+## Depth addendum — extended workbook
+
+### Mental picture (second angle)
+
+Sketch input on paper and mark **what changes each loop iteration**. If the pattern uses a stack, queue, heap, or map, write its contents as a column beside the array/tree.
+
+### Brute force reminder
+
+State the naive approach in one sentence, its time/space, and **one sentence why** the optimal pattern beats it.
+
+### Hardest-part drill
+
+| Before coding | After understanding |
+|---|---|
+| Unsure what moves | Name the invariant pointers/stack maintain |
+| Edge case worry | Check empty, single, duplicates |
+
+### Extended dry-run columns
+
+| iter | key variables | container snapshot | output so far |
+|---:|---|---|---|
+
+Fill five rows from the matching Java main example in the sibling .java file.
+
+### Interview say-aloud (30s)
+
+> I recognize the pattern, use the right structure for the invariant, avoid brute time because each element is handled once.
+
+### Follow-up Q&A
+
+**Q: In-place?** Only if allowed.  
+**Q: Unsorted input?** State preprocessing.
+
 ## 16. Quick revision
 
 Pattern: **Pattern A — Stack cancellation**.
@@ -279,3 +314,98 @@ One line:
 
 **Problem 09 — Stack track complete**
 Continue in order through the folder.
+
+---
+
+---
+
+## Repository Java (full)
+
+Align with `../RemoveAdjacentDuplicates.java`.
+
+```java
+package DSA.Stack;
+
+import java.util.ArrayDeque;
+import java.util.Deque;
+
+/**
+ * LeetCode 1047 — Remove All Adjacent Duplicates In String
+ * Pattern: Stack cancellation on push
+ */
+public class RemoveAdjacentDuplicates {
+
+  // APPROACH 1: BRUTE FORCE — repeatedly scan and remove pairs until stable
+  // Time: O(n^2) worst case, Space: O(n)
+  public static String bruteForce(String s) {
+    StringBuilder sb = new StringBuilder(s);
+    boolean found;
+    do {
+      found = false;
+      for (int i = 0; i < sb.length() - 1; i++) {
+        if (sb.charAt(i) == sb.charAt(i + 1)) {
+          sb.deleteCharAt(i + 1);
+          sb.deleteCharAt(i);
+          found = true;
+          break;
+        }
+      }
+    } while (found);
+    return sb.toString();
+  }
+
+  // APPROACH 2: STACK — if char equals peek, pop; else push
+  // Time: O(n), Space: O(n)
+  public static String removeDuplicates(String s) {
+    Deque<Character> stack = new ArrayDeque<>();
+
+    for (char c : s.toCharArray()) {
+      if (!stack.isEmpty() && stack.peek() == c) {
+        stack.pop();
+      } else {
+        stack.push(c);
+      }
+    }
+
+    StringBuilder result = new StringBuilder();
+    while (!stack.isEmpty()) {
+      result.append(stack.removeLast());
+    }
+    return result.toString();
+  }
+
+  // APPROACH 3: StringBuilder as stack (same logic, no Deque)
+  public static String removeDuplicatesStringBuilder(String s) {
+    StringBuilder stack = new StringBuilder();
+    for (char c : s.toCharArray()) {
+      int len = stack.length();
+      if (len > 0 && stack.charAt(len - 1) == c) {
+        stack.deleteCharAt(len - 1);
+      } else {
+        stack.append(c);
+      }
+    }
+    return stack.toString();
+  }
+
+  /**
+   * Dry run: "abbaca"
+   * a push, b push, b matches -> pop b, a push, c push, a matches -> pop a => "ca"
+   */
+  public static void main(String[] args) {
+    String[] tests = {"abbaca", "azxxzy", "aaaa", "a", "", "baab"};
+
+    for (String s : tests) {
+      System.out.println("Input: \"" + s + "\"");
+      System.out.println("  Brute:          " + bruteForce(s));
+      System.out.println("  Stack:          " + removeDuplicates(s));
+      System.out.println("  StringBuilder:  " + removeDuplicatesStringBuilder(s));
+      System.out.println("-------------------------");
+    }
+
+    System.out.println("Interview script:");
+    System.out.println(
+        "Brute rescans after each removal. Stack collapses pairs in one pass: cancel with peek or push.");
+  }
+}
+```

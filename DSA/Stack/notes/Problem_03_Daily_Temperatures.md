@@ -267,6 +267,41 @@ java -cp . DSA.Stack.DailyTemperatures
 
 ---
 
+---
+
+## Depth addendum — extended workbook
+
+### Mental picture (second angle)
+
+Sketch input on paper and mark **what changes each loop iteration**. If the pattern uses a stack, queue, heap, or map, write its contents as a column beside the array/tree.
+
+### Brute force reminder
+
+State the naive approach in one sentence, its time/space, and **one sentence why** the optimal pattern beats it.
+
+### Hardest-part drill
+
+| Before coding | After understanding |
+|---|---|
+| Unsure what moves | Name the invariant pointers/stack maintain |
+| Edge case worry | Check empty, single, duplicates |
+
+### Extended dry-run columns
+
+| iter | key variables | container snapshot | output so far |
+|---:|---|---|---|
+
+Fill five rows from the matching Java main example in the sibling .java file.
+
+### Interview say-aloud (30s)
+
+> I recognize the pattern, use the right structure for the invariant, avoid brute time because each element is handled once.
+
+### Follow-up Q&A
+
+**Q: In-place?** Only if allowed.  
+**Q: Unsorted input?** State preprocessing.
+
 ## 16. Quick revision
 
 Pattern: **Pattern B — Monotonic stack**.
@@ -290,3 +325,104 @@ One line:
 
 **Problem 04 — Next Greater Element**
 Continue in order through the folder.
+
+---
+
+---
+
+## Repository Java (full)
+
+Align with `../DailyTemperatures.java`.
+
+```java
+package DSA.Stack;
+
+import java.util.ArrayDeque;
+import java.util.Arrays;
+import java.util.Deque;
+
+/**
+ * LeetCode 739 — Daily Temperatures
+ * Pattern: Monotonic decreasing stack of indices
+ */
+public class DailyTemperatures {
+
+  // APPROACH 1: BRUTE FORCE — for each i, scan right until warmer day
+  // Time: O(n^2), Space: O(1) besides output
+  public static int[] bruteForce(int[] temperatures) {
+    int n = temperatures.length;
+    int[] answer = new int[n];
+    for (int i = 0; i < n; i++) {
+      for (int j = i + 1; j < n; j++) {
+        if (temperatures[j] > temperatures[i]) {
+          answer[i] = j - i;
+          break;
+        }
+      }
+    }
+    return answer;
+  }
+
+  // APPROACH 2: MONOTONIC STACK — scan right to left (indices, decreasing temps on stack)
+  // Time: O(n), Space: O(n)
+  public static int[] dailyTemperatures(int[] temperatures) {
+    int n = temperatures.length;
+    int[] answer = new int[n];
+    Deque<Integer> stack = new ArrayDeque<>();
+
+    for (int day = n - 1; day >= 0; day--) {
+      while (!stack.isEmpty() && temperatures[stack.peek()] <= temperatures[day]) {
+        stack.pop();
+      }
+      answer[day] = stack.isEmpty() ? 0 : stack.peek() - day;
+      stack.push(day);
+    }
+    return answer;
+  }
+
+  // APPROACH 3: LEFT-TO-RIGHT variant (pop while current is warmer than stack top)
+  public static int[] dailyTemperaturesLeftToRight(int[] temperatures) {
+    int n = temperatures.length;
+    int[] answer = new int[n];
+    Deque<Integer> stack = new ArrayDeque<>();
+
+    for (int day = 0; day < n; day++) {
+      while (!stack.isEmpty() && temperatures[day] > temperatures[stack.peek()]) {
+        int prev = stack.pop();
+        answer[prev] = day - prev;
+      }
+      stack.push(day);
+    }
+    return answer;
+  }
+
+  /**
+   * Dry run (right to left): T = [73,74,75,71,...]
+   * day 7: stack empty -> ans[7]=0, push 7
+   * day 6: 76>73 at top -> pop, stack empty -> ans[6]=0, push 6
+   * day 5: top 6 has 76>72 -> ans[5]=6-5=1, push 5
+   */
+  public static void main(String[] args) {
+    int[][] tests = {
+      {73, 74, 75, 71, 69, 72, 76, 73},
+      {30, 40, 50, 60},
+      {30, 20, 10},
+      {55}
+    };
+
+    for (int[] t : tests) {
+      System.out.println("Input:  " + Arrays.toString(t));
+      System.out.println("Brute:  " + Arrays.toString(bruteForce(t)));
+      System.out.println("Stack:  " + Arrays.toString(dailyTemperatures(t)));
+      System.out.println("L->R:   " + Arrays.toString(dailyTemperaturesLeftToRight(t)));
+      System.out.println("-------------------------");
+    }
+
+    System.out.println("Interview script:");
+    System.out.println(
+        "Brute is O(n^2). I keep a decreasing stack of indices of future warmer candidates.");
+    System.out.println(
+        "Scanning right-to-left, I pop indices not warmer than today; top is next warmer day.");
+  }
+}
+```

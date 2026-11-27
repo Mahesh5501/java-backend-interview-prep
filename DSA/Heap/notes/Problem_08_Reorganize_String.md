@@ -264,6 +264,41 @@ java -cp . DSA.Heap.ReorganizeString
 
 ---
 
+---
+
+## Depth addendum — extended workbook
+
+### Mental picture (second angle)
+
+Sketch input on paper and mark **what changes each loop iteration**. If the pattern uses a stack, queue, heap, or map, write its contents as a column beside the array/tree.
+
+### Brute force reminder
+
+State the naive approach in one sentence, its time/space, and **one sentence why** the optimal pattern beats it.
+
+### Hardest-part drill
+
+| Before coding | After understanding |
+|---|---|
+| Unsure what moves | Name the invariant pointers/stack maintain |
+| Edge case worry | Check empty, single, duplicates |
+
+### Extended dry-run columns
+
+| iter | key variables | container snapshot | output so far |
+|---:|---|---|---|
+
+Fill five rows from the matching Java main example in the sibling .java file.
+
+### Interview say-aloud (30s)
+
+> I recognize the pattern, use the right structure for the invariant, avoid brute time because each element is handled once.
+
+### Follow-up Q&A
+
+**Q: In-place?** Only if allowed.  
+**Q: Unsorted input?** State preprocessing.
+
 ## 16. Quick revision
 
 Pattern: **Pattern D — Scheduling**.
@@ -287,3 +322,117 @@ One line:
 
 **Problem 09 — Heap track complete**
 Continue in order through the folder.
+
+---
+
+---
+
+## Repository Java (full)
+
+Align with `../ReorganizeString.java`.
+
+```java
+package DSA.Heap;
+
+import java.util.Arrays;
+import java.util.PriorityQueue;
+
+/*
+Problem: Reorganize String (LeetCode 767)
+
+Rearrange so no two adjacent letters are the same.
+Return any valid string or "" if impossible.
+
+Example:
+    "aab" -> "aba"
+    "aaab" -> ""
+*/
+
+public class ReorganizeString {
+
+    static class LetterCount {
+        char letter;
+        int count;
+
+        LetterCount(char letter, int count) {
+            this.letter = letter;
+            this.count = count;
+        }
+    }
+
+    public static String reorganizeString(String s) {
+        int[] frequency = new int[26];
+        for (char ch : s.toCharArray()) {
+            frequency[ch - 'a']++;
+        }
+
+        int maxCount = 0;
+        for (int count : frequency) {
+            maxCount = Math.max(maxCount, count);
+        }
+        if (maxCount > (s.length() + 1) / 2) {
+            return "";
+        }
+
+        PriorityQueue<LetterCount> maxHeap = new PriorityQueue<>(
+                (a, b) -> Integer.compare(b.count, a.count));
+
+        for (int i = 0; i < 26; i++) {
+            if (frequency[i] > 0) {
+                maxHeap.offer(new LetterCount((char) ('a' + i), frequency[i]));
+            }
+        }
+
+        StringBuilder result = new StringBuilder();
+
+        while (!maxHeap.isEmpty()) {
+            LetterCount first = maxHeap.poll();
+            result.append(first.letter);
+
+            if (!maxHeap.isEmpty()) {
+                LetterCount second = maxHeap.poll();
+                result.append(second.letter);
+                second.count--;
+                if (second.count > 0) {
+                    maxHeap.offer(second);
+                }
+            }
+
+            first.count--;
+            if (first.count > 0) {
+                maxHeap.offer(first);
+            }
+        }
+
+        return result.length() == s.length() ? result.toString() : "";
+    }
+
+    public static void main(String[] args) {
+        String[] samples = { "aab", "aaab", "vvvlo", "aabbcc" };
+        for (String sample : samples) {
+            String answer = reorganizeString(sample);
+            System.out.println("Input: " + sample + " -> " + answer
+                    + " (valid: " + isValidReorganization(sample, answer) + ")");
+        }
+    }
+
+    private static boolean isValidReorganization(String original, String result) {
+        if (result.isEmpty() && !original.isEmpty() && original.chars().distinct().count() == 1) {
+            return true;
+        }
+        if (result.length() != original.length()) {
+            return result.isEmpty();
+        }
+        for (int i = 1; i < result.length(); i++) {
+            if (result.charAt(i) == result.charAt(i - 1)) {
+                return false;
+            }
+        }
+        char[] a = original.toCharArray();
+        char[] b = result.toCharArray();
+        Arrays.sort(a);
+        Arrays.sort(b);
+        return Arrays.equals(a, b);
+    }
+}
+```

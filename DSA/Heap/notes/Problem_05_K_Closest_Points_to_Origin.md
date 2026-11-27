@@ -248,6 +248,41 @@ java -cp . DSA.Heap.KClosestPoints
 
 ---
 
+---
+
+## Depth addendum — extended workbook
+
+### Mental picture (second angle)
+
+Sketch input on paper and mark **what changes each loop iteration**. If the pattern uses a stack, queue, heap, or map, write its contents as a column beside the array/tree.
+
+### Brute force reminder
+
+State the naive approach in one sentence, its time/space, and **one sentence why** the optimal pattern beats it.
+
+### Hardest-part drill
+
+| Before coding | After understanding |
+|---|---|
+| Unsure what moves | Name the invariant pointers/stack maintain |
+| Edge case worry | Check empty, single, duplicates |
+
+### Extended dry-run columns
+
+| iter | key variables | container snapshot | output so far |
+|---:|---|---|---|
+
+Fill five rows from the matching Java main example in the sibling .java file.
+
+### Interview say-aloud (30s)
+
+> I recognize the pattern, use the right structure for the invariant, avoid brute time because each element is handled once.
+
+### Follow-up Q&A
+
+**Q: In-place?** Only if allowed.  
+**Q: Unsorted input?** State preprocessing.
+
 ## 16. Quick revision
 
 Pattern: **Pattern A — Top-K**.
@@ -271,3 +306,62 @@ One line:
 
 **Problem 06 — Task Scheduler**
 Continue in order through the folder.
+
+---
+
+---
+
+## Repository Java (full)
+
+Align with `../KClosestPoints.java`.
+
+```java
+package DSA.Heap;
+
+import java.util.Arrays;
+import java.util.PriorityQueue;
+
+/*
+Problem: K Closest Points to Origin (LeetCode 973)
+
+Each point is [x, y]. Return the k points with smallest distance squared to (0, 0).
+
+Example:
+    points = [[1,1],[3,-2],[-2,2]], k = 2 -> two closest among them
+*/
+
+public class KClosestPoints {
+
+    public static int[][] kClosest(int[][] points, int k) {
+        PriorityQueue<int[]> maxHeap = new PriorityQueue<>(
+                (a, b) -> Integer.compare(distanceSquared(b), distanceSquared(a)));
+
+        for (int[] point : points) {
+            maxHeap.offer(point);
+            if (maxHeap.size() > k) {
+                maxHeap.poll();
+            }
+        }
+
+        int[][] result = new int[maxHeap.size()][2];
+        int index = result.length - 1;
+        while (!maxHeap.isEmpty()) {
+            result[index--] = maxHeap.poll();
+        }
+        return result;
+    }
+
+    private static int distanceSquared(int[] point) {
+        return point[0] * point[0] + point[1] * point[1];
+    }
+
+    public static void main(String[] args) {
+        int[][] points = { { 1, 1 }, { 3, -2 }, { -2, 2 } };
+        int[][] closest = kClosest(points, 2);
+        System.out.println("Two closest: " + Arrays.deepToString(closest));
+
+        int[][] points2 = { { 3, 3 }, { 5, -1 }, { -2, 4 } };
+        System.out.println("k=1: " + Arrays.deepToString(kClosest(points2, 1)));
+    }
+}
+```

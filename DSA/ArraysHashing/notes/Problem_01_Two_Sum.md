@@ -220,6 +220,41 @@ Run `main` after implementing from memory.
 
 ---
 
+---
+
+## Depth addendum — extended workbook
+
+### Mental picture (second angle)
+
+Sketch input on paper and mark **what changes each loop iteration**. If the pattern uses a stack, queue, heap, or map, write its contents as a column beside the array/tree.
+
+### Brute force reminder
+
+State the naive approach in one sentence, its time/space, and **one sentence why** the optimal pattern beats it.
+
+### Hardest-part drill
+
+| Before coding | After understanding |
+|---|---|
+| Unsure what moves | Name the invariant pointers/stack maintain |
+| Edge case worry | Check empty, single, duplicates |
+
+### Extended dry-run columns
+
+| iter | key variables | container snapshot | output so far |
+|---:|---|---|---|
+
+Fill five rows from the matching Java main example in the sibling .java file.
+
+### Interview say-aloud (30s)
+
+> I recognize the pattern, use the right structure for the invariant, avoid brute time because each element is handled once.
+
+### Follow-up Q&A
+
+**Q: In-place?** Only if allowed.  
+**Q: Unsorted input?** State preprocessing.
+
 ## 16. Quick revision
 
 One line: **Two Sum = HashMap complement + optimal method in `TwoSum.java`.**
@@ -235,3 +270,71 @@ See **`Arrays_Hashing_Common_Patterns.md`**.
 ## 18. Next problem
 
 **Problem 02 — Contains Duplicate**
+
+---
+
+---
+
+## Repository Java (full)
+
+Align with `../TwoSum.java`.
+
+```java
+package DSA.ArraysHashing;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
+/*
+Problem: Two Sum
+
+Given an integer array nums and an integer target, return indices i and j
+such that nums[i] + nums[j] == target and i != j. Exactly one solution exists.
+
+Examples:
+  nums = [2, 7, 11, 15], target = 9  →  [0, 1]
+  nums = [3, 2, 4], target = 6       →  [1, 2]
+
+Approach: One pass HashMap — complement lookup
+Time: O(n)   Space: O(n)
+*/
+
+public class TwoSum {
+
+    // BRUTE: check every pair
+    public static int[] twoSumBruteForce(int[] nums, int target) {
+        for (int i = 0; i < nums.length; i++) {
+            for (int j = i + 1; j < nums.length; j++) {
+                if (nums[i] + nums[j] == target) {
+                    return new int[] { i, j };
+                }
+            }
+        }
+        return new int[] { -1, -1 };
+    }
+
+    // OPTIMAL: store value → index; look for target - nums[i]
+    public static int[] twoSum(int[] nums, int target) {
+        Map<Integer, Integer> valueToIndex = new HashMap<>();
+
+        for (int i = 0; i < nums.length; i++) {
+            int complement = target - nums[i];
+            if (valueToIndex.containsKey(complement)) {
+                return new int[] { valueToIndex.get(complement), i };
+            }
+            valueToIndex.put(nums[i], i);
+        }
+        return new int[] { -1, -1 };
+    }
+
+    public static void main(String[] args) {
+        int[] a = { 2, 7, 11, 15 };
+        System.out.println("Brute:  " + Arrays.toString(twoSumBruteForce(a, 9)));
+        System.out.println("Optimal:" + Arrays.toString(twoSum(a, 9)));
+
+        int[] b = { 3, 2, 4 };
+        System.out.println("Optimal:" + Arrays.toString(twoSum(b, 6)));
+    }
+}
+```

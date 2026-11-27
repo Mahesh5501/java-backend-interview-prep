@@ -254,6 +254,41 @@ java -cp . DSA.Trees.ValidateBST
 
 ---
 
+---
+
+## Depth addendum — extended workbook
+
+### Mental picture (second angle)
+
+Sketch input on paper and mark **what changes each loop iteration**. If the pattern uses a stack, queue, heap, or map, write its contents as a column beside the array/tree.
+
+### Brute force reminder
+
+State the naive approach in one sentence, its time/space, and **one sentence why** the optimal pattern beats it.
+
+### Hardest-part drill
+
+| Before coding | After understanding |
+|---|---|
+| Unsure what moves | Name the invariant pointers/stack maintain |
+| Edge case worry | Check empty, single, duplicates |
+
+### Extended dry-run columns
+
+| iter | key variables | container snapshot | output so far |
+|---:|---|---|---|
+
+Fill five rows from the matching Java main example in the sibling .java file.
+
+### Interview say-aloud (30s)
+
+> I recognize the pattern, use the right structure for the invariant, avoid brute time because each element is handled once.
+
+### Follow-up Q&A
+
+**Q: In-place?** Only if allowed.  
+**Q: Unsorted input?** State preprocessing.
+
 ## 16. Quick revision
 
 Pattern: **Pattern C — BST bounds**.
@@ -277,3 +312,52 @@ One line:
 
 **Problem 06 — Lowest Common Ancestor (BST)**
 Continue in order through the folder.
+
+---
+
+---
+
+## Repository Java (full)
+
+Align with `../ValidateBST.java`.
+
+```java
+package DSA.Trees;
+
+/*
+Problem: Validate Binary Search Tree (LeetCode 98)
+
+A BST: all nodes in left subtree < root < all nodes in right subtree.
+
+Example:
+    [2, 1, 3] -> true
+    [5, 1, 4, null, null, 3, 6] -> false (4 with 3 left-child violates BST)
+*/
+
+public class ValidateBST {
+
+    public static boolean isValidBST(TreeNode root) {
+        return validate(root, Long.MIN_VALUE, Long.MAX_VALUE);
+    }
+
+    private static boolean validate(TreeNode node, long minAllowed, long maxAllowed) {
+        if (node == null) {
+            return true;
+        }
+        if (node.val <= minAllowed || node.val >= maxAllowed) {
+            return false;
+        }
+        boolean leftOk = validate(node.left, minAllowed, node.val);
+        boolean rightOk = validate(node.right, node.val, maxAllowed);
+        return leftOk && rightOk;
+    }
+
+    public static void main(String[] args) {
+        TreeNode valid = TreeNode.buildLevelOrder(new Integer[] { 2, 1, 3 });
+        System.out.println("[2,1,3] is BST: " + isValidBST(valid)); // true
+
+        TreeNode invalid = TreeNode.buildLevelOrder(new Integer[] { 5, 1, 4, null, null, 3, 6 });
+        System.out.println("[5,1,4,null,null,3,6] is BST: " + isValidBST(invalid)); // false
+    }
+}
+```

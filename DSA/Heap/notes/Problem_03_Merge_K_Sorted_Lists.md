@@ -258,6 +258,41 @@ java -cp . DSA.Heap.MergeKSortedLists
 
 ---
 
+---
+
+## Depth addendum — extended workbook
+
+### Mental picture (second angle)
+
+Sketch input on paper and mark **what changes each loop iteration**. If the pattern uses a stack, queue, heap, or map, write its contents as a column beside the array/tree.
+
+### Brute force reminder
+
+State the naive approach in one sentence, its time/space, and **one sentence why** the optimal pattern beats it.
+
+### Hardest-part drill
+
+| Before coding | After understanding |
+|---|---|
+| Unsure what moves | Name the invariant pointers/stack maintain |
+| Edge case worry | Check empty, single, duplicates |
+
+### Extended dry-run columns
+
+| iter | key variables | container snapshot | output so far |
+|---:|---|---|---|
+
+Fill five rows from the matching Java main example in the sibling .java file.
+
+### Interview say-aloud (30s)
+
+> I recognize the pattern, use the right structure for the invariant, avoid brute time because each element is handled once.
+
+### Follow-up Q&A
+
+**Q: In-place?** Only if allowed.  
+**Q: Unsorted input?** State preprocessing.
+
 ## 16. Quick revision
 
 Pattern: **Pattern B — K-way merge**.
@@ -281,3 +316,94 @@ One line:
 
 **Problem 04 — Find Median from Data Stream**
 Continue in order through the folder.
+
+---
+
+---
+
+## Repository Java (full)
+
+Align with `../MergeKSortedLists.java`.
+
+```java
+package DSA.Heap;
+
+import java.util.PriorityQueue;
+
+/*
+Problem: Merge k Sorted Lists (LeetCode 23)
+
+Each list is sorted. Return one sorted linked list.
+
+Example:
+    [[1,4,5],[1,3,4],[2,6]] -> 1 -> 1 -> 2 -> 3 -> 4 -> 4 -> 5 -> 6
+*/
+
+public class MergeKSortedLists {
+
+    static class ListNode {
+        int val;
+        ListNode next;
+
+        ListNode(int val) {
+            this.val = val;
+        }
+
+        ListNode(int val, ListNode next) {
+            this.val = val;
+            this.next = next;
+        }
+    }
+
+    public static ListNode mergeKLists(ListNode[] lists) {
+        PriorityQueue<ListNode> minHeap = new PriorityQueue<>(
+                (a, b) -> Integer.compare(a.val, b.val));
+
+        for (ListNode head : lists) {
+            if (head != null) {
+                minHeap.offer(head);
+            }
+        }
+
+        ListNode dummy = new ListNode(0);
+        ListNode tail = dummy;
+
+        while (!minHeap.isEmpty()) {
+            ListNode node = minHeap.poll();
+            tail.next = node;
+            tail = tail.next;
+
+            if (node.next != null) {
+                minHeap.offer(node.next);
+            }
+        }
+
+        return dummy.next;
+    }
+
+    static void printList(ListNode head) {
+        StringBuilder builder = new StringBuilder();
+        while (head != null) {
+            builder.append(head.val);
+            if (head.next != null) {
+                builder.append(" -> ");
+            }
+            head = head.next;
+        }
+        System.out.println(builder.toString());
+    }
+
+    public static void main(String[] args) {
+        ListNode l1 = new ListNode(1, new ListNode(4, new ListNode(5)));
+        ListNode l2 = new ListNode(1, new ListNode(3, new ListNode(4)));
+        ListNode l3 = new ListNode(2, new ListNode(6));
+
+        ListNode merged = mergeKLists(new ListNode[] { l1, l2, l3 });
+        System.out.print("Merged: ");
+        printList(merged);
+
+        System.out.print("Empty input: ");
+        printList(mergeKLists(new ListNode[0]));
+    }
+}
+```

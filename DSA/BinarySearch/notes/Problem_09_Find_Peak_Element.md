@@ -214,6 +214,41 @@ Run `main` after implementing from memory.
 
 ---
 
+---
+
+## Depth addendum — extended workbook
+
+### Mental picture (second angle)
+
+Sketch input on paper and mark **what changes each loop iteration**. If the pattern uses a stack, queue, heap, or map, write its contents as a column beside the array/tree.
+
+### Brute force reminder
+
+State the naive approach in one sentence, its time/space, and **one sentence why** the optimal pattern beats it.
+
+### Hardest-part drill
+
+| Before coding | After understanding |
+|---|---|
+| Unsure what moves | Name the invariant pointers/stack maintain |
+| Edge case worry | Check empty, single, duplicates |
+
+### Extended dry-run columns
+
+| iter | key variables | container snapshot | output so far |
+|---:|---|---|---|
+
+Fill five rows from the matching Java main example in the sibling .java file.
+
+### Interview say-aloud (30s)
+
+> I recognize the pattern, use the right structure for the invariant, avoid brute time because each element is handled once.
+
+### Follow-up Q&A
+
+**Q: In-place?** Only if allowed.  
+**Q: Unsorted input?** State preprocessing.
+
 ## 16. Quick revision
 
 One line: **Find Peak Element = Peak BS + optimal method in `FindPeakElement.java`.**
@@ -229,3 +264,65 @@ See **`Binary_Search_Common_Patterns.md`**.
 ## 18. Next problem
 
 **Problem 10 — Capacity To Ship Packages**
+
+---
+
+---
+
+## Repository Java (full)
+
+Align with `../FindPeakElement.java`.
+
+```java
+package DSA.BinarySearch;
+
+/*
+Problem: Find Peak Element
+
+A peak is nums[i] > nums[i-1] and nums[i] > nums[i+1] (ends compare with one neighbor).
+Return any peak index.
+
+Example:
+  [1,2,3,1] → 2 (value 3)
+
+Approach: If nums[mid] < nums[mid+1], peak on right; else on left
+Time: O(log n)   Space: O(1)
+*/
+
+public class FindPeakElement {
+
+    public static int findPeakLinear(int[] nums) {
+        for (int i = 0; i < nums.length; i++) {
+            int left = (i == 0) ? Integer.MIN_VALUE : nums[i - 1];
+            int right = (i == nums.length - 1) ? Integer.MIN_VALUE : nums[i + 1];
+            if (nums[i] > left && nums[i] > right) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public static int findPeakElement(int[] nums) {
+        int left = 0;
+        int right = nums.length - 1;
+
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+            if (nums[mid] < nums[mid + 1]) {
+                left = mid + 1;
+            } else {
+                right = mid;
+            }
+        }
+        return left;
+    }
+
+    public static void main(String[] args) {
+        int[] a = { 1, 2, 3, 1 };
+        System.out.println("Peak idx: " + findPeakElement(a));
+        int[] b = { 1, 2, 1, 3, 5, 6, 4 };
+        System.out.println("Peak idx: " + findPeakElement(b));
+        System.out.println("Linear:   " + findPeakLinear(b));
+    }
+}
+```

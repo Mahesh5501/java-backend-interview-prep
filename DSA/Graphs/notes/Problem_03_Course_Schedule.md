@@ -1,47 +1,320 @@
 # Problem 03 — Course Schedule
 
-> **Pattern:** Cycle detection (Kahn BFS / DFS colors)  
-> **Goal:** Return whether you can finish all courses given prerequisites.
+> **Pattern:** Topological sort / cycle detect  
+> **Goal:** Can finish all courses?
 
 ---
 
 ## 1. Problem statement
 
-`prerequisites[i] = [a, b]` means you must take `b` before `a`. Detect if the prerequisite graph has a **cycle**.
+See LeetCode / class **`CourseSchedule.java`** in the repo for full constraints and examples.
 
-### Example
+**Core idea (one line):** Build graph prereq[b]→a; Kahn indegree or DFS 3-color cycle.
+
+---
+
+## 2. Mental picture — ASCII
 
 ```text
-Input:  numCourses = 2, prerequisites = [[1,0]]
-Output: true
+prereq b --> a (must take b before a)\nindegree[a]++; Kahn queue indegree 0
+```
+
+Read the pattern as:
+
+> **Topological sort / cycle detect** — know what you store per node/edge and what you return when traversal finishes.
+
+---
+
+## 3. How to start thinking (simple questions)
+
+1. **Graph type?** Directed vs undirected; weighted vs unweighted; implicit vs explicit.
+2. **What is the node?** Index, coordinate, string, object reference.
+3. **Can brute BFS/DFS work?** Usually yes for reachability; shortest unweighted → BFS; non‑negative weights → Dijkstra.
+4. **Visited strategy?** `boolean[]`, hash set, mutate grid, or map for clones.
+5. **Match repo methods?** Implement `canFinishKahn`, `canFinishDFS` so tests align with Java file.
+
+---
+
+## 4. Approach 1 — Brute force
+
+### Idea
+
+Enumerate all possibilities without reusing work (full search, repeated states).
+
+### Why we avoid it
+
+Overlapping subproblems / exponential states — too slow at interview constraints.
+
+### Typical complexity
+
+| | Brute |
+|---|---|
+| **Time** | Exponential or `O(n! / …)` |
+| **Space** | Proportional to recursion depth |
+
+---
+
+## 5. Approach 2 — Optimal (pattern standard)
+
+### Step-by-step
+
+1. Build adjacency / map / trie as required.
+2. Choose BFS, DFS, Kahn, Dijkstra, or Union-Find per pattern above.
+3. Track visited / distance / indegree / parent / clone map.
+4. Stop when goal met or queue empty; validate cycles or unreachable nodes.
+
+### Why it is safe
+
+Each canonical state processed once (with correct visited / dist relax rules).
+
+### Java entry points
+
+File: `../CourseSchedule.java` — use `canFinishKahn`, `canFinishDFS`.
+
+---
+
+## 6. Hardest part — before / after
+
+### Before (confusion)
+
+Mixing **visited timing** (enqueue vs dequeue), **directed edge direction**, or **skipping stale Dijkstra heap nodes**.
+
+### After (clear)
+
+**Build graph prereq[b]→a; Kahn indegree or DFS 3-color cycle.**
+
+---
+
+## 7. Detailed dry run table
+
+| step | state / queue | action | note |
+|---:|---|---|---|
+| 0 | init | load input | set bases |
+| 1 | expand | push neighbors | mark visited |
+| 2 | … | … | stop when goal |
+
+Trace the **small example** from the Java `main` method on paper before coding.
+
+---
+
+## 8. Why the algorithm is correct
+
+**Safety:** Valid edges only; no illegal moves.  
+**Completeness:** BFS/DFS covers reachable component; topo visits all nodes iff acyclic; Dijkstra relaxes optimally with non‑negative weights.  
+**Termination:** Finite graph / grid bounds.
+
+---
+
+## 9. Complexity comparison
+
+| Method | Time | Extra space |
+|---|---|---|
+| Brute search | Too large | High |
+| Optimal (Topological sort) | See pattern guide | `O(V+E)` or `O(n)` typical |
+
+---
+
+## 10. Edge cases
+
+| Case | Expected behavior |
+|---|---|
+| Empty input / null | Return problem-specific sentinel |
+| Single node | Often base answer = 0 or 1 |
+| Disconnected | BFS/Dijkstra may return -1 / false |
+| Cycle (directed) | Topo fails; UF returns bad edge |
+
+---
+
+## 11. Common mistakes
+
+| Mistake | Effect |
+|---|---|
+| Wrong edge direction | Wrong topo / wrong reachability |
+| No visited on implicit graph | TLE / infinite loop |
+| BFS mark on pop not push | Duplicates in queue |
+| Forget `endWord` in dict (Word Ladder) | Return 0 incorrectly |
+
+---
+
+## 12. Interview — say this aloud
+
+> “I'll model this as **Topological sort / cycle detect**. Build the structure, run **canFinishKahn**, track visited/distance, and return the required value. Time is linear in vertices plus edges for traversal-style problems.”
+
+---
+
+## 13. Follow-up Q&A
+
+**Q: BFS or DFS?**  
+A: Shortest steps in unweighted → BFS; path existence / cloning / flood fill → either with care.
+
+**Q: Can we use Union-Find here instead?**  
+A: If question is dynamic connectivity or redundant edge — yes; see TrieUnionFind folder variants.
+
+**Q: Space optimize?**  
+A: In-place grid marking, iterative DFS, or parent array instead of full stack log.
+
+---
+
+## 14. Complete runnable Java
+
+See `../CourseSchedule.java` for `package` and `main` smoke tests.
+
+Compile from `PreparationGuide/` root:
+
+```bash
+javac DSA/Graphs/CourseSchedule.java
+java DSA.Graphs.CourseSchedule
 ```
 
 ---
 
-## 2. Mental picture
+## 15. Practice checklist
 
-Directed edges `b → a`. Cycle ⇒ deadlock ⇒ **false**.
-
----
-
-## 3. Kahn (indegree BFS)
-
-Push all indegree-0 nodes; pop, relax edges; if processed < n → cycle.
+- [ ] Explain pattern without opening notes.
+- [ ] Code optimal from memory matching repo method names.
+- [ ] Dry-run mini example on paper.
+- [ ] State time/space aloud.
+- [ ] Handle one edge case deliberately.
 
 ---
 
-## 4. DFS three colors
+---
 
-`0` unvisited, `1` on stack, `2` finished. Edge to state `1` ⇒ cycle.
+## Depth addendum — extended workbook
+
+### Brute force reminder
+
+Enumerate states without memo — exponential. Optimal visits each vertex/edge once.
+
+### Extended dry-run columns
+
+| step | structure (queue/stack/map) | note |
+|---:|---|---|
+
+### Hardest-part drill
+
+| Before | After |
+|---|---|
+| Cycle fear | Map or visited breaks infinite revisits |
+| Wrong direction | Redraw edge arrows on paper |
+
+### Interview say-aloud
+
+> Model as graph pattern, build adjacency, run BFS/DFS/topo/UF, track visited — linear in V+E.
+
+### Follow-up Q&A
+
+**Q: Weighted?** Dijkstra. **Q: Multi-source?** Seed queue with all sources.
+
+## 16. Quick revision
+
+1. **Pattern:** Topological sort / cycle detect.
+2. **Methods:** `canFinishKahn`, `canFinishDFS`.
+3. **Build graph prereq[b]→a; Kahn indegree or DFS 3-color cycle.**
+4. Check **visited** and **edge direction**.
+5. Read `Graphs_Common_Patterns.md` or Trie/UF guide.
+
+One line: **Can finish all courses?**
 
 ---
 
-## 5. Java
+## 17. Pattern used
 
-`../CourseSchedule.java` — `canFinishKahn`, `canFinishDFS`.
+**Topological sort / cycle detect** — cross-link `../../Graphs/notes` pattern cheatsheet if present.
 
 ---
 
-## 6. Next
+## 18. Next problem
 
-**Problem 04 — Course Schedule II**
+**Problem 04** — continue in `Graphs` track.
+
+---
+
+---
+
+## Repository Java (full)
+
+Align method names with `../CourseSchedule.java`.
+
+```java
+package DSA.Graphs;
+
+import java.util.*;
+
+/*
+ * Problem 03 — Course Schedule (LeetCode 207)
+ */
+public class CourseSchedule {
+
+    public static boolean canFinishKahn(int numCourses, int[][] prerequisites) {
+        List<List<Integer>> adj = new ArrayList<>();
+        int[] indegree = new int[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            adj.add(new ArrayList<>());
+        }
+        for (int[] p : prerequisites) {
+            int a = p[0], b = p[1];
+            adj.get(b).add(a);
+            indegree[a]++;
+        }
+        ArrayDeque<Integer> q = new ArrayDeque<>();
+        for (int i = 0; i < numCourses; i++) {
+            if (indegree[i] == 0) {
+                q.offer(i);
+            }
+        }
+        int taken = 0;
+        while (!q.isEmpty()) {
+            int u = q.poll();
+            taken++;
+            for (int v : adj.get(u)) {
+                if (--indegree[v] == 0) {
+                    q.offer(v);
+                }
+            }
+        }
+        return taken == numCourses;
+    }
+
+    public static boolean canFinishDFS(int numCourses, int[][] prerequisites) {
+        List<List<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) {
+            adj.add(new ArrayList<>());
+        }
+        for (int[] p : prerequisites) {
+            adj.get(p[1]).add(p[0]);
+        }
+        int[] state = new int[numCourses]; // 0 unvisited, 1 visiting, 2 done
+        for (int i = 0; i < numCourses; i++) {
+            if (state[i] == 0 && hasCycleDFS(i, adj, state)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static boolean hasCycleDFS(int u, List<List<Integer>> adj, int[] state) {
+        state[u] = 1;
+        for (int v : adj.get(u)) {
+            if (state[v] == 1) {
+                return true;
+            }
+            if (state[v] == 0 && hasCycleDFS(v, adj, state)) {
+                return true;
+            }
+        }
+        state[u] = 2;
+        return false;
+    }
+
+    public static void main(String[] args) {
+        int n = 2;
+        int[][] prereq = { { 1, 0 } };
+        System.out.println("Kahn can finish: " + canFinishKahn(n, prereq));
+        System.out.println("DFS can finish: " + canFinishDFS(n, prereq));
+
+        int[][] cycle = { { 1, 0 }, { 0, 1 } };
+        System.out.println("Cycle (Kahn): " + canFinishKahn(2, cycle));
+    }
+}
+```

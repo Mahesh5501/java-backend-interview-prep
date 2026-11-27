@@ -253,6 +253,41 @@ java -cp . DSA.Trees.InvertBinaryTree
 
 ---
 
+---
+
+## Depth addendum — extended workbook
+
+### Mental picture (second angle)
+
+Sketch input on paper and mark **what changes each loop iteration**. If the pattern uses a stack, queue, heap, or map, write its contents as a column beside the array/tree.
+
+### Brute force reminder
+
+State the naive approach in one sentence, its time/space, and **one sentence why** the optimal pattern beats it.
+
+### Hardest-part drill
+
+| Before coding | After understanding |
+|---|---|
+| Unsure what moves | Name the invariant pointers/stack maintain |
+| Edge case worry | Check empty, single, duplicates |
+
+### Extended dry-run columns
+
+| iter | key variables | container snapshot | output so far |
+|---:|---|---|---|
+
+Fill five rows from the matching Java main example in the sibling .java file.
+
+### Interview say-aloud (30s)
+
+> I recognize the pattern, use the right structure for the invariant, avoid brute time because each element is handled once.
+
+### Follow-up Q&A
+
+**Q: In-place?** Only if allowed.  
+**Q: Unsorted input?** State preprocessing.
+
 ## 16. Quick revision
 
 Pattern: **Pattern A — DFS**.
@@ -276,3 +311,56 @@ One line:
 
 **Problem 03 — Same Tree**
 Continue in order through the folder.
+
+---
+
+---
+
+## Repository Java (full)
+
+Align with `../InvertBinaryTree.java`.
+
+```java
+package DSA.Trees;
+
+import java.util.List;
+
+/*
+Problem: Invert Binary Tree (LeetCode 226)
+
+Mirror the tree: swap left and right children at every node.
+
+Example:
+    Input:  [4, 2, 7, 1, 3, 6, 9]
+    Output: [4, 7, 2, 9, 6, 3, 1] (structure mirrored)
+*/
+
+public class InvertBinaryTree {
+
+    public static TreeNode invertTree(TreeNode root) {
+        if (root == null) {
+            return null;
+        }
+
+        TreeNode temp = root.left;
+        root.left = root.right;
+        root.right = temp;
+
+        invertTree(root.left);
+        invertTree(root.right);
+
+        return root;
+    }
+
+    public static void main(String[] args) {
+        TreeNode root = TreeNode.buildLevelOrder(new Integer[] { 4, 2, 7, 1, 3, 6, 9 });
+        System.out.println("Before invert (BFS order): " + TreeNode.toLevelOrderList(root));
+
+        invertTree(root);
+        System.out.println("After invert (BFS order):  " + TreeNode.toLevelOrderList(root));
+
+        TreeNode empty = invertTree(null);
+        System.out.println("Inverted empty tree: " + empty);
+    }
+}
+```
