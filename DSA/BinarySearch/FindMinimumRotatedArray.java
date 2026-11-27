@@ -1,54 +1,52 @@
 package DSA.BinarySearch;
+
 /*
 Problem: Find Minimum in Rotated Sorted Array
 
-You are given an array that was originally sorted in ascending order but was rotated at some unknown position.
-Find and return the minimum element.
+Sorted ascending, then rotated. All elements unique.
+Return the minimum element.
 
-All elements are unique.
 Examples:
-Input: nums = [3, 4, 5, 1, 2]
-Output: 1
+  [3,4,5,1,2] → 1
+  [11,13,15,17] (not rotated) → 11
 
-Input: nums = [4, 5, 6, 7, 0, 1, 2]
-Output: 0
-
-Input: nums = [11, 13, 15, 17]
-Output: 11
-
-Input: nums = [5, 1, 2, 3, 4]
-Output: 1
-
-Expected Approach: Binary Search
-Time: O(log n)
-Space: O(1)
+Approach: Compare nums[mid] with nums[right]
+Time: O(log n)   Space: O(1)
 */
 
 public class FindMinimumRotatedArray {
 
-    public static void main(String[] args) {
-
-        System.out.println(findMin(new int[]{3, 4, 5, 1, 2})); // 1
-        System.out.println(findMin(new int[]{4, 5, 6, 7, 0, 1, 2})); // 0
-        System.out.println(findMin(new int[]{11, 13, 15, 17})); // 11
-        System.out.println(findMin(new int[]{5, 1, 2, 3, 4})); // 1
+    public static int findMinLinear(int[] nums) {
+        int min = nums[0];
+        for (int x : nums) {
+            min = Math.min(min, x);
+        }
+        return min;
     }
 
-    static int findMin(int[] nums) {
-        int left = 0;
-        int right = nums.length - 1;
-
+    public static int findMin(int[] nums) {
         if (nums == null || nums.length == 0) {
             return -1;
         }
+        int left = 0;
+        int right = nums.length - 1;
+
         while (left < right) {
             int mid = left + (right - left) / 2;
+
             if (nums[mid] > nums[right]) {
                 left = mid + 1;
             } else {
-                right = mid - 1;
+                right = mid;
             }
         }
         return nums[left];
+    }
+
+    public static void main(String[] args) {
+        System.out.println(findMin(new int[] { 3, 4, 5, 1, 2 }));
+        System.out.println(findMin(new int[] { 4, 5, 6, 7, 0, 1, 2 }));
+        System.out.println(findMin(new int[] { 11, 13, 15, 17 }));
+        System.out.println(findMin(new int[] { 5, 1, 2, 3, 4 }));
     }
 }

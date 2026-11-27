@@ -1,53 +1,96 @@
 package DSA.SlidingWindow;
 
+import java.util.Arrays;
+
 /*
-Problem: Maximum Average Subarray I
-Given an integer array nums and an integer k, find the maximum average value of any contiguous subarray of length k.
-Return the maximum average.
-Examples:
-Input:
-nums = [1, 12, -5, -6, 50, 3]
-k = 4
-
-Output:
-12.75
-
-Explanation:
-The subarray [12, -5, -6, 50] has the maximum average:
-(12 - 5 - 6 + 50) / 4 = 12.75
-
-Input:
-nums = [5]
-k = 1
-
-Output:
-5.0
-
-Expected Approach:
-Think about the size of the window.
-*/
-
+ * =============================================================================
+ * Problem 02 — Maximum Average Subarray I (LeetCode 643)
+ * Pattern:    Fixed-size sliding window (same as max sum, then divide by k)
+ * Return:     double — maximum average of any subarray of length k
+ * =============================================================================
+ */
 public class MaximumAverageSubarray {
 
-    public static void main(String[] args) {
-        System.out.println(maxAverage(new int[]{1, 12, -5, -6, 50, 3}, 4)); // 12.75
-        System.out.println(maxAverage(new int[]{5}, 1)); // 5.0
+    // -------------------------------------------------------------------------
+    // Approach 1 — Brute force
+    // Time: O(n * k)   Space: O(1)
+    // -------------------------------------------------------------------------
+    public static double findMaxAverageBruteForce(int[] nums, int k) {
+        if (nums == null || nums.length < k || k <= 0) {
+            return 0.0;
+        }
+
+        double best = Integer.MIN_VALUE;
+
+        for (int start = 0; start <= nums.length - k; start++) {
+            int sum = 0;
+            for (int i = start; i < start + k; i++) {
+                sum += nums[i];
+            }
+            best = Math.max(best, (double) sum / k);
+        }
+        return best;
     }
 
-    static double maxAverage(int[] nums, int k) {
+    // -------------------------------------------------------------------------
+    // Approach 2 — Optimal: track max SUM in window, divide once at end
+    // (Dividing each step also works — we show both ideas in notes.)
+    // Time: O(n)   Space: O(1)
+    // -------------------------------------------------------------------------
+    public static double findMaxAverage(int[] nums, int k) {
+        if (nums == null || nums.length < k || k <= 0) {
+            return 0.0;
+        }
+
+        int windowSum = 0;
+        for (int i = 0; i < k; i++) {
+            windowSum += nums[i];
+        }
+
+        int bestSum = windowSum;
+
+        for (int right = k; right < nums.length; right++) {
+            windowSum += nums[right];
+            windowSum -= nums[right - k];
+            bestSum = Math.max(bestSum, windowSum);
+        }
+
+        return (double) bestSum / k;
+    }
+
+    // Alternative: update max average on every full window (matches mental model)
+    public static double findMaxAveragePerStep(int[] nums, int k) {
+        if (nums == null || nums.length < k || k <= 0) {
+            return 0.0;
+        }
+
         int left = 0;
-        double avarage = 0;
         int sum = 0;
+        double bestAvg = Double.NEGATIVE_INFINITY;
 
         for (int right = 0; right < nums.length; right++) {
             sum += nums[right];
+
             if (right - left + 1 == k) {
-                double currentAvarage = (double) sum / k;
-                avarage = Math.max(currentAvarage, avarage);
+                double currentAvg = (double) sum / k;
+                bestAvg = Math.max(bestAvg, currentAvg);
                 sum -= nums[left];
                 left++;
             }
         }
-        return avarage;
+        return bestAvg;
+    }
+
+    public static void main(String[] args) {
+        int[] nums = { 1, 12, -5, -6, 50, 3 };
+        int k = 4;
+
+        System.out.println("nums: " + Arrays.toString(nums) + ", k = " + k);
+        System.out.println("Brute Force:  " + findMaxAverageBruteForce(nums, k));
+        System.out.println("Optimal:      " + findMaxAverage(nums, k));
+        System.out.println("Per-step avg: " + findMaxAveragePerStep(nums, k));
+        System.out.println();
+
+        System.out.println("Single element: " + findMaxAverage(new int[] { 5 }, 1));
     }
 }

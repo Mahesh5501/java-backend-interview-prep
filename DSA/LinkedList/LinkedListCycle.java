@@ -1,64 +1,59 @@
 package DSA.LinkedList;
 
-/*
-Problem: Linked List Cycle
+import java.util.HashSet;
+import java.util.Set;
 
-Given the head of a linked list, determine whether the linked list contains a cycle.
-A cycle exists when some node's next pointer points back to a previous node instead of pointing to null.
-
-Examples:
-1 -> 2 -> 3 -> 4 -> null
-Output: false
-
-1 -> 2 -> 3 -> 4
-     ^         |
-     |_________|
-Output: true
-
-Expected Approach:
-Use Fast & Slow pointers.
-
-slow moves one step.
-fast moves two steps.
-
-If slow and fast meet, a cycle exists.
-If fast reaches null, there is no cycle.
-*/
-
+/**
+ * LeetCode 141 — Linked List Cycle
+ * Pattern: Fast & slow (Floyd); alternative hash set
+ */
 public class LinkedListCycle {
 
-    static class ListNode {
-        int val;
-        ListNode next;
-
-        ListNode(int val) {
-            this.val = val;
-        }
+  // APPROACH 1: BRUTE / HASH SET — track visited nodes
+  // Time: O(n), Space: O(n)
+  public static boolean hasCycleHashSet(ListNode head) {
+    Set<ListNode> seen = new HashSet<>();
+    ListNode current = head;
+    while (current != null) {
+      if (!seen.add(current)) {
+        return true;
+      }
+      current = current.next;
     }
+    return false;
+  }
 
-    static boolean hasCycle(ListNode head) {
-        ListNode slow = head;
-        ListNode fast = head;
-        while (fast != null && fast.next != null) {
-            slow = slow.next;
-            fast = fast.next.next;
-            if (slow == fast) {
-                return true;
-            }
-        }
-        return false;
+  // APPROACH 2: FLOYD — fast and slow meet if cycle exists
+  // Time: O(n), Space: O(1)
+  public static boolean hasCycle(ListNode head) {
+    ListNode slow = head;
+    ListNode fast = head;
+    while (fast != null && fast.next != null) {
+      slow = slow.next;
+      fast = fast.next.next;
+      if (slow == fast) {
+        return true;
+      }
     }
+    return false;
+  }
 
-    public static void main(String[] args) {
+  public static void main(String[] args) {
+    ListNode noCycle = ListNode.of(1, 2, 3, 4);
+    ListNode withCycle = ListNode.withCycle(new int[] {1, 2, 3, 4}, 1);
 
-        ListNode head = new ListNode(1);
-        head.next = new ListNode(2);
-        head.next.next = new ListNode(3);
-        head.next.next.next = new ListNode(4);
+    System.out.println("No cycle:");
+    ListNode.print(noCycle);
+    System.out.println("  HashSet: " + hasCycleHashSet(noCycle));
+    System.out.println("  Floyd:   " + hasCycle(noCycle));
 
-        // Create cycle: 4 -> 2
-        head.next.next.next.next = head.next;
+    System.out.println("\nCycle (tail -> node at index 1):");
+    System.out.println("  HashSet: " + hasCycleHashSet(withCycle));
+    System.out.println("  Floyd:   " + hasCycle(withCycle));
 
-        System.out.println(hasCycle(head)); // true
-    }
+    System.out.println();
+    System.out.println("Interview script:");
+    System.out.println(
+        "HashSet stores nodes O(n) space. Floyd moves slow 1 and fast 2; meeting inside cycle => true.");
+  }
 }

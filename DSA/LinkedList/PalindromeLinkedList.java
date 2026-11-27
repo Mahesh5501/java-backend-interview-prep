@@ -1,80 +1,84 @@
 package DSA.LinkedList;
 
-/*
-Problem: Palindrome Linked List
+import java.util.ArrayList;
+import java.util.List;
 
-Given the head of a singly linked list, determine whether the linked list is a palindrome.
-A palindrome reads the same forward and backward.
-
-Example 1:
-1 → 2 → 2 → 1
-Output: true
-
-Example 2:
-1 → 2 → 3
-Output: false
-
-Example 3:
-1 → 2 → 3 → 2 → 1
-Output: true
-
-Expected Approach:
-- Use slow and fast pointers to find the middle.
-- Reverse the second half.
-- Compare the first half with the reversed second half.
-- If any values are different, return false.
-- If all values match, return true.
-
-Time Complexity: O(n)
-Space Complexity: O(1)
-*/
-
+/**
+ * LeetCode 234 — Palindrome Linked List
+ * Pattern: Find middle, reverse second half, compare
+ */
 public class PalindromeLinkedList {
 
-    static class ListNode {
-        int val;
-        ListNode next;
+  // APPROACH 1: BRUTE — copy values to list, two indices
+  public static boolean bruteForce(ListNode head) {
+    List<Integer> values = ListNode.toList(head);
+    int left = 0;
+    int right = values.size() - 1;
+    while (left < right) {
+      if (!values.get(left).equals(values.get(right))) {
+        return false;
+      }
+      left++;
+      right--;
+    }
+    return true;
+  }
 
-        ListNode(int val) {
-            this.val = val;
-        }
+  // APPROACH 2: O(1) space — slow/fast, reverse second half, compare
+  public static boolean isPalindrome(ListNode head) {
+    if (head == null || head.next == null) {
+      return true;
     }
 
-    static boolean isPalindrome(ListNode head) {
-        ListNode slow = head;
-        ListNode fast = head;
-        while (fast != null && fast.next != null) {
-            slow = slow.next;
-            fast = fast.next.next;
-        }
-        if (fast != null) {
-            slow = slow.next;
-        }
-        ListNode curr = slow;
-        ListNode prev = null;
-        while (curr != null) {
-            ListNode next = curr.next;
-            curr.next = prev;
-            prev = curr;
-            curr = next;
-        }
-        ListNode p1 = head;
-        ListNode p2 = prev;
-        while (p1 != null && p2 != null) {
-            if (p1.val != p2.val) return false;
-            p1 = p1.next;
-            p2 = p2.next;
-        }
-        return true;
+    ListNode slow = head;
+    ListNode fast = head;
+    while (fast != null && fast.next != null) {
+      slow = slow.next;
+      fast = fast.next.next;
+    }
+    if (fast != null) {
+      slow = slow.next;
     }
 
-    public static void main(String[] args) {
-
-        ListNode head = new ListNode(1);
-        head.next = new ListNode(2);
-        head.next.next = new ListNode(2);
-        head.next.next.next = new ListNode(1);
-
-        System.out.println(isPalindrome(head)); // true
+    ListNode secondHalf = reverse(slow);
+    ListNode left = head;
+    ListNode right = secondHalf;
+    while (right != null) {
+      if (left.val != right.val) {
+        return false;
+      }
+      left = left.next;
+      right = right.next;
     }
+    return true;
+  }
+
+  private static ListNode reverse(ListNode head) {
+    ListNode prev = null;
+    ListNode curr = head;
+    while (curr != null) {
+      ListNode next = curr.next;
+      curr.next = prev;
+      prev = curr;
+      curr = next;
+    }
+    return prev;
+  }
+
+  public static void main(String[] args) {
+    ListNode pal = ListNode.of(1, 2, 2, 1);
+    ListNode notPal = ListNode.of(1, 2, 3);
+    ListNode oddPal = ListNode.of(1, 2, 3, 2, 1);
+
+    for (ListNode h : new ListNode[] {pal, notPal, oddPal}) {
+      ListNode.print(h);
+      System.out.println("  Brute:  " + bruteForce(h));
+      System.out.println("  Optimal: " + isPalindrome(h));
+      System.out.println("-------------------------");
+    }
+
+    System.out.println("Interview script:");
+    System.out.println(
+        "Brute uses array. Optimal finds mid with fast/slow, reverses second half, compares, O(1) space.");
+  }
 }

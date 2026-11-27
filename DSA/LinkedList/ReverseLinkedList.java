@@ -1,74 +1,79 @@
 package DSA.LinkedList;
 
-/*
-Problem: Reverse Linked List
+import java.util.Collections;
+import java.util.List;
 
-Given the head of a singly linked list, reverse the list and return the new head.
-
-Example 1:
-Input:  1 -> 2 -> 3 -> 4 -> 5
-Output: 5 -> 4 -> 3 -> 2 -> 1
-
-Example 2:
-Input:  1 -> 2
-Output: 2 -> 1
-
-Example 3:
-Input:  1
-Output: 1
-
-Expected Approach:
-Use three references:
-prev, current, next
-
-Time Complexity: O(n)
-Space Complexity: O(1)
-*/
-
-
+/**
+ * LeetCode 206 — Reverse Linked List
+ * Pattern: Three-pointer in-place reversal
+ */
 public class ReverseLinkedList {
 
-    static class ListNode {
-        int val;
-        ListNode next;
-
-        ListNode(int val) {
-            this.val = val;
-        }
+  // APPROACH 1: BRUTE — copy to list, reverse, rebuild
+  // Time: O(n), Space: O(n)
+  public static ListNode bruteForce(ListNode head) {
+    List<Integer> values = ListNode.toList(head);
+    Collections.reverse(values);
+    int[] arr = new int[values.size()];
+    for (int i = 0; i < values.size(); i++) {
+      arr[i] = values.get(i);
     }
+    return ListNode.of(arr);
+  }
 
-    static ListNode reverse(ListNode head) {
-        ListNode prev = null;
-        ListNode curr = head;
-        while (curr != null) {
-            ListNode next = curr.next;
-            curr.next = prev;
-            prev = curr;
-            curr = next;
-        }
-        return prev;
+  // APPROACH 2: ITERATIVE three pointers
+  // Time: O(n), Space: O(1)
+  public static ListNode reverseList(ListNode head) {
+    ListNode prev = null;
+    ListNode curr = head;
+    while (curr != null) {
+      ListNode next = curr.next;
+      curr.next = prev;
+      prev = curr;
+      curr = next;
     }
+    return prev;
+  }
 
-    static void printList(ListNode head) {
-        while (head != null) {
-            System.out.print(head.val + " -> ");
-            head = head.next;
-        }
-        System.out.println("null");
+  // APPROACH 3: RECURSIVE
+  public static ListNode reverseRecursive(ListNode head) {
+    if (head == null || head.next == null) {
+      return head;
     }
+    ListNode newHead = reverseRecursive(head.next);
+    head.next.next = head;
+    head.next = null;
+    return newHead;
+  }
 
-    public static void main(String[] args) {
+  /**
+   * Dry run: 1->2->3
+   * prev=null, curr=1: 1->null, prev=1, curr=2
+   * prev=1, curr=2: 2->1, prev=2, curr=3
+   * prev=2, curr=3: 3->2, prev=3, curr=null => return 3
+   */
+  public static void main(String[] args) {
+    ListNode head = ListNode.of(1, 2, 3, 4, 5);
 
-        ListNode head = new ListNode(1);
-        head.next = new ListNode(2);
-        head.next.next = new ListNode(3);
-        head.next.next.next = new ListNode(4);
-        head.next.next.next.next = new ListNode(5);
+    System.out.println("Original:");
+    ListNode.print(head);
 
-        printList(head);
+    ListNode brute = bruteForce(ListNode.of(1, 2, 3, 4, 5));
+    System.out.print("Brute reversed: ");
+    ListNode.print(brute);
 
-        head = reverse(head);
+    ListNode iter = reverseList(ListNode.of(1, 2, 3, 4, 5));
+    System.out.print("Iterative:      ");
+    ListNode.print(iter);
 
-        printList(head);
-    }
+    ListNode rec = reverseRecursive(ListNode.of(1, 2));
+    System.out.print("Recursive:      ");
+    ListNode.print(rec);
+
+    System.out.println();
+    System.out.println("Interview script:");
+    System.out.println(
+        "I keep prev, curr, next. For each node I point curr.next to prev and slide all three forward.");
+    System.out.println("Brute uses O(n) extra; iterative is O(1) space.");
+  }
 }
