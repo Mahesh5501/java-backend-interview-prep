@@ -35,7 +35,7 @@ public class TopKFrequentElements {
     public static int[] topKFrequentSort(int[] nums, int k) {
         Map<Integer, Integer> freq = buildFreq(nums);
         List<Integer> keys = new ArrayList<>(freq.keySet());
-        keys.sort((a, b) -> freq.get(b) - freq.get(a)); // high freq first
+        keys.sort((a, b) -> Integer.compare(freq.get(b), freq.get(a))); // high freq first
 
         int[] ans = new int[k];
         for (int i = 0; i < k; i++) {
@@ -51,8 +51,7 @@ public class TopKFrequentElements {
     public static int[] topKFrequentHeap(int[] nums, int k) {
         Map<Integer, Integer> freq = buildFreq(nums);
 
-        PriorityQueue<Integer> minHeap = new PriorityQueue<>(
-            (a, b) -> freq.get(a) - freq.get(b));
+        PriorityQueue<Integer> minHeap = new PriorityQueue<>((a, b) -> Integer.compare(freq.get(a), freq.get(b)));
 
         for (int key : freq.keySet()) {
             minHeap.offer(key);
