@@ -1,4 +1,4 @@
-package cubic;
+package DSA.TwoPointers;
 
 import java.util.Stack;
 

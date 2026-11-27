@@ -1,4 +1,4 @@
-package cubic;
+package DSA.ArraysHashing;
 
 import java.util.HashMap;
 import java.util.Map;

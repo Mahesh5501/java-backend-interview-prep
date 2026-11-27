@@ -1,5 +1,5 @@
 
-package Wise;
+package DSA.ArraysHashing;
 
 import java.util.Arrays;
 import java.util.ArrayList;

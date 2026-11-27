@@ -1,4 +1,4 @@
-package Wise;
+package DSA.ArraysHashing;
 
 import java.io.*;
 import java.util.*;
