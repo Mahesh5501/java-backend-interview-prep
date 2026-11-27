@@ -1,7 +1,6 @@
 package DSA.ArraysHashing;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,17 +9,20 @@ import java.util.PriorityQueue;
 /*
 Problem: Top K Frequent Elements
 
-Return the k most frequent integers in nums (any order).
+Return the k most frequent integers (any order).
 
 Example:
-  nums = [1,1,1,2,2,3], k = 2  →  [1,2] (or [2,1])
+  nums = [1,1,1,2,2,3], k = 2  →  [1,2]
 
-Approach 1: Frequency map + bucket by frequency — O(n)
-Approach 2: Frequency map + min-heap of size k — O(n log k)
+See notes/Problem_05_Top_K_Frequent_Elements.md for approach explanations.
 */
 
 public class TopKFrequentElements {
 
+    // APPROACH 1: FREQUENCY MAP + BUCKETS (OPTIMAL — often preferred)
+    // Why buckets: frequency is at most n, so we can "sort" by freq in O(n).
+    // bucket[f] = values that appear exactly f times; read from high f downward.
+    // Time: O(n)   Extra space: O(n)
     public static int[] topKFrequentBucket(int[] nums, int k) {
         Map<Integer, Integer> freq = new HashMap<>();
         for (int x : nums) {
@@ -53,6 +55,11 @@ public class TopKFrequentElements {
         return ans;
     }
 
+    // APPROACH 2: FREQUENCY MAP + MIN-HEAP OF SIZE K
+    // Why min-heap: keep only k elements; pop the least frequent when size > k.
+    // Why not max-heap of all: that is O(n log n); size-k heap is O(n log k).
+    // Use when: interviewer wants heap, or k is small.
+    // Time: O(n log k)   Extra space: O(n)
     public static int[] topKFrequentHeap(int[] nums, int k) {
         Map<Integer, Integer> freq = new HashMap<>();
         for (int x : nums) {
@@ -79,11 +86,13 @@ public class TopKFrequentElements {
     public static void main(String[] args) {
         int[] nums = { 1, 1, 1, 2, 2, 3 };
         int k = 2;
+
         System.out.print("Bucket: ");
         for (int x : topKFrequentBucket(nums, k)) {
             System.out.print(x + " ");
         }
         System.out.println();
+
         System.out.print("Heap:   ");
         for (int x : topKFrequentHeap(nums, k)) {
             System.out.print(x + " ");

@@ -1,346 +1,204 @@
 # Problem 06 — Product of Array Except Self
 
-> **Pattern:** Prefix/suffix  
-> **Goal:** Interview-ready: mental model, brute force, optimal approach, dry run, complexity, edge cases, and what to say aloud.
+> **Pattern:** Prefix / suffix products (no division)  
+> **Java file:** `../ProductOfArrayExceptSelf.java`  
+> **Goal:** See why left×right products replace division, and how we reuse the output array.
 
 ---
 
 ## 1. Problem statement
 
-Return products of all elements except self without division.
+Given `nums`, return `output` where:
 
-Work through the examples in the matching `.java` file `main` method and on LeetCode (if applicable).
+```text
+output[i] = product of every nums[j] where j != i
+```
 
-### Constraints (typical)
+Rules:
 
-- Input sizes up to `10^5` (sometimes `10^4`) — aim for **O(n)** or **O(n log n)** unless constraints are tiny.
-- Read whether the problem wants **indices**, **values**, or **counts**.
+- **Do not use division**
+- Follow-up: `O(1)` extra space (the output array does not count)
+
+### Example
+
+```text
+Input:  [1, 2, 3, 4]
+Output: [24, 12, 8, 6]
+
+Because:
+  index 0: 2*3*4 = 24
+  index 1: 1*3*4 = 12
+  index 2: 1*2*4 = 8
+  index 3: 1*2*3 = 6
+```
 
 ---
 
 ## 2. Mental picture
 
-Before coding, draw the array and ask: **what do I need to remember from earlier positions?**
+For index `i`:
 
-- If you need “the other value that completes a pair” → **hash map / set**.
-- If you need “sum of a contiguous block” with negatives allowed → **prefix sum + frequency map**, not sliding window by default.
-- If the array is **sorted** and you discard half the range → **binary search**, not hashing.
+```text
+output[i] = (product of everything LEFT of i)
+          × (product of everything RIGHT of i)
+```
 
-Re-open **`notes/Arrays_Hashing_Common_Patterns.md`** and name the pattern letter (A–H for hashing, A–G for binary search) that matches this problem.
+```text
+nums:     1   2   3   4
+left:     1   1   2   6     (running product before i)
+right:   24  12   4   1     (running product after i)
+output:  24  12   8   6
+```
 
 ---
 
 ## 3. How to start thinking
 
-1. State brute force complexity honestly (often `O(n²)`).
-2. Identify the **bottleneck** (re-scanning, re-multiplying, re-walking chains).
-3. Choose the structure: `Map`, `Set`, prefix map, or binary search bounds.
-4. Write the **invariant** in one sentence before coding.
+1. Brute: for each i, multiply all other j → `O(n²)`.
+2. Division trick: totalProduct / nums[i] → forbidden (and breaks on zeros).
+3. Optimal: precompute left products and right products.
 
 ---
 
 ## 4. Approach 1 — Brute force
 
-Implement the definition directly: nested loops, full rescans, or linear search on sorted data.
+### Idea
 
-**Why mention it in interviews:** It proves you understand the problem and gives a correct baseline before optimizing.
+Nested loops: for each `i`, multiply all `j != i`.
 
-**Typical complexity:** `O(n²)` or `O(n)` on sorted data — too slow when `n` is large.
+### Java method
 
----
+`productExceptSelfBrute`
 
-## 5. Approach 2 — Optimal
+### Complexity
 
-Open the optimal method in the Java file below. While reading:
+`O(n²)` time, `O(1)` extra besides output.
 
-1. Name each variable (`prefix`, `seen`, `left`, `right`, …).
-2. Say why each update is safe (no missed answers).
-3. Trace one small example on paper (see section 7).
+### When
 
-**Target complexity:** See section 9 — usually **O(n)** or **O(log n)** with **O(n)** or **O(1)** extra space.
+Explain first only.
 
 ---
 
-## 6. Hardest part (slow down here)
+## 5. Approach 2 — Why division fails (know this)
 
-For **Product of Array Except Self**, candidates usually slip on **boundary conditions** and **off-by-one** updates.
+```text
+output[i] = (product of all) / nums[i]
+```
 
-- Re-read the optimal method comments in Java.
-- Compare your mental model to the pattern section in `Arrays_Hashing_Common_Patterns.md`.
-- If you use a map, ask: what is the **key** and what does the **value** mean?
+Problems:
 
----
+1. Problem forbids division.
+2. Zeros: division by zero / wrong counts of zeros need special cases.
 
-## 7. Detailed dry run
-
-Pick the **smallest interesting example** from `main` in the Java file.
-
-| Step | What to write on paper |
-|---|---|
-| Initialization | Empty map/set, `left/right`, or `prefix=0` + `{0:1}` if prefix problem |
-| Each index | Show map/set after the step; or show which half of the array remains in BS |
-| Answer | Final return value |
-
-Do this once with the video off. Interviewers care that you can trace without running the IDE.
+Do **not** use this in the final answer.
 
 ---
 
-## 8. Why the optimal approach is correct
+## 6. Approach 3 — Prefix then suffix into output (optimal — what we use)
 
-Give a **one-paragraph proof sketch**:
+### Idea
 
-- Hashing: “When we are at index `i`, the structure contains exactly the information we need from indices `< i`.”
-- Prefix map: “Each subarray sum equals difference of two prefix sums; we count valid earlier prefixes.”
-- Binary search: “The answer always lies in `[left, right]`; each step discards a half that cannot contain it.”
+**Pass 1 (left → right):**  
+`out[i] = product of all left of i` (running `prefix`).
 
----
+**Pass 2 (right → left):**  
+Multiply `out[i]` by product of all right of i (running `suffix`).
 
-## 9. Complexity comparison
+### Why this approach?
 
-| Method | Time | Extra space |
-|---|---:|---:|
-| Brute | See your brute implementation | Usually `O(1)` |
-| Optimal | Per pattern cheat sheet in `Arrays_Hashing_Common_Patterns.md` | Usually `O(n)` for hash structures |
+- No division
+- Handles zeros naturally
+- Extra space `O(1)` besides `out` (only two ints: prefix & suffix)
 
----
+### Java method
 
-## 10. Edge cases
-
-Build a tiny table before you submit:
-
-| Case | Expected behavior |
-|---|---|
-| Minimum length input | Single element / pair |
-| All equal values | Duplicates / freq / first-last BS |
-| Negatives (if allowed) | Prefix map still works; sliding sum may not |
-| Empty / null | Return `0`, `false`, or `-1` per spec |
-
----
-
-## 11. Common mistakes
-
-- Using the wrong loop condition (`left < right` vs `left <= right`).
-- Forgetting `prefixCount.put(0, 1)` on subarray-sum problems.
-- Starting a consecutive walk from **every** element (re-sums chains).
-- Returning immediately on first binary-search hit when the problem asks for **first/last** occurrence.
-
----
-
-## 12. Interview — say this aloud
-
-> “I'll start with brute force to confirm the definition, then optimize. For this problem the right tool is **prefix/suffix**. I'll maintain [map/set/prefix/left-right] so each step is one pass / logarithmic. Let me trace a small example, then I'll code the optimal solution.”
-
-Then code the **optimal** method from memory, not brute force.
-
----
-
-## 13. Follow-ups
-
-- Ask yourself: “What if the array were sorted?” “What if we need indices not values?” “What if `k` changes?”
-- Link to the **next problem** in this folder’s roadmap in `Arrays_Hashing_Common_Patterns.md`.
-
----
-
-## 14. Complete runnable Java
-
-Package: `DSA.ArraysHashing`  
-File: `../ProductOfArrayExceptSelf.java`
+`productExceptSelf`
 
 ```java
-package DSA.ArraysHashing;
+public static int[] productExceptSelf(int[] nums) {
+    int n = nums.length;
+    int[] out = new int[n];
 
-import java.util.Arrays;
-
-/*
-Problem: Product of Array Except Self
-
-Return array output where output[i] = product of all nums[j] where j != i.
-Solve without division. Follow-up: O(1) extra space (output does not count).
-
-Example:
-  [1,2,3,4] → [24,12,8,6]
-
-Approach: Prefix products left-to-right, suffix right-to-left into output
-Time: O(n)   Space: O(1) excluding output array
-*/
-
-public class ProductOfArrayExceptSelf {
-
-    public static int[] productExceptSelfBrute(int[] nums) {
-        int n = nums.length;
-        int[] out = new int[n];
-        for (int i = 0; i < n; i++) {
-            int prod = 1;
-            for (int j = 0; j < n; j++) {
-                if (j != i) {
-                    prod *= nums[j];
-                }
-            }
-            out[i] = prod;
-        }
-        return out;
+    int prefix = 1;
+    for (int i = 0; i < n; i++) {
+        out[i] = prefix;
+        prefix *= nums[i];
     }
 
-    public static int[] productExceptSelf(int[] nums) {
-        int n = nums.length;
-        int[] out = new int[n];
-
-        int prefix = 1;
-        for (int i = 0; i < n; i++) {
-            out[i] = prefix;
-            prefix *= nums[i];
-        }
-
-        int suffix = 1;
-        for (int i = n - 1; i >= 0; i--) {
-            out[i] *= suffix;
-            suffix *= nums[i];
-        }
-        return out;
+    int suffix = 1;
+    for (int i = n - 1; i >= 0; i--) {
+        out[i] *= suffix;
+        suffix *= nums[i];
     }
-
-    public static void main(String[] args) {
-        int[] nums = { 1, 2, 3, 4 };
-        System.out.println("Brute:   " + Arrays.toString(productExceptSelfBrute(nums)));
-        System.out.println("Optimal:" + Arrays.toString(productExceptSelf(nums)));
-        int[] withZero = { -1, 1, 0, -3, 3 };
-        System.out.println("Zeros:   " + Arrays.toString(productExceptSelf(withZero)));
-    }
+    return out;
 }
 ```
 
-Run `main` after implementing from memory.
+### Dry run
 
----
+`[1,2,3,4]`
 
-## 15. Practice checklist
+After pass 1 (`out` = left products):
 
-- [ ] Implement brute force without looking.
-- [ ] Implement optimal without looking.
-- [ ] Trace one example on paper.
-- [ ] State time and space complexity.
-- [ ] List three edge cases from section 10.
-
----
-
----
-
-## Depth addendum — extended workbook
-
-### Mental picture (second angle)
-
-Sketch input on paper and mark **what changes each loop iteration**. If the pattern uses a stack, queue, heap, or map, write its contents as a column beside the array/tree.
-
-### Brute force reminder
-
-State the naive approach in one sentence, its time/space, and **one sentence why** the optimal pattern beats it.
-
-### Hardest-part drill
-
-| Before coding | After understanding |
-|---|---|
-| Unsure what moves | Name the invariant pointers/stack maintain |
-| Edge case worry | Check empty, single, duplicates |
-
-### Extended dry-run columns
-
-| iter | key variables | container snapshot | output so far |
-|---:|---|---|---|
-
-Fill five rows from the matching Java main example in the sibling .java file.
-
-### Interview say-aloud (30s)
-
-> I recognize the pattern, use the right structure for the invariant, avoid brute time because each element is handled once.
-
-### Follow-up Q&A
-
-**Q: In-place?** Only if allowed.  
-**Q: Unsorted input?** State preprocessing.
-
-## 16. Quick revision
-
-One line: **Product of Array Except Self = Prefix/suffix + optimal method in `ProductOfArrayExceptSelf.java`.**
-
----
-
-## 17. Pattern used
-
-See **`Arrays_Hashing_Common_Patterns.md`**.
-
----
-
-## 18. Next problem
-
-**Problem 07 — Longest Consecutive Sequence**
-
----
-
----
-
-## Repository Java (full)
-
-Align with `../ProductOfArrayExceptSelf.java`.
-
-```java
-package DSA.ArraysHashing;
-
-import java.util.Arrays;
-
-/*
-Problem: Product of Array Except Self
-
-Return array output where output[i] = product of all nums[j] where j != i.
-Solve without division. Follow-up: O(1) extra space (output does not count).
-
-Example:
-  [1,2,3,4] → [24,12,8,6]
-
-Approach: Prefix products left-to-right, suffix right-to-left into output
-Time: O(n)   Space: O(1) excluding output array
-*/
-
-public class ProductOfArrayExceptSelf {
-
-    public static int[] productExceptSelfBrute(int[] nums) {
-        int n = nums.length;
-        int[] out = new int[n];
-        for (int i = 0; i < n; i++) {
-            int prod = 1;
-            for (int j = 0; j < n; j++) {
-                if (j != i) {
-                    prod *= nums[j];
-                }
-            }
-            out[i] = prod;
-        }
-        return out;
-    }
-
-    public static int[] productExceptSelf(int[] nums) {
-        int n = nums.length;
-        int[] out = new int[n];
-
-        int prefix = 1;
-        for (int i = 0; i < n; i++) {
-            out[i] = prefix;
-            prefix *= nums[i];
-        }
-
-        int suffix = 1;
-        for (int i = n - 1; i >= 0; i--) {
-            out[i] *= suffix;
-            suffix *= nums[i];
-        }
-        return out;
-    }
-
-    public static void main(String[] args) {
-        int[] nums = { 1, 2, 3, 4 };
-        System.out.println("Brute:   " + Arrays.toString(productExceptSelfBrute(nums)));
-        System.out.println("Optimal:" + Arrays.toString(productExceptSelf(nums)));
-        int[] withZero = { -1, 1, 0, -3, 3 };
-        System.out.println("Zeros:   " + Arrays.toString(productExceptSelf(withZero)));
-    }
-}
+```text
+out = [1, 1, 2, 6]
 ```
+
+Pass 2:
+
+| i | out[i] before | suffix | out[i] after | new suffix |
+|---|---|---|---|---|
+| 3 | 6 | 1 | 6 | 4 |
+| 2 | 2 | 4 | 8 | 12 |
+| 1 | 1 | 12 | 12 | 24 |
+| 0 | 1 | 24 | 24 | 24 |
+
+Result `[24,12,8,6]`.
+
+### Complexity
+
+| Time | Extra space |
+|---|---|
+| `O(n)` | `O(1)` besides output |
+
+---
+
+## 7. What we use and why
+
+| Approach | Java method | Time | Space | Use |
+|---|---|---|---|---|
+| Brute multiply | `productExceptSelfBrute` | `O(n²)` | `O(1)` | Verbal |
+| Division | — | `O(n)` | `O(1)` | **Forbidden / fragile** |
+| **Prefix×suffix** | `productExceptSelf` | `O(n)` | `O(1)` | **Interview answer** |
+
+Alternative: two arrays `left[]` and `right[]` — clearer to learn, same idea, uses `O(n)` extra. Then compress into one `out[]` for the follow-up.
+
+---
+
+## 8. Hardest part
+
+### Zeros
+
+One zero: every index except the zero’s index becomes 0; the zero’s index gets product of others.  
+Two zeros: entire output is zeros.  
+Prefix/suffix handles this without special cases.
+
+### Mistake — Including nums[i] in prefix before writing out[i]
+
+Write `out[i] = prefix` **first**, then `prefix *= nums[i]`.
+
+---
+
+## 9. Interview explanation — say this aloud
+
+“Brute force is `O(n²)`. Division is not allowed and breaks with zeros. Instead, `output[i]` is left product times right product. I fill the output with prefix products left to right, then multiply suffix products right to left. Time `O(n)`, extra space `O(1)` besides the output.”
+
+---
+
+## 10. Link to Java
+
+| Approach | Method |
+|---|---|
+| Brute | `productExceptSelfBrute` |
+| Prefix × suffix | `productExceptSelf` |

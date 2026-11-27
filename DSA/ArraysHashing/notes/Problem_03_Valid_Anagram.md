@@ -1,332 +1,249 @@
 # Problem 03 — Valid Anagram
 
-> **Pattern:** Frequency count  
-> **Goal:** Interview-ready: mental model, brute force, optimal approach, dry run, complexity, edge cases, and what to say aloud.
+> **Pattern:** Frequency count (or sort-and-compare)  
+> **Java file:** `../ValidAnagram.java`  
+> **Goal:** Clear approaches — sort vs count array vs map — and why interviews prefer `int[26]`.
 
 ---
 
 ## 1. Problem statement
 
-Return whether `t` is an anagram of `s`.
+Given two strings `s` and `t`, return `true` if `t` is an **anagram** of `s`.
 
-Work through the examples in the matching `.java` file `main` method and on LeetCode (if applicable).
+Anagram = same characters with the **same frequencies**, order does not matter.
 
-### Constraints (typical)
+### Example 1
 
-- Input sizes up to `10^5` (sometimes `10^4`) — aim for **O(n)** or **O(n log n)** unless constraints are tiny.
-- Read whether the problem wants **indices**, **values**, or **counts**.
+```text
+Input:  s = "anagram", t = "nagaram"
+Output: true
+```
+
+### Example 2
+
+```text
+Input:  s = "rat", t = "car"
+Output: false
+```
+
+### Constraints (typical LeetCode)
+
+- Same length required for anagrams (different length → false immediately)
+- Often lowercase English letters only → `int[26]` works
+- If Unicode / mixed case → use `HashMap` instead of `int[26]`
 
 ---
 
 ## 2. Mental picture
 
-Before coding, draw the array and ask: **what do I need to remember from earlier positions?**
+Two strings are anagrams if their character **bags** match.
 
-- If you need “the other value that completes a pair” → **hash map / set**.
-- If you need “sum of a contiguous block” with negatives allowed → **prefix sum + frequency map**, not sliding window by default.
-- If the array is **sorted** and you discard half the range → **binary search**, not hashing.
+```text
+s = "listen"   bag: e:1 i:1 l:1 n:1 s:1 t:1
+t = "silent"   bag: e:1 i:1 l:1 n:1 s:1 t:1  → same → true
+```
 
-Re-open **`notes/Arrays_Hashing_Common_Patterns.md`** and name the pattern letter (A–H for hashing, A–G for binary search) that matches this problem.
+Ways to compare bags:
+
+1. Sort both strings → must become identical
+2. Count letters in both → counts must match
+
+### Jargon
+
+| Term | Meaning |
+|---|---|
+| **Frequency** | How many times a character appears |
+| **int[26]** | Fixed array for `'a'`..`'z'`; index = `ch - 'a'` |
+| **Canonical form** | Sorted string used as a fingerprint |
 
 ---
 
 ## 3. How to start thinking
 
-1. State brute force complexity honestly (often `O(n²)`).
-2. Identify the **bottleneck** (re-scanning, re-multiplying, re-walking chains).
-3. Choose the structure: `Map`, `Set`, prefix map, or binary search bounds.
-4. Write the **invariant** in one sentence before coding.
+1. Different lengths? → false immediately.
+2. Brute / simple? Sort both and compare.
+3. Faster / common interview? Count characters.
+4. Alphabet size known? Prefer `int[26]` over HashMap.
+5. Unicode? Must use HashMap (or similar).
 
 ---
 
-## 4. Approach 1 — Brute force
+## 4. Approach 1 — Sort both strings
 
-Implement the definition directly: nested loops, full rescans, or linear search on sorted data.
+### Idea
 
-**Why mention it in interviews:** It proves you understand the problem and gives a correct baseline before optimizing.
+```text
+sort(s) == sort(t)  →  anagram
+```
 
-**Typical complexity:** `O(n²)` or `O(n)` on sorted data — too slow when `n` is large.
+```text
+"anagram" → "aaagmnr"
+"nagaram" → "aaagmnr"  → equal → true
+```
 
----
+### Why it works
 
-## 5. Approach 2 — Optimal
+Sorting puts the same multiset of characters into the same order.
 
-Open the optimal method in the Java file below. While reading:
+### Java method
 
-1. Name each variable (`prefix`, `seen`, `left`, `right`, …).
-2. Say why each update is safe (no missed answers).
-3. Trace one small example on paper (see section 7).
-
-**Target complexity:** See section 9 — usually **O(n)** or **O(log n)** with **O(n)** or **O(1)** extra space.
-
----
-
-## 6. Hardest part (slow down here)
-
-For **Valid Anagram**, candidates usually slip on **boundary conditions** and **off-by-one** updates.
-
-- Re-read the optimal method comments in Java.
-- Compare your mental model to the pattern section in `Arrays_Hashing_Common_Patterns.md`.
-- If you use a map, ask: what is the **key** and what does the **value** mean?
-
----
-
-## 7. Detailed dry run
-
-Pick the **smallest interesting example** from `main` in the Java file.
-
-| Step | What to write on paper |
-|---|---|
-| Initialization | Empty map/set, `left/right`, or `prefix=0` + `{0:1}` if prefix problem |
-| Each index | Show map/set after the step; or show which half of the array remains in BS |
-| Answer | Final return value |
-
-Do this once with the video off. Interviewers care that you can trace without running the IDE.
-
----
-
-## 8. Why the optimal approach is correct
-
-Give a **one-paragraph proof sketch**:
-
-- Hashing: “When we are at index `i`, the structure contains exactly the information we need from indices `< i`.”
-- Prefix map: “Each subarray sum equals difference of two prefix sums; we count valid earlier prefixes.”
-- Binary search: “The answer always lies in `[left, right]`; each step discards a half that cannot contain it.”
-
----
-
-## 9. Complexity comparison
-
-| Method | Time | Extra space |
-|---|---:|---:|
-| Brute | See your brute implementation | Usually `O(1)` |
-| Optimal | Per pattern cheat sheet in `Arrays_Hashing_Common_Patterns.md` | Usually `O(n)` for hash structures |
-
----
-
-## 10. Edge cases
-
-Build a tiny table before you submit:
-
-| Case | Expected behavior |
-|---|---|
-| Minimum length input | Single element / pair |
-| All equal values | Duplicates / freq / first-last BS |
-| Negatives (if allowed) | Prefix map still works; sliding sum may not |
-| Empty / null | Return `0`, `false`, or `-1` per spec |
-
----
-
-## 11. Common mistakes
-
-- Using the wrong loop condition (`left < right` vs `left <= right`).
-- Forgetting `prefixCount.put(0, 1)` on subarray-sum problems.
-- Starting a consecutive walk from **every** element (re-sums chains).
-- Returning immediately on first binary-search hit when the problem asks for **first/last** occurrence.
-
----
-
-## 12. Interview — say this aloud
-
-> “I'll start with brute force to confirm the definition, then optimize. For this problem the right tool is **frequency count**. I'll maintain [map/set/prefix/left-right] so each step is one pass / logarithmic. Let me trace a small example, then I'll code the optimal solution.”
-
-Then code the **optimal** method from memory, not brute force.
-
----
-
-## 13. Follow-ups
-
-- Ask yourself: “What if the array were sorted?” “What if we need indices not values?” “What if `k` changes?”
-- Link to the **next problem** in this folder’s roadmap in `Arrays_Hashing_Common_Patterns.md`.
-
----
-
-## 14. Complete runnable Java
-
-Package: `DSA.ArraysHashing`  
-File: `../ValidAnagram.java`
+`isAnagramSort`
 
 ```java
-package DSA.ArraysHashing;
-
-import java.util.Arrays;
-
-/*
-Problem: Valid Anagram
-
-Given strings s and t, return true if t is an anagram of s.
-
-Examples:
-  s = "anagram", t = "nagaram" → true
-  s = "rat", t = "car"         → false
-
-Approach: Count characters (int[26] or sort)
-Time: O(n)   Space: O(1) alphabet fixed
-*/
-
-public class ValidAnagram {
-
-    public static boolean isAnagramSort(String s, String t) {
-        if (s.length() != t.length()) {
-            return false;
-        }
-        char[] a = s.toCharArray();
-        char[] b = t.toCharArray();
-        Arrays.sort(a);
-        Arrays.sort(b);
-        return Arrays.equals(a, b);
-    }
-
-    public static boolean isAnagram(String s, String t) {
-        if (s.length() != t.length()) {
-            return false;
-        }
-        int[] count = new int[26];
-        for (int i = 0; i < s.length(); i++) {
-            count[s.charAt(i) - 'a']++;
-            count[t.charAt(i) - 'a']--;
-        }
-        for (int c : count) {
-            if (c != 0) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public static void main(String[] args) {
-        System.out.println(isAnagram("anagram", "nagaram"));
-        System.out.println(isAnagram("rat", "car"));
-        System.out.println(isAnagramSort("listen", "silent"));
-    }
+public static boolean isAnagramSort(String s, String t) {
+    if (s.length() != t.length()) return false;
+    char[] a = s.toCharArray();
+    char[] b = t.toCharArray();
+    Arrays.sort(a);
+    Arrays.sort(b);
+    return Arrays.equals(a, b);
 }
 ```
 
-Run `main` after implementing from memory.
+### Complexity
 
----
-
-## 15. Practice checklist
-
-- [ ] Implement brute force without looking.
-- [ ] Implement optimal without looking.
-- [ ] Trace one example on paper.
-- [ ] State time and space complexity.
-- [ ] List three edge cases from section 10.
-
----
-
----
-
-## Depth addendum — extended workbook
-
-### Mental picture (second angle)
-
-Sketch input on paper and mark **what changes each loop iteration**. If the pattern uses a stack, queue, heap, or map, write its contents as a column beside the array/tree.
-
-### Brute force reminder
-
-State the naive approach in one sentence, its time/space, and **one sentence why** the optimal pattern beats it.
-
-### Hardest-part drill
-
-| Before coding | After understanding |
+| Time | Extra space |
 |---|---|
-| Unsure what moves | Name the invariant pointers/stack maintain |
-| Edge case worry | Check empty, single, duplicates |
+| `O(n log n)` | `O(n)` for char arrays (depending on language) |
 
-### Extended dry-run columns
+### When to use
 
-| iter | key variables | container snapshot | output so far |
-|---:|---|---|---|
-
-Fill five rows from the matching Java main example in the sibling .java file.
-
-### Interview say-aloud (30s)
-
-> I recognize the pattern, use the right structure for the invariant, avoid brute time because each element is handled once.
-
-### Follow-up Q&A
-
-**Q: In-place?** Only if allowed.  
-**Q: Unsorted input?** State preprocessing.
-
-## 16. Quick revision
-
-One line: **Valid Anagram = Frequency count + optimal method in `ValidAnagram.java`.**
+Quick to write; fine if `n` is small. Good backup if you blank on counting.
 
 ---
 
-## 17. Pattern used
+## 5. Approach 2 — Count array `int[26]` (optimal — what we use)
 
-See **`Arrays_Hashing_Common_Patterns.md`**.
+### Core idea
 
----
+Assume lowercase `a`–`z`:
 
-## 18. Next problem
+1. If lengths differ → false
+2. One array `count[26]`
+3. For each index `i`: `count[s[i]-'a']++` and `count[t[i]-'a']--`
+4. If every bucket is `0` → same frequencies → true
 
-**Problem 04 — Group Anagrams**
+### Why this approach?
 
----
+- One pass over both strings (same length)
+- Fixed alphabet → `O(1)` extra space (26 slots)
+- Faster than sorting: `O(n)` time
 
----
+### Why increment and decrement together?
 
-## Repository Java (full)
+After processing both strings, leftovers cancel. Any leftover ≠ 0 means a mismatch.
 
-Align with `../ValidAnagram.java`.
+You can also count `s` fully, then decrement with `t` and fail early on negative — same idea.
+
+### Java method
+
+`isAnagram`
 
 ```java
-package DSA.ArraysHashing;
+public static boolean isAnagram(String s, String t) {
+    if (s.length() != t.length()) return false;
 
-import java.util.Arrays;
-
-/*
-Problem: Valid Anagram
-
-Given strings s and t, return true if t is an anagram of s.
-
-Examples:
-  s = "anagram", t = "nagaram" → true
-  s = "rat", t = "car"         → false
-
-Approach: Count characters (int[26] or sort)
-Time: O(n)   Space: O(1) alphabet fixed
-*/
-
-public class ValidAnagram {
-
-    public static boolean isAnagramSort(String s, String t) {
-        if (s.length() != t.length()) {
-            return false;
-        }
-        char[] a = s.toCharArray();
-        char[] b = t.toCharArray();
-        Arrays.sort(a);
-        Arrays.sort(b);
-        return Arrays.equals(a, b);
+    int[] count = new int[26];
+    for (int i = 0; i < s.length(); i++) {
+        count[s.charAt(i) - 'a']++;
+        count[t.charAt(i) - 'a']--;
     }
-
-    public static boolean isAnagram(String s, String t) {
-        if (s.length() != t.length()) {
-            return false;
-        }
-        int[] count = new int[26];
-        for (int i = 0; i < s.length(); i++) {
-            count[s.charAt(i) - 'a']++;
-            count[t.charAt(i) - 'a']--;
-        }
-        for (int c : count) {
-            if (c != 0) {
-                return false;
-            }
-        }
-        return true;
+    for (int c : count) {
+        if (c != 0) return false;
     }
-
-    public static void main(String[] args) {
-        System.out.println(isAnagram("anagram", "nagaram"));
-        System.out.println(isAnagram("rat", "car"));
-        System.out.println(isAnagramSort("listen", "silent"));
-    }
+    return true;
 }
 ```
+
+### Dry run
+
+`s = "rat"`, `t = "car"`
+
+| step | action | count idea |
+|---|---|---|
+| i=0 | +r, -c | r:1, c:-1 |
+| i=1 | +a, -a | r:1, c:-1, a:0 |
+| i=2 | +t, -r | r:0, c:-1, t:1 |
+
+`c` is `-1`, `t` is `1` → not all zero → **false**
+
+### Complexity
+
+| Measure | Value |
+|---|---|
+| **Time** | `O(n)` |
+| **Extra space** | `O(1)` — fixed 26 |
+
+---
+
+## 6. Approach 3 — HashMap frequency (when alphabet is huge)
+
+### Idea
+
+`Map<Character, Integer>` for counts of `s`, then decrement with `t`.
+
+### Why use Map instead of int[26]?
+
+- Unicode characters
+- Mixed case without normalizing
+- Alphabet not limited to 26 letters
+
+### Why we don’t default to Map here
+
+LeetCode Valid Anagram is usually lowercase English → `int[26]` is simpler and `O(1)` space.
+
+*(Map version can be added later if you practise Unicode follow-ups; core file keeps sort + int[26].)*
+
+---
+
+## 7. What we use and why
+
+| Approach | Java method | Time | Space | Use when |
+|---|---|---|---|---|
+| Sort + equals | `isAnagramSort` | `O(n log n)` | `O(n)` | Quick / backup |
+| **Count int[26]** | `isAnagram` | `O(n)` | `O(1)` | **Default interview** |
+| HashMap counts | *(follow-up)* | `O(n)` | `O(k)` alphabet | Unicode / unknown alphabet |
+
+---
+
+## 8. Hardest part
+
+### Mistake — Forgetting length check
+
+Different lengths can never be anagrams. Check first.
+
+### Mistake — Using int[26] on non a–z
+
+`'A' - 'a'` is wrong index. Confirm constraints.
+
+### Mistake — Comparing with `==` on Strings
+
+After sorting char arrays, use `Arrays.equals`, not `==`.
+
+---
+
+## 9. Edge cases
+
+| Input | Expected | Checks |
+|---|---|---|
+| `"", ""` | true | Empty |
+| `"a", "a"` | true | Single |
+| `"ab", "a"` | false | Length |
+| `"aacc", "ccac"` | false | Frequency mismatch |
+
+---
+
+## 10. Interview explanation — say this aloud
+
+“First I check lengths. Brute-ish approach: sort both and compare — `O(n log n)`. Better: count letters with `int[26]`. I increment for `s` and decrement for `t` in one loop; if every count is zero, they are anagrams. Time `O(n)`, space `O(1)` for fixed alphabet. If the alphabet were Unicode, I’d switch to a HashMap.”
+
+---
+
+## 11. Link to Java
+
+| Approach | Method |
+|---|---|
+| Sort | `isAnagramSort` |
+| Count int[26] (preferred) | `isAnagram` |
+
+Run `main` to try both.

@@ -1,346 +1,194 @@
 # Problem 08 — Subarray Sum Equals K
 
-> **Pattern:** Prefix + map  
-> **Goal:** Interview-ready: mental model, brute force, optimal approach, dry run, complexity, edge cases, and what to say aloud.
+> **Pattern:** Prefix sum + HashMap of prefix frequencies  
+> **Java file:** `../SubarraySumEqualsK.java`  
+> **Goal:** Understand why sliding window fails with negatives, and how prefix maps fix it.
 
 ---
 
 ## 1. Problem statement
 
-Count subarrays with sum exactly `k`.
+Given an integer array `nums` and an integer `k`, return the **number of contiguous subarrays** whose sum equals `k`.
 
-Work through the examples in the matching `.java` file `main` method and on LeetCode (if applicable).
+### Example 1
 
-### Constraints (typical)
+```text
+Input:  nums = [1, 1, 1], k = 2
+Output: 2
+```
 
-- Input sizes up to `10^5` (sometimes `10^4`) — aim for **O(n)** or **O(n log n)** unless constraints are tiny.
-- Read whether the problem wants **indices**, **values**, or **counts**.
+Subarrays: `[1,1]` (indices 0–1) and `[1,1]` (indices 1–2).
+
+### Example 2
+
+```text
+Input:  nums = [1, 2, 3], k = 3
+Output: 2
+```
+
+`[1,2]` and `[3]`.
 
 ---
 
 ## 2. Mental picture
 
-Before coding, draw the array and ask: **what do I need to remember from earlier positions?**
+Prefix sum:
 
-- If you need “the other value that completes a pair” → **hash map / set**.
-- If you need “sum of a contiguous block” with negatives allowed → **prefix sum + frequency map**, not sliding window by default.
-- If the array is **sorted** and you discard half the range → **binary search**, not hashing.
+```text
+prefix[i] = nums[0] + nums[1] + ... + nums[i]
+```
 
-Re-open **`notes/Arrays_Hashing_Common_Patterns.md`** and name the pattern letter (A–H for hashing, A–G for binary search) that matches this problem.
+Sum of subarray `left..right`:
+
+```text
+prefix[right] - prefix[left - 1]   (with prefix[-1] = 0)
+```
+
+We want that equal to `k`:
+
+```text
+prefix[right] - prefix[left - 1] == k
+→ prefix[left - 1] == prefix[right] - k
+```
+
+So at each running `prefix`, ask: **how many earlier prefixes equal `prefix - k`?**
+
+```text
+nums:    1   1   1     k = 2
+prefix:  1   2   3
+At 2: 2-2=0 seen once → +1
+At 3: 3-2=1 seen once → +1
+Total 2
+```
+
+### Jargon
+
+| Term | Meaning |
+|---|---|
+| **Prefix sum** | Running sum from the start |
+| **prefixCount map** | How many times each prefix value has appeared |
+| **Why put 0 → 1** | Empty prefix before start; whole-prefix subarrays that equal `k` |
 
 ---
 
 ## 3. How to start thinking
 
-1. State brute force complexity honestly (often `O(n²)`).
-2. Identify the **bottleneck** (re-scanning, re-multiplying, re-walking chains).
-3. Choose the structure: `Map`, `Set`, prefix map, or binary search bounds.
-4. Write the **invariant** in one sentence before coding.
+1. Brute: every `start..end` sum → `O(n²)`.
+2. Can sliding window work? **Only if all numbers are non-negative.** Negatives break the “grow/shrink” rule.
+3. General case (negatives allowed): prefix + HashMap.
 
 ---
 
 ## 4. Approach 1 — Brute force
 
-Implement the definition directly: nested loops, full rescans, or linear search on sorted data.
+### Idea
 
-**Why mention it in interviews:** It proves you understand the problem and gives a correct baseline before optimizing.
+For every start, expand end and keep a running sum; count when sum == k.
 
-**Typical complexity:** `O(n²)` or `O(n)` on sorted data — too slow when `n` is large.
+### Java method
 
----
+`subarraySumBrute`
 
-## 5. Approach 2 — Optimal
+### Complexity
 
-Open the optimal method in the Java file below. While reading:
-
-1. Name each variable (`prefix`, `seen`, `left`, `right`, …).
-2. Say why each update is safe (no missed answers).
-3. Trace one small example on paper (see section 7).
-
-**Target complexity:** See section 9 — usually **O(n)** or **O(log n)** with **O(n)** or **O(1)** extra space.
+`O(n²)` time, `O(1)` extra space.
 
 ---
 
-## 6. Hardest part (slow down here)
+## 5. Approach 2 — Sliding window (NOT for general case)
 
-For **Subarray Sum Equals K**, candidates usually slip on **boundary conditions** and **off-by-one** updates.
-
-- Re-read the optimal method comments in Java.
-- Compare your mental model to the pattern section in `Arrays_Hashing_Common_Patterns.md`.
-- If you use a map, ask: what is the **key** and what does the **value** mean?
+Works for “positive numbers only” variants.  
+If `nums` can have **negatives or zeros**, window size rules break — **do not use** for this LeetCode problem.
 
 ---
 
-## 7. Detailed dry run
+## 6. Approach 3 — Prefix sum + frequency map (optimal — what we use)
 
-`nums = [1, 1, 1]`, `k = 2` — map starts `{0: 1}`, `count = 0`, `prefix = 0`
+### Idea
 
-| idx | x | prefix | need (prefix − k) | map has need? | count | map after |
-|---:|---:|---:|---:|---|---:|---|
-| 0 | 1 | 1 | −1 | 0 | 0 | {0:1, 1:1} |
-| 1 | 1 | 2 | 0 | **1** | 1 | {0:1, 1:1, 2:1} |
-| 2 | 1 | 3 | 1 | **1** | 2 | {0:1, 1:1, 2:1, 3:1} |
+```text
+map: prefixValue → how many times seen
+map.put(0, 1)   // imaginary empty prefix
 
-Two subarrays with sum 2: indices [0,1] and [1,2].
-
----
-
-## 8. Why the optimal approach is correct
-
-Give a **one-paragraph proof sketch**:
-
-- Hashing: “When we are at index `i`, the structure contains exactly the information we need from indices `< i`.”
-- Prefix map: “Each subarray sum equals difference of two prefix sums; we count valid earlier prefixes.”
-- Binary search: “The answer always lies in `[left, right]`; each step discards a half that cannot contain it.”
-
----
-
-## 9. Complexity comparison
-
-| Method | Time | Extra space |
-|---|---:|---:|
-| Brute | See your brute implementation | Usually `O(1)` |
-| Optimal | Per pattern cheat sheet in `Arrays_Hashing_Common_Patterns.md` | Usually `O(n)` for hash structures |
-
----
-
-## 10. Edge cases
-
-Build a tiny table before you submit:
-
-| Case | Expected behavior |
-|---|---|
-| Minimum length input | Single element / pair |
-| All equal values | Duplicates / freq / first-last BS |
-| Negatives (if allowed) | Prefix map still works; sliding sum may not |
-| Empty / null | Return `0`, `false`, or `-1` per spec |
-
----
-
-## 11. Common mistakes
-
-- Using the wrong loop condition (`left < right` vs `left <= right`).
-- Forgetting `prefixCount.put(0, 1)` on subarray-sum problems.
-- Starting a consecutive walk from **every** element (re-sums chains).
-- Returning immediately on first binary-search hit when the problem asks for **first/last** occurrence.
-
----
-
-## 12. Interview — say this aloud
-
-> “I'll start with brute force to confirm the definition, then optimize. For this problem the right tool is **prefix + map**. I'll maintain [map/set/prefix/left-right] so each step is one pass / logarithmic. Let me trace a small example, then I'll code the optimal solution.”
-
-Then code the **optimal** method from memory, not brute force.
-
----
-
-## 13. Follow-ups
-
-- Ask yourself: “What if the array were sorted?” “What if we need indices not values?” “What if `k` changes?”
-- Link to the **next problem** in this folder’s roadmap in `Arrays_Hashing_Common_Patterns.md`.
-
----
-
-## 14. Complete runnable Java
-
-Package: `DSA.ArraysHashing`  
-File: `../SubarraySumEqualsK.java`
-
-```java
-package DSA.ArraysHashing;
-
-import java.util.HashMap;
-import java.util.Map;
-
-/*
-Problem: Subarray Sum Equals K
-
-Return the number of contiguous subarrays whose sum equals k.
-
-Example:
-  nums = [1,1,1], k = 2  →  2
-
-Approach: Prefix sum + map of prefix → count of times seen
-Time: O(n)   Space: O(n)
-*/
-
-public class SubarraySumEqualsK {
-
-    public static int subarraySumBrute(int[] nums, int k) {
-        int count = 0;
-        for (int start = 0; start < nums.length; start++) {
-            int sum = 0;
-            for (int end = start; end < nums.length; end++) {
-                sum += nums[end];
-                if (sum == k) {
-                    count++;
-                }
-            }
-        }
-        return count;
-    }
-
-    public static int subarraySum(int[] nums, int k) {
-        Map<Integer, Integer> prefixCount = new HashMap<>();
-        prefixCount.put(0, 1);
-
-        int prefix = 0;
-        int count = 0;
-
-        for (int x : nums) {
-            prefix += x;
-            count += prefixCount.getOrDefault(prefix - k, 0);
-            prefixCount.put(prefix, prefixCount.getOrDefault(prefix, 0) + 1);
-        }
-        return count;
-    }
-
-    public static void main(String[] args) {
-        int[] a = { 1, 1, 1 };
-        System.out.println("Brute:   " + subarraySumBrute(a, 2));
-        System.out.println("Optimal:" + subarraySum(a, 2));
-
-        int[] b = { 1, 2, 3 };
-        System.out.println("Optimal:" + subarraySum(b, 3)); // [1,2] and [3]
-
-        int[] neg = { 1, -1, 0 };
-        System.out.println("Neg:     " + subarraySum(neg, 0));
-    }
-}
+prefix = 0, count = 0
+for x in nums:
+    prefix += x
+    count += map.getOrDefault(prefix - k, 0)
+    map.put(prefix, map.getOrDefault(prefix, 0) + 1)
 ```
 
-Run `main` after implementing from memory.
+### Why this approach?
 
----
+- Handles negatives
+- One pass `O(n)`
+- Directly counts how many earlier starts form sum `k` ending here
 
-## 15. Practice checklist
+### Why map stores counts (not just a Set)?
 
-- [ ] Implement brute force without looking.
-- [ ] Implement optimal without looking.
-- [ ] Trace one example on paper.
-- [ ] State time and space complexity.
-- [ ] List three edge cases from section 10.
+Multiple earlier prefixes can share the same value → multiple valid subarrays.
 
----
+### Java method
 
----
+`subarraySum`
 
-## Depth addendum — extended workbook
+### Dry run
 
-### Mental picture (second angle)
+`nums = [1, 1, 1]`, `k = 2`
 
-Sketch input on paper and mark **what changes each loop iteration**. If the pattern uses a stack, queue, heap, or map, write its contents as a column beside the array/tree.
+| x | prefix | prefix−k | map before | add to count | map after |
+|---|---|---|---|---|---|
+| — | 0 | — | `{0:1}` | — | — |
+| 1 | 1 | -1 | `{0:1}` | +0 | `{0:1, 1:1}` |
+| 1 | 2 | 0 | `{0:1,1:1}` | +1 | `{0:1,1:1,2:1}` |
+| 1 | 3 | 1 | `…2:1` | +1 | `{…,3:1}` |
 
-### Brute force reminder
+Total count = 2.
 
-State the naive approach in one sentence, its time/space, and **one sentence why** the optimal pattern beats it.
+### Complexity
 
-### Hardest-part drill
-
-| Before coding | After understanding |
+| Time | Extra space |
 |---|---|
-| Unsure what moves | Name the invariant pointers/stack maintain |
-| Edge case worry | Check empty, single, duplicates |
-
-### Extended dry-run columns
-
-| iter | key variables | container snapshot | output so far |
-|---:|---|---|---|
-
-Fill five rows from the matching Java main example in the sibling .java file.
-
-### Interview say-aloud (30s)
-
-> I recognize the pattern, use the right structure for the invariant, avoid brute time because each element is handled once.
-
-### Follow-up Q&A
-
-**Q: In-place?** Only if allowed.  
-**Q: Unsorted input?** State preprocessing.
-
-## 16. Quick revision
-
-One line: **Subarray Sum Equals K = Prefix + map + optimal method in `SubarraySumEqualsK.java`.**
+| `O(n)` | `O(n)` |
 
 ---
 
-## 17. Pattern used
+## 7. What we use and why
 
-See **`Arrays_Hashing_Common_Patterns.md`**.
-
----
-
-## 18. Next problem
-
-**Problem 01 — Classic Binary Search**
+| Approach | Java method | Works with negatives? | Time | Use |
+|---|---|---|---|---|
+| Brute | `subarraySumBrute` | yes | `O(n²)` | Baseline |
+| Sliding window | — | **no** (not always) | `O(n)` | Only all ≥ 0 problems |
+| **Prefix + map** | `subarraySum` | **yes** | `O(n)` | **Interview answer** |
 
 ---
 
+## 8. Hardest part
+
+### Forgetting `map.put(0, 1)`
+
+Misses subarrays that start at index 0.
+
+### Updating the map before checking
+
+Usually **check first**, then put — same spirit as Two Sum. (If you put first, a `k == 0` case can miscount the current prefix against itself depending on logic — be careful.)
+
+Our code: add to count using old map, **then** put current prefix.
+
+### Confusing with “longest subarray”
+
+This problem asks for **count**, not length — hence frequency map, not just first index.
+
 ---
 
-## Repository Java (full)
+## 9. Interview explanation — say this aloud
 
-Align with `../SubarraySumEqualsK.java`.
+“Brute force tries every subarray in `O(n²)`. Sliding window is unsafe when negatives exist. I use prefix sums: a subarray sums to `k` when `prefix - earlierPrefix = k`. I store how many times each prefix appeared in a HashMap, initialize `0 → 1`, and at each step add `map[prefix - k]` to the answer, then record the current prefix. Time `O(n)`, space `O(n)`.”
 
-```java
-package DSA.ArraysHashing;
+---
 
-import java.util.HashMap;
-import java.util.Map;
+## 10. Link to Java
 
-/*
-Problem: Subarray Sum Equals K
-
-Return the number of contiguous subarrays whose sum equals k.
-
-Example:
-  nums = [1,1,1], k = 2  →  2
-
-Approach: Prefix sum + map of prefix → count of times seen
-Time: O(n)   Space: O(n)
-*/
-
-public class SubarraySumEqualsK {
-
-    public static int subarraySumBrute(int[] nums, int k) {
-        int count = 0;
-        for (int start = 0; start < nums.length; start++) {
-            int sum = 0;
-            for (int end = start; end < nums.length; end++) {
-                sum += nums[end];
-                if (sum == k) {
-                    count++;
-                }
-            }
-        }
-        return count;
-    }
-
-    public static int subarraySum(int[] nums, int k) {
-        Map<Integer, Integer> prefixCount = new HashMap<>();
-        prefixCount.put(0, 1);
-
-        int prefix = 0;
-        int count = 0;
-
-        for (int x : nums) {
-            prefix += x;
-            count += prefixCount.getOrDefault(prefix - k, 0);
-            prefixCount.put(prefix, prefixCount.getOrDefault(prefix, 0) + 1);
-        }
-        return count;
-    }
-
-    public static void main(String[] args) {
-        int[] a = { 1, 1, 1 };
-        System.out.println("Brute:   " + subarraySumBrute(a, 2));
-        System.out.println("Optimal:" + subarraySum(a, 2));
-
-        int[] b = { 1, 2, 3 };
-        System.out.println("Optimal:" + subarraySum(b, 3)); // [1,2] and [3]
-
-        int[] neg = { 1, -1, 0 };
-        System.out.println("Neg:     " + subarraySum(neg, 0));
-    }
-}
-```
+| Approach | Method |
+|---|---|
+| Brute | `subarraySumBrute` |
+| Prefix + map | `subarraySum` |

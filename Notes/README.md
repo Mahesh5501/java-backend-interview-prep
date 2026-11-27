@@ -38,6 +38,8 @@ Notes/
 1. `SystemDesign/00_Platform_Blueprint.md`  
 2. Then layers `01` → `11` in order  
 
+Interview-style SD problems (URL shortener, rate limiter, …) are in `SystemDesign/Interview_Problems/`.
+
 ---
 
 ## Simple rule

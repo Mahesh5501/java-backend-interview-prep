@@ -5,18 +5,22 @@ import java.util.Arrays;
 /*
 Problem: Valid Anagram
 
-Given strings s and t, return true if t is an anagram of s.
+Return true if t is an anagram of s (same characters, same frequencies).
 
 Examples:
   s = "anagram", t = "nagaram" → true
   s = "rat", t = "car"         → false
 
-Approach: Count characters (int[26] or sort)
-Time: O(n)   Space: O(1) alphabet fixed
+See notes/Problem_03_Valid_Anagram.md for full approach explanations.
+Assumption for count approach: lowercase English letters a–z.
 */
 
 public class ValidAnagram {
 
+    // APPROACH 1: SORT BOTH AND COMPARE
+    // Why: same multiset of chars → same sorted string.
+    // Use when: quick to write, or you blank on counting.
+    // Time: O(n log n)   Extra space: O(n) for char arrays
     public static boolean isAnagramSort(String s, String t) {
         if (s.length() != t.length()) {
             return false;
@@ -28,6 +32,11 @@ public class ValidAnagram {
         return Arrays.equals(a, b);
     }
 
+    // APPROACH 2: FREQUENCY COUNT int[26] (OPTIMAL — what we use)
+    // Why int[26]: alphabet is fixed lowercase a–z → O(1) extra space.
+    // Why ++ on s and -- on t: leftovers cancel; any non-zero means mismatch.
+    // Why not HashMap here: Map is for Unicode / unknown alphabet follow-ups.
+    // Time: O(n)   Extra space: O(1)
     public static boolean isAnagram(String s, String t) {
         if (s.length() != t.length()) {
             return false;
@@ -46,8 +55,9 @@ public class ValidAnagram {
     }
 
     public static void main(String[] args) {
-        System.out.println(isAnagram("anagram", "nagaram"));
-        System.out.println(isAnagram("rat", "car"));
-        System.out.println(isAnagramSort("listen", "silent"));
+        System.out.println("Count: " + isAnagram("anagram", "nagaram"));
+        System.out.println("Count: " + isAnagram("rat", "car"));
+        System.out.println("Sort:  " + isAnagramSort("listen", "silent"));
+        System.out.println("Sort:  " + isAnagramSort("hello", "bello"));
     }
 }

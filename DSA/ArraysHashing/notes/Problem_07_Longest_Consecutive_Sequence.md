@@ -1,364 +1,158 @@
 # Problem 07 — Longest Consecutive Sequence
 
-> **Pattern:** HashSet starts  
-> **Goal:** Interview-ready: mental model, brute force, optimal approach, dry run, complexity, edge cases, and what to say aloud.
+> **Pattern:** HashSet + only start a run at sequence beginnings  
+> **Java file:** `../LongestConsecutiveSequence.java`  
+> **Goal:** See why sorting works, and why the Set trick is truly `O(n)`.
 
 ---
 
 ## 1. Problem statement
 
-Longest consecutive sequence length in O(n).
+Given an **unsorted** array of integers, return the length of the longest sequence of **consecutive** values.
 
-Work through the examples in the matching `.java` file `main` method and on LeetCode (if applicable).
+Numbers can appear in any order. Extra duplicates do not extend the sequence.
 
-### Constraints (typical)
+### Example
 
-- Input sizes up to `10^5` (sometimes `10^4`) — aim for **O(n)** or **O(n log n)** unless constraints are tiny.
-- Read whether the problem wants **indices**, **values**, or **counts**.
+```text
+Input:  [100, 4, 200, 1, 3, 2]
+Output: 4
+```
+
+Longest run: `1, 2, 3, 4`.
 
 ---
 
 ## 2. Mental picture
 
-Before coding, draw the array and ask: **what do I need to remember from earlier positions?**
+A consecutive sequence looks like a chain:
 
-- If you need “the other value that completes a pair” → **hash map / set**.
-- If you need “sum of a contiguous block” with negatives allowed → **prefix sum + frequency map**, not sliding window by default.
-- If the array is **sorted** and you discard half the range → **binary search**, not hashing.
+```text
+1 → 2 → 3 → 4
+```
 
-Re-open **`notes/Arrays_Hashing_Common_Patterns.md`** and name the pattern letter (A–H for hashing, A–G for binary search) that matches this problem.
+You only want to **start walking** at the beginning of a chain (when `x-1` is missing). Otherwise you re-count the same chain many times.
+
+```text
+set = {100, 4, 200, 1, 3, 2}
+
+1 has no 0  → start; walk 1,2,3,4 → length 4
+2 has 1     → skip (not a start)
+3 has 2     → skip
+4 has 3     → skip
+100 has no 99 → start; length 1
+200 has no 199 → start; length 1
+```
 
 ---
 
 ## 3. How to start thinking
 
-1. State brute force complexity honestly (often `O(n²)`).
-2. Identify the **bottleneck** (re-scanning, re-multiplying, re-walking chains).
-3. Choose the structure: `Map`, `Set`, prefix map, or binary search bounds.
-4. Write the **invariant** in one sentence before coding.
+1. Brute: for each num, while num+1 exists (linear search) → very slow.
+2. Sort: consecutive values become neighbors → easy scan.
+3. Optimal: HashSet for `O(1)` contains; only start at chain heads.
 
 ---
 
-## 4. Approach 1 — Brute force
+## 4. Approach 1 — Sort then scan
 
-Implement the definition directly: nested loops, full rescans, or linear search on sorted data.
+### Idea
 
-**Why mention it in interviews:** It proves you understand the problem and gives a correct baseline before optimizing.
+Sort, skip duplicates, count how long `nums[i] == nums[i-1] + 1` streaks last.
 
-**Typical complexity:** `O(n²)` or `O(n)` on sorted data — too slow when `n` is large.
+### Java method
 
----
+`longestConsecutiveSort`
 
-## 5. Approach 2 — Optimal
+### Complexity
 
-Open the optimal method in the Java file below. While reading:
+`O(n log n)` time.
 
-1. Name each variable (`prefix`, `seen`, `left`, `right`, …).
-2. Say why each update is safe (no missed answers).
-3. Trace one small example on paper (see section 7).
+### When to use
 
-**Target complexity:** See section 9 — usually **O(n)** or **O(log n)** with **O(n)** or **O(1)** extra space.
+Simple and correct. Good if `O(n)` is not required. LeetCode asks for `O(n)` → prefer Set.
 
 ---
 
-## 6. Hardest part (slow down here)
+## 5. Approach 2 — HashSet + start only when `x-1` missing (optimal — what we use)
 
-For **Longest Consecutive Sequence**, candidates usually slip on **boundary conditions** and **off-by-one** updates.
+### Idea
 
-- Re-read the optimal method comments in Java.
-- Compare your mental model to the pattern section in `Arrays_Hashing_Common_Patterns.md`.
-- If you use a map, ask: what is the **key** and what does the **value** mean?
+1. Put all numbers in a HashSet (dedupes automatically).
+2. For each `x` in the set:
+   - If `x-1` exists → skip (middle of a chain).
+   - Else walk `x, x+1, x+2, ...` while present; track best length.
 
----
+### Why this is O(n)
 
-## 7. Detailed dry run
+Each number is the start of a walk **at most once**. Across all walks, each number is visited about once as you step `x+len`. Total work proportional to `n`.
 
-Pick the **smallest interesting example** from `main` in the Java file.
+### Why the `x-1` check matters
 
-| Step | What to write on paper |
-|---|---|
-| Initialization | Empty map/set, `left/right`, or `prefix=0` + `{0:1}` if prefix problem |
-| Each index | Show map/set after the step; or show which half of the array remains in BS |
-| Answer | Final return value |
+Without it, from every number you walk forward → can become `O(n²)`.
 
-Do this once with the video off. Interviewers care that you can trace without running the IDE.
+### Java method
 
----
-
-## 8. Why the optimal approach is correct
-
-Give a **one-paragraph proof sketch**:
-
-- Hashing: “When we are at index `i`, the structure contains exactly the information we need from indices `< i`.”
-- Prefix map: “Each subarray sum equals difference of two prefix sums; we count valid earlier prefixes.”
-- Binary search: “The answer always lies in `[left, right]`; each step discards a half that cannot contain it.”
-
----
-
-## 9. Complexity comparison
-
-| Method | Time | Extra space |
-|---|---:|---:|
-| Brute | See your brute implementation | Usually `O(1)` |
-| Optimal | Per pattern cheat sheet in `Arrays_Hashing_Common_Patterns.md` | Usually `O(n)` for hash structures |
-
----
-
-## 10. Edge cases
-
-Build a tiny table before you submit:
-
-| Case | Expected behavior |
-|---|---|
-| Minimum length input | Single element / pair |
-| All equal values | Duplicates / freq / first-last BS |
-| Negatives (if allowed) | Prefix map still works; sliding sum may not |
-| Empty / null | Return `0`, `false`, or `-1` per spec |
-
----
-
-## 11. Common mistakes
-
-- Using the wrong loop condition (`left < right` vs `left <= right`).
-- Forgetting `prefixCount.put(0, 1)` on subarray-sum problems.
-- Starting a consecutive walk from **every** element (re-sums chains).
-- Returning immediately on first binary-search hit when the problem asks for **first/last** occurrence.
-
----
-
-## 12. Interview — say this aloud
-
-> “I'll start with brute force to confirm the definition, then optimize. For this problem the right tool is **hashset starts**. I'll maintain [map/set/prefix/left-right] so each step is one pass / logarithmic. Let me trace a small example, then I'll code the optimal solution.”
-
-Then code the **optimal** method from memory, not brute force.
-
----
-
-## 13. Follow-ups
-
-- Ask yourself: “What if the array were sorted?” “What if we need indices not values?” “What if `k` changes?”
-- Link to the **next problem** in this folder’s roadmap in `Arrays_Hashing_Common_Patterns.md`.
-
----
-
-## 14. Complete runnable Java
-
-Package: `DSA.ArraysHashing`  
-File: `../LongestConsecutiveSequence.java`
+`longestConsecutive`
 
 ```java
-package DSA.ArraysHashing;
+public static int longestConsecutive(int[] nums) {
+    Set<Integer> set = new HashSet<>();
+    for (int x : nums) set.add(x);
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-
-/*
-Problem: Longest Consecutive Sequence
-
-Given unsorted nums, return length of longest consecutive elements sequence.
-Run in O(n) time.
-
-Example:
-  [100,4,200,1,3,2] → 4  (sequence 1,2,3,4)
-
-Approach: HashSet; only start walk when x-1 is not in set
-Time: O(n)   Space: O(n)
-*/
-
-public class LongestConsecutiveSequence {
-
-    public static int longestConsecutiveSort(int[] nums) {
-        if (nums.length == 0) {
-            return 0;
-        }
-        Arrays.sort(nums);
-        int best = 1;
-        int streak = 1;
-        for (int i = 1; i < nums.length; i++) {
-            if (nums[i] == nums[i - 1]) {
-                continue;
-            }
-            if (nums[i] == nums[i - 1] + 1) {
-                streak++;
-            } else {
-                streak = 1;
-            }
-            best = Math.max(best, streak);
-        }
-        return best;
+    int best = 0;
+    for (int x : set) {
+        if (set.contains(x - 1)) continue; // not a sequence start
+        int len = 1;
+        while (set.contains(x + len)) len++;
+        best = Math.max(best, len);
     }
-
-    public static int longestConsecutive(int[] nums) {
-        Set<Integer> set = new HashSet<>();
-        for (int x : nums) {
-            set.add(x);
-        }
-
-        int best = 0;
-        for (int x : set) {
-            if (set.contains(x - 1)) {
-                continue;
-            }
-            int len = 1;
-            while (set.contains(x + len)) {
-                len++;
-            }
-            best = Math.max(best, len);
-        }
-        return best;
-    }
-
-    public static void main(String[] args) {
-        int[] nums = { 100, 4, 200, 1, 3, 2 };
-        System.out.println("Sort:    " + longestConsecutiveSort(nums));
-        System.out.println("Optimal:" + longestConsecutive(nums));
-        System.out.println("Empty:   " + longestConsecutive(new int[] {}));
-    }
+    return best;
 }
 ```
 
-Run `main` after implementing from memory.
+### Complexity
 
----
-
-## 15. Practice checklist
-
-- [ ] Implement brute force without looking.
-- [ ] Implement optimal without looking.
-- [ ] Trace one example on paper.
-- [ ] State time and space complexity.
-- [ ] List three edge cases from section 10.
-
----
-
----
-
-## Depth addendum — extended workbook
-
-### Mental picture (second angle)
-
-Sketch input on paper and mark **what changes each loop iteration**. If the pattern uses a stack, queue, heap, or map, write its contents as a column beside the array/tree.
-
-### Brute force reminder
-
-State the naive approach in one sentence, its time/space, and **one sentence why** the optimal pattern beats it.
-
-### Hardest-part drill
-
-| Before coding | After understanding |
+| Time | Extra space |
 |---|---|
-| Unsure what moves | Name the invariant pointers/stack maintain |
-| Edge case worry | Check empty, single, duplicates |
-
-### Extended dry-run columns
-
-| iter | key variables | container snapshot | output so far |
-|---:|---|---|---|
-
-Fill five rows from the matching Java main example in the sibling .java file.
-
-### Interview say-aloud (30s)
-
-> I recognize the pattern, use the right structure for the invariant, avoid brute time because each element is handled once.
-
-### Follow-up Q&A
-
-**Q: In-place?** Only if allowed.  
-**Q: Unsorted input?** State preprocessing.
-
-## 16. Quick revision
-
-One line: **Longest Consecutive Sequence = HashSet starts + optimal method in `LongestConsecutiveSequence.java`.**
+| `O(n)` average | `O(n)` |
 
 ---
 
-## 17. Pattern used
+## 6. What we use and why
 
-See **`Arrays_Hashing_Common_Patterns.md`**.
-
----
-
-## 18. Next problem
-
-**Problem 08 — Subarray Sum Equals K**
+| Approach | Java method | Time | Use |
+|---|---|---|---|
+| Sort + streak | `longestConsecutiveSort` | `O(n log n)` | Simple backup |
+| **Set + start heads** | `longestConsecutive` | `O(n)` | **Required interview answer** |
 
 ---
 
+## 7. Hardest part
+
+### Mistake — Walking forward from every number
+
+Destroys the `O(n)` guarantee.
+
+### Mistake — Using the array instead of the set in the for-loop
+
+Duplicates in `nums` can re-trigger work. Iterate the **set**.
+
+### Empty array
+
+Return `0`.
+
 ---
 
-## Repository Java (full)
+## 8. Interview explanation — say this aloud
 
-Align with `../LongestConsecutiveSequence.java`.
+“Sorting then scanning streaks is `O(n log n)`. For `O(n)`, I put numbers in a HashSet. I only start a forward walk when `x-1` is not in the set — that means `x` is the start of a consecutive run. I walk with `contains(x+len)` and track the max length. Each number is visited constantly many times overall, so time is `O(n)`.”
 
-```java
-package DSA.ArraysHashing;
+---
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+## 9. Link to Java
 
-/*
-Problem: Longest Consecutive Sequence
-
-Given unsorted nums, return length of longest consecutive elements sequence.
-Run in O(n) time.
-
-Example:
-  [100,4,200,1,3,2] → 4  (sequence 1,2,3,4)
-
-Approach: HashSet; only start walk when x-1 is not in set
-Time: O(n)   Space: O(n)
-*/
-
-public class LongestConsecutiveSequence {
-
-    public static int longestConsecutiveSort(int[] nums) {
-        if (nums.length == 0) {
-            return 0;
-        }
-        Arrays.sort(nums);
-        int best = 1;
-        int streak = 1;
-        for (int i = 1; i < nums.length; i++) {
-            if (nums[i] == nums[i - 1]) {
-                continue;
-            }
-            if (nums[i] == nums[i - 1] + 1) {
-                streak++;
-            } else {
-                streak = 1;
-            }
-            best = Math.max(best, streak);
-        }
-        return best;
-    }
-
-    public static int longestConsecutive(int[] nums) {
-        Set<Integer> set = new HashSet<>();
-        for (int x : nums) {
-            set.add(x);
-        }
-
-        int best = 0;
-        for (int x : set) {
-            if (set.contains(x - 1)) {
-                continue;
-            }
-            int len = 1;
-            while (set.contains(x + len)) {
-                len++;
-            }
-            best = Math.max(best, len);
-        }
-        return best;
-    }
-
-    public static void main(String[] args) {
-        int[] nums = { 100, 4, 200, 1, 3, 2 };
-        System.out.println("Sort:    " + longestConsecutiveSort(nums));
-        System.out.println("Optimal:" + longestConsecutive(nums));
-        System.out.println("Empty:   " + longestConsecutive(new int[] {}));
-    }
-}
-```
+| Approach | Method |
+|---|---|
+| Sort | `longestConsecutiveSort` |
+| HashSet optimal | `longestConsecutive` |

@@ -1,412 +1,175 @@
 # Problem 05 — Top K Frequent Elements
 
-> **Pattern:** Freq + bucket/heap  
-> **Goal:** Interview-ready: mental model, brute force, optimal approach, dry run, complexity, edge cases, and what to say aloud.
+> **Pattern:** Frequency map + bucket **or** min-heap  
+> **Java file:** `../TopKFrequentElements.java`  
+> **Goal:** Know both interview solutions and when each wins.
 
 ---
 
 ## 1. Problem statement
 
-Return the `k` most frequent integers.
+Given `nums` and integer `k`, return the `k` most frequent elements (any order).
 
-Work through the examples in the matching `.java` file `main` method and on LeetCode (if applicable).
+### Example
 
-### Constraints (typical)
+```text
+Input:  nums = [1,1,1,2,2,3], k = 2
+Output: [1, 2]   (or [2, 1])
+```
 
-- Input sizes up to `10^5` (sometimes `10^4`) — aim for **O(n)** or **O(n log n)** unless constraints are tiny.
-- Read whether the problem wants **indices**, **values**, or **counts**.
+`1` appears 3 times, `2` appears 2 times, `3` appears once → top 2 are `1` and `2`.
 
 ---
 
 ## 2. Mental picture
 
-Before coding, draw the array and ask: **what do I need to remember from earlier positions?**
+Step 1 always: **count frequencies**.
 
-- If you need “the other value that completes a pair” → **hash map / set**.
-- If you need “sum of a contiguous block” with negatives allowed → **prefix sum + frequency map**, not sliding window by default.
-- If the array is **sorted** and you discard half the range → **binary search**, not hashing.
+```text
+1 → 3
+2 → 2
+3 → 1
+```
 
-Re-open **`notes/Arrays_Hashing_Common_Patterns.md`** and name the pattern letter (A–H for hashing, A–G for binary search) that matches this problem.
+Step 2: pick the `k` keys with largest counts — either:
+
+- Put numbers into **buckets by frequency**, then read from high freq down
+- Keep a **min-heap of size k** by frequency
 
 ---
 
 ## 3. How to start thinking
 
-1. State brute force complexity honestly (often `O(n²)`).
-2. Identify the **bottleneck** (re-scanning, re-multiplying, re-walking chains).
-3. Choose the structure: `Map`, `Set`, prefix map, or binary search bounds.
-4. Write the **invariant** in one sentence before coding.
+1. Must count first → HashMap value → frequency.
+2. Naive: sort unique entries by frequency → `O(n log n)`.
+3. Better with heap: `O(n log k)`.
+4. Best average for this problem: bucket sort by frequency → `O(n)`.
 
 ---
 
-## 4. Approach 1 — Brute force
+## 4. Approach 1 — Frequency map + sort entries
 
-Implement the definition directly: nested loops, full rescans, or linear search on sorted data.
+### Idea
 
-**Why mention it in interviews:** It proves you understand the problem and gives a correct baseline before optimizing.
+Count, put entries in a list, sort by frequency descending, take first `k`.
 
-**Typical complexity:** `O(n²)` or `O(n)` on sorted data — too slow when `n` is large.
+### Complexity
 
----
+`O(n log n)` — fine, but not the sharpest answer.
 
-## 5. Approach 2 — Optimal
+### When
 
-Open the optimal method in the Java file below. While reading:
-
-1. Name each variable (`prefix`, `seen`, `left`, `right`, …).
-2. Say why each update is safe (no missed answers).
-3. Trace one small example on paper (see section 7).
-
-**Target complexity:** See section 9 — usually **O(n)** or **O(log n)** with **O(n)** or **O(1)** extra space.
+Quick coding if constraints are mild.
 
 ---
 
-## 6. Hardest part (slow down here)
+## 5. Approach 2 — Frequency map + min-heap of size k
 
-For **Top K Frequent Elements**, candidates usually slip on **boundary conditions** and **off-by-one** updates.
+### Idea
 
-- Re-read the optimal method comments in Java.
-- Compare your mental model to the pattern section in `Arrays_Hashing_Common_Patterns.md`.
-- If you use a map, ask: what is the **key** and what does the **value** mean?
-
----
-
-## 7. Detailed dry run
-
-Pick the **smallest interesting example** from `main` in the Java file.
-
-| Step | What to write on paper |
-|---|---|
-| Initialization | Empty map/set, `left/right`, or `prefix=0` + `{0:1}` if prefix problem |
-| Each index | Show map/set after the step; or show which half of the array remains in BS |
-| Answer | Final return value |
-
-Do this once with the video off. Interviewers care that you can trace without running the IDE.
-
----
-
-## 8. Why the optimal approach is correct
-
-Give a **one-paragraph proof sketch**:
-
-- Hashing: “When we are at index `i`, the structure contains exactly the information we need from indices `< i`.”
-- Prefix map: “Each subarray sum equals difference of two prefix sums; we count valid earlier prefixes.”
-- Binary search: “The answer always lies in `[left, right]`; each step discards a half that cannot contain it.”
-
----
-
-## 9. Complexity comparison
-
-| Method | Time | Extra space |
-|---|---:|---:|
-| Brute | See your brute implementation | Usually `O(1)` |
-| Optimal | Per pattern cheat sheet in `Arrays_Hashing_Common_Patterns.md` | Usually `O(n)` for hash structures |
-
----
-
-## 10. Edge cases
-
-Build a tiny table before you submit:
-
-| Case | Expected behavior |
-|---|---|
-| Minimum length input | Single element / pair |
-| All equal values | Duplicates / freq / first-last BS |
-| Negatives (if allowed) | Prefix map still works; sliding sum may not |
-| Empty / null | Return `0`, `false`, or `-1` per spec |
-
----
-
-## 11. Common mistakes
-
-- Using the wrong loop condition (`left < right` vs `left <= right`).
-- Forgetting `prefixCount.put(0, 1)` on subarray-sum problems.
-- Starting a consecutive walk from **every** element (re-sums chains).
-- Returning immediately on first binary-search hit when the problem asks for **first/last** occurrence.
-
----
-
-## 12. Interview — say this aloud
-
-> “I'll start with brute force to confirm the definition, then optimize. For this problem the right tool is **freq + bucket/heap**. I'll maintain [map/set/prefix/left-right] so each step is one pass / logarithmic. Let me trace a small example, then I'll code the optimal solution.”
-
-Then code the **optimal** method from memory, not brute force.
-
----
-
-## 13. Follow-ups
-
-- Ask yourself: “What if the array were sorted?” “What if we need indices not values?” “What if `k` changes?”
-- Link to the **next problem** in this folder’s roadmap in `Arrays_Hashing_Common_Patterns.md`.
-
----
-
-## 14. Complete runnable Java
-
-Package: `DSA.ArraysHashing`  
-File: `../TopKFrequentElements.java`
-
-```java
-package DSA.ArraysHashing;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.PriorityQueue;
-
-/*
-Problem: Top K Frequent Elements
-
-Return the k most frequent integers in nums (any order).
-
-Example:
-  nums = [1,1,1,2,2,3], k = 2  →  [1,2] (or [2,1])
-
-Approach 1: Frequency map + bucket by frequency — O(n)
-Approach 2: Frequency map + min-heap of size k — O(n log k)
-*/
-
-public class TopKFrequentElements {
-
-    public static int[] topKFrequentBucket(int[] nums, int k) {
-        Map<Integer, Integer> freq = new HashMap<>();
-        for (int x : nums) {
-            freq.put(x, freq.getOrDefault(x, 0) + 1);
-        }
-
-        @SuppressWarnings("unchecked")
-        List<Integer>[] bucket = new List[nums.length + 1];
-        for (Map.Entry<Integer, Integer> e : freq.entrySet()) {
-            int f = e.getValue();
-            if (bucket[f] == null) {
-                bucket[f] = new ArrayList<>();
-            }
-            bucket[f].add(e.getKey());
-        }
-
-        int[] ans = new int[k];
-        int idx = 0;
-        for (int f = bucket.length - 1; f >= 0 && idx < k; f--) {
-            if (bucket[f] == null) {
-                continue;
-            }
-            for (int val : bucket[f]) {
-                ans[idx++] = val;
-                if (idx == k) {
-                    return ans;
-                }
-            }
-        }
-        return ans;
-    }
-
-    public static int[] topKFrequentHeap(int[] nums, int k) {
-        Map<Integer, Integer> freq = new HashMap<>();
-        for (int x : nums) {
-            freq.put(x, freq.getOrDefault(x, 0) + 1);
-        }
-
-        PriorityQueue<Integer> minHeap = new PriorityQueue<>(
-            (a, b) -> freq.get(a) - freq.get(b));
-
-        for (int key : freq.keySet()) {
-            minHeap.offer(key);
-            if (minHeap.size() > k) {
-                minHeap.poll();
-            }
-        }
-
-        int[] ans = new int[k];
-        for (int i = k - 1; i >= 0; i--) {
-            ans[i] = minHeap.poll();
-        }
-        return ans;
-    }
-
-    public static void main(String[] args) {
-        int[] nums = { 1, 1, 1, 2, 2, 3 };
-        int k = 2;
-        System.out.print("Bucket: ");
-        for (int x : topKFrequentBucket(nums, k)) {
-            System.out.print(x + " ");
-        }
-        System.out.println();
-        System.out.print("Heap:   ");
-        for (int x : topKFrequentHeap(nums, k)) {
-            System.out.print(x + " ");
-        }
-        System.out.println();
-    }
-}
+```text
+for each unique number:
+    push onto min-heap ordered by frequency
+    if heap size > k → pop (remove least frequent)
 ```
 
-Run `main` after implementing from memory.
+Heap always holds the current top-k.
 
----
+### Why min-heap (not max-heap)?
 
-## 15. Practice checklist
+With size capped at `k`, popping the **smallest** frequency keeps the k largest.
 
-- [ ] Implement brute force without looking.
-- [ ] Implement optimal without looking.
-- [ ] Trace one example on paper.
-- [ ] State time and space complexity.
-- [ ] List three edge cases from section 10.
+### Java method
 
----
+`topKFrequentHeap`
 
----
+### Complexity
 
-## Depth addendum — extended workbook
-
-### Mental picture (second angle)
-
-Sketch input on paper and mark **what changes each loop iteration**. If the pattern uses a stack, queue, heap, or map, write its contents as a column beside the array/tree.
-
-### Brute force reminder
-
-State the naive approach in one sentence, its time/space, and **one sentence why** the optimal pattern beats it.
-
-### Hardest-part drill
-
-| Before coding | After understanding |
+| Time | Extra space |
 |---|---|
-| Unsure what moves | Name the invariant pointers/stack maintain |
-| Edge case worry | Check empty, single, duplicates |
+| `O(n log k)` | `O(n)` for map + `O(k)` heap |
 
-### Extended dry-run columns
+### When to use
 
-| iter | key variables | container snapshot | output so far |
-|---:|---|---|---|
-
-Fill five rows from the matching Java main example in the sibling .java file.
-
-### Interview say-aloud (30s)
-
-> I recognize the pattern, use the right structure for the invariant, avoid brute time because each element is handled once.
-
-### Follow-up Q&A
-
-**Q: In-place?** Only if allowed.  
-**Q: Unsorted input?** State preprocessing.
-
-## 16. Quick revision
-
-One line: **Top K Frequent Elements = Freq + bucket/heap + optimal method in `TopKFrequentElements.java`.**
+When `k` is small compared to `n`, or interviewer wants heap practice.
 
 ---
 
-## 17. Pattern used
+## 6. Approach 3 — Frequency map + buckets (optimal — often preferred)
 
-See **`Arrays_Hashing_Common_Patterns.md`**.
+### Idea
 
----
+Frequency of any value is between `1` and `n`.
 
-## 18. Next problem
+```text
+bucket[f] = list of values that appear exactly f times
 
-**Problem 06 — Product of Array Except Self**
-
----
-
----
-
-## Repository Java (full)
-
-Align with `../TopKFrequentElements.java`.
-
-```java
-package DSA.ArraysHashing;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.PriorityQueue;
-
-/*
-Problem: Top K Frequent Elements
-
-Return the k most frequent integers in nums (any order).
-
-Example:
-  nums = [1,1,1,2,2,3], k = 2  →  [1,2] (or [2,1])
-
-Approach 1: Frequency map + bucket by frequency — O(n)
-Approach 2: Frequency map + min-heap of size k — O(n log k)
-*/
-
-public class TopKFrequentElements {
-
-    public static int[] topKFrequentBucket(int[] nums, int k) {
-        Map<Integer, Integer> freq = new HashMap<>();
-        for (int x : nums) {
-            freq.put(x, freq.getOrDefault(x, 0) + 1);
-        }
-
-        @SuppressWarnings("unchecked")
-        List<Integer>[] bucket = new List[nums.length + 1];
-        for (Map.Entry<Integer, Integer> e : freq.entrySet()) {
-            int f = e.getValue();
-            if (bucket[f] == null) {
-                bucket[f] = new ArrayList<>();
-            }
-            bucket[f].add(e.getKey());
-        }
-
-        int[] ans = new int[k];
-        int idx = 0;
-        for (int f = bucket.length - 1; f >= 0 && idx < k; f--) {
-            if (bucket[f] == null) {
-                continue;
-            }
-            for (int val : bucket[f]) {
-                ans[idx++] = val;
-                if (idx == k) {
-                    return ans;
-                }
-            }
-        }
-        return ans;
-    }
-
-    public static int[] topKFrequentHeap(int[] nums, int k) {
-        Map<Integer, Integer> freq = new HashMap<>();
-        for (int x : nums) {
-            freq.put(x, freq.getOrDefault(x, 0) + 1);
-        }
-
-        PriorityQueue<Integer> minHeap = new PriorityQueue<>(
-            (a, b) -> freq.get(a) - freq.get(b));
-
-        for (int key : freq.keySet()) {
-            minHeap.offer(key);
-            if (minHeap.size() > k) {
-                minHeap.poll();
-            }
-        }
-
-        int[] ans = new int[k];
-        for (int i = k - 1; i >= 0; i--) {
-            ans[i] = minHeap.poll();
-        }
-        return ans;
-    }
-
-    public static void main(String[] args) {
-        int[] nums = { 1, 1, 1, 2, 2, 3 };
-        int k = 2;
-        System.out.print("Bucket: ");
-        for (int x : topKFrequentBucket(nums, k)) {
-            System.out.print(x + " ");
-        }
-        System.out.println();
-        System.out.print("Heap:   ");
-        for (int x : topKFrequentHeap(nums, k)) {
-            System.out.print(x + " ");
-        }
-        System.out.println();
-    }
-}
+Then scan f from n down to 1, collect values until you have k of them.
 ```
+
+```text
+nums freq: 1→3, 2→2, 3→1
+
+bucket[3] = [1]
+bucket[2] = [2]
+bucket[1] = [3]
+
+Scan high→low: take 1, then 2 → done (k=2)
+```
+
+### Why this approach?
+
+Linear time after counting — no heap log factors.
+
+### Java method
+
+`topKFrequentBucket`
+
+### Complexity
+
+| Time | Extra space |
+|---|---|
+| `O(n)` | `O(n)` |
+
+---
+
+## 7. What we use and why
+
+| Approach | Java method | Time | Use when |
+|---|---|---|---|
+| Sort by freq | *(verbal)* | `O(n log n)` | Quick |
+| Min-heap size k | `topKFrequentHeap` | `O(n log k)` | Heap follow-up / small k |
+| **Buckets** | `topKFrequentBucket` | `O(n)` | **Best default here** |
+
+Both heap and bucket are interview-valid. Know **both**. Lead with bucket if comfortable; offer heap as alternative.
+
+---
+
+## 8. Hardest part
+
+### Mistake — Max-heap of all uniques then pop k
+
+Works but `O(n log n)`. Size-`k` min-heap is smarter.
+
+### Mistake — Bucket index off-by-one
+
+`bucket` length should be `n + 1` because frequency can be `n`.
+
+### Mistake — Assuming unique frequencies
+
+Multiple numbers can share the same frequency — bucket holds a **list**.
+
+---
+
+## 9. Interview explanation — say this aloud
+
+“I count frequencies with a HashMap. Then I either (1) put numbers into buckets indexed by frequency and read from high to low until I have k values — `O(n)`, or (2) keep a min-heap of size k by frequency — `O(n log k)`. I’ll use buckets for linear time.”
+
+---
+
+## 10. Link to Java
+
+| Approach | Method |
+|---|---|
+| Bucket | `topKFrequentBucket` |
+| Heap | `topKFrequentHeap` |

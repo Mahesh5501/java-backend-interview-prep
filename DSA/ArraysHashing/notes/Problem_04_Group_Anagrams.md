@@ -1,320 +1,191 @@
 # Problem 04 — Group Anagrams
 
-> **Pattern:** Map + canonical key  
-> **Goal:** Interview-ready: mental model, brute force, optimal approach, dry run, complexity, edge cases, and what to say aloud.
+> **Pattern:** Canonical key → HashMap of groups  
+> **Java file:** `../GroupAnagrams.java`  
+> **Goal:** Know why we hash a “fingerprint” of each word, and which fingerprints to use.
 
 ---
 
 ## 1. Problem statement
 
-Group strings that are mutual anagrams.
+Given an array of strings, group the anagrams together.
 
-Work through the examples in the matching `.java` file `main` method and on LeetCode (if applicable).
+Order of groups (and order inside a group) can vary.
 
-### Constraints (typical)
+### Example
 
-- Input sizes up to `10^5` (sometimes `10^4`) — aim for **O(n)** or **O(n log n)** unless constraints are tiny.
-- Read whether the problem wants **indices**, **values**, or **counts**.
+```text
+Input:  ["eat","tea","tan","ate","nat","bat"]
+
+Output (one valid grouping):
+  [["bat"],["nat","tan"],["ate","eat","tea"]]
+```
+
+`eat`, `tea`, `ate` share letters → one group.  
+`tan`, `nat` → another.  
+`bat` alone.
 
 ---
 
 ## 2. Mental picture
 
-Before coding, draw the array and ask: **what do I need to remember from earlier positions?**
+Anagrams share the same character bag. Give every word a **key** that is the same for anagrams and different otherwise. Put words with the same key in the same list.
 
-- If you need “the other value that completes a pair” → **hash map / set**.
-- If you need “sum of a contiguous block” with negatives allowed → **prefix sum + frequency map**, not sliding window by default.
-- If the array is **sorted** and you discard half the range → **binary search**, not hashing.
+```text
+eat → key "aet"
+tea → key "aet"   } same bucket
+ate → key "aet"
 
-Re-open **`notes/Arrays_Hashing_Common_Patterns.md`** and name the pattern letter (A–H for hashing, A–G for binary search) that matches this problem.
+tan → key "ant"
+nat → key "ant"
+
+bat → key "abt"
+```
+
+### Jargon
+
+| Term | Meaning |
+|---|---|
+| **Canonical key** | Fingerprint of a word (sorted chars, or count signature) |
+| **Group map** | `Map<key, List<word>>` |
 
 ---
 
 ## 3. How to start thinking
 
-1. State brute force complexity honestly (often `O(n²)`).
-2. Identify the **bottleneck** (re-scanning, re-multiplying, re-walking chains).
-3. Choose the structure: `Map`, `Set`, prefix map, or binary search bounds.
-4. Write the **invariant** in one sentence before coding.
+1. Brute force? For each word, compare to every other with an anagram check → slow.
+2. Better? One pass: compute key, append word to that key’s list.
+3. What key? Sorted string (simple) or count string (faster for long words).
 
 ---
 
-## 4. Approach 1 — Brute force
+## 4. Approach 1 — Brute force (pairwise anagram checks)
 
-Implement the definition directly: nested loops, full rescans, or linear search on sorted data.
+### Idea
 
-**Why mention it in interviews:** It proves you understand the problem and gives a correct baseline before optimizing.
+For each ungrouped word, scan remaining words and pull anagrams into a group.
 
-**Typical complexity:** `O(n²)` or `O(n)` on sorted data — too slow when `n` is large.
+### Complexity
 
----
+Roughly `O(n² * k)` where `k` = word length — too slow for interviews as final answer.
 
-## 5. Approach 2 — Optimal
+### When to mention
 
-Open the optimal method in the Java file below. While reading:
-
-1. Name each variable (`prefix`, `seen`, `left`, `right`, …).
-2. Say why each update is safe (no missed answers).
-3. Trace one small example on paper (see section 7).
-
-**Target complexity:** See section 9 — usually **O(n)** or **O(log n)** with **O(n)** or **O(1)** extra space.
+Only as the “naive” starting point verbally.
 
 ---
 
-## 6. Hardest part (slow down here)
+## 5. Approach 2 — Sorted string as key (what we use in the Java file)
 
-For **Group Anagrams**, candidates usually slip on **boundary conditions** and **off-by-one** updates.
+### Idea
 
-- Re-read the optimal method comments in Java.
-- Compare your mental model to the pattern section in `Arrays_Hashing_Common_Patterns.md`.
-- If you use a map, ask: what is the **key** and what does the **value** mean?
+```text
+key = sort characters of word
+map.computeIfAbsent(key, ...).add(word)
+return all map values
+```
 
----
+### Why this approach?
 
-## 7. Detailed dry run
+- Anagrams sort to the **same** string
+- Easy to code and explain
+- One pass over the word list
 
-Pick the **smallest interesting example** from `main` in the Java file.
+### Java method
 
-| Step | What to write on paper |
-|---|---|
-| Initialization | Empty map/set, `left/right`, or `prefix=0` + `{0:1}` if prefix problem |
-| Each index | Show map/set after the step; or show which half of the array remains in BS |
-| Answer | Final return value |
-
-Do this once with the video off. Interviewers care that you can trace without running the IDE.
-
----
-
-## 8. Why the optimal approach is correct
-
-Give a **one-paragraph proof sketch**:
-
-- Hashing: “When we are at index `i`, the structure contains exactly the information we need from indices `< i`.”
-- Prefix map: “Each subarray sum equals difference of two prefix sums; we count valid earlier prefixes.”
-- Binary search: “The answer always lies in `[left, right]`; each step discards a half that cannot contain it.”
-
----
-
-## 9. Complexity comparison
-
-| Method | Time | Extra space |
-|---|---:|---:|
-| Brute | See your brute implementation | Usually `O(1)` |
-| Optimal | Per pattern cheat sheet in `Arrays_Hashing_Common_Patterns.md` | Usually `O(n)` for hash structures |
-
----
-
-## 10. Edge cases
-
-Build a tiny table before you submit:
-
-| Case | Expected behavior |
-|---|---|
-| Minimum length input | Single element / pair |
-| All equal values | Duplicates / freq / first-last BS |
-| Negatives (if allowed) | Prefix map still works; sliding sum may not |
-| Empty / null | Return `0`, `false`, or `-1` per spec |
-
----
-
-## 11. Common mistakes
-
-- Using the wrong loop condition (`left < right` vs `left <= right`).
-- Forgetting `prefixCount.put(0, 1)` on subarray-sum problems.
-- Starting a consecutive walk from **every** element (re-sums chains).
-- Returning immediately on first binary-search hit when the problem asks for **first/last** occurrence.
-
----
-
-## 12. Interview — say this aloud
-
-> “I'll start with brute force to confirm the definition, then optimize. For this problem the right tool is **map + canonical key**. I'll maintain [map/set/prefix/left-right] so each step is one pass / logarithmic. Let me trace a small example, then I'll code the optimal solution.”
-
-Then code the **optimal** method from memory, not brute force.
-
----
-
-## 13. Follow-ups
-
-- Ask yourself: “What if the array were sorted?” “What if we need indices not values?” “What if `k` changes?”
-- Link to the **next problem** in this folder’s roadmap in `Arrays_Hashing_Common_Patterns.md`.
-
----
-
-## 14. Complete runnable Java
-
-Package: `DSA.ArraysHashing`  
-File: `../GroupAnagrams.java`
+`groupAnagrams` (+ helper `sortedKey`)
 
 ```java
-package DSA.ArraysHashing;
+private static String sortedKey(String word) {
+    char[] chars = word.toCharArray();
+    Arrays.sort(chars);
+    return new String(chars);
+}
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-/*
-Problem: Group Anagrams
-
-Group strings that are anagrams of each other.
-
-Example:
-  ["eat","tea","tan","ate","nat","bat"]
-  → [["bat"],["nat","tan"],["ate","eat","tea"]]  (order within groups may vary)
-
-Approach: Map canonical key → list of words
-Time: O(n * k log k) with sorted key, k = max word length
-*/
-
-public class GroupAnagrams {
-
-    private static String sortedKey(String word) {
-        char[] chars = word.toCharArray();
-        Arrays.sort(chars);
-        return new String(chars);
+public static List<List<String>> groupAnagrams(String[] strs) {
+    Map<String, List<String>> groups = new HashMap<>();
+    for (String word : strs) {
+        String key = sortedKey(word);
+        groups.computeIfAbsent(key, k -> new ArrayList<>()).add(word);
     }
-
-    public static List<List<String>> groupAnagrams(String[] strs) {
-        Map<String, List<String>> groups = new HashMap<>();
-
-        for (String word : strs) {
-            String key = sortedKey(word);
-            groups.computeIfAbsent(key, k -> new ArrayList<>()).add(word);
-        }
-        return new ArrayList<>(groups.values());
-    }
-
-    public static void main(String[] args) {
-        String[] input = { "eat", "tea", "tan", "ate", "nat", "bat" };
-        List<List<String>> result = groupAnagrams(input);
-        for (List<String> group : result) {
-            System.out.println(group);
-        }
-    }
+    return new ArrayList<>(groups.values());
 }
 ```
 
-Run `main` after implementing from memory.
+### Dry run
+
+| word | key | map buckets |
+|---|---|---|
+| eat | aet | aet→[eat] |
+| tea | aet | aet→[eat,tea] |
+| tan | ant | aet→…, ant→[tan] |
+| ate | aet | aet→[eat,tea,ate] |
+| nat | ant | ant→[tan,nat] |
+| bat | abt | abt→[bat] |
+
+### Complexity
+
+| Measure | Value | Why |
+|---|---|---|
+| **Time** | `O(n * k log k)` | Sort each word of length `k` |
+| **Extra space** | `O(n * k)` | Store all words + keys |
 
 ---
 
-## 15. Practice checklist
+## 6. Approach 3 — Count signature as key (faster alternative)
 
-- [ ] Implement brute force without looking.
-- [ ] Implement optimal without looking.
-- [ ] Trace one example on paper.
-- [ ] State time and space complexity.
-- [ ] List three edge cases from section 10.
+### Idea
+
+Build a key from letter counts, e.g. `"a1e1t1"` or a fixed `#1#0#0#...` of 26 counts.
+
+Same counts → same key → same group. **No sorting** per word → `O(n * k)` time.
+
+### Why use it?
+
+Long words (`k` large): counting beats sorting.
+
+### Why we still teach sorted key first
+
+Simpler to write under pressure. Mention count-key as the follow-up optimization.
+
+*(Optional: add a second method later; core file keeps sorted key for clarity.)*
 
 ---
 
+## 7. What we use and why
+
+| Approach | Time | Use when |
+|---|---|---|
+| Pairwise grouping | `O(n²·k)` | Verbal only |
+| **Sorted key + map** | `O(n·k log k)` | **Default in our Java** — clear |
+| Count signature + map | `O(n·k)` | Follow-up / long strings |
+
 ---
 
-## Depth addendum — extended workbook
+## 8. Hardest part
 
-### Mental picture (second angle)
+### Mistake — Using the word itself as key
 
-Sketch input on paper and mark **what changes each loop iteration**. If the pattern uses a stack, queue, heap, or map, write its contents as a column beside the array/tree.
+Different anagrams are different strings — they would not group.
 
-### Brute force reminder
+### Mistake — Mutating the same char array for every word
 
-State the naive approach in one sentence, its time/space, and **one sentence why** the optimal pattern beats it.
+Create a **new** char array (or copy) per word before sorting.
 
-### Hardest-part drill
+### Mistake — Forgetting empty string / single letter
 
-| Before coding | After understanding |
+They are valid groups — empty key `""` is fine.
+
+---
+
+## 9. Interview explanation — say this aloud
+
+“I group by a canonical key. For each word I sort its characters; that sorted string is the map key. Anagrams share the key, so I append the word to that list. At the end I return the map values. Time `O(n k log k)`. If needed I can switch the key to a 26-count signature for `O(n k)`.”
+
+---
+
+## 10. Link to Java
+
+| Approach | Method |
 |---|---|
-| Unsure what moves | Name the invariant pointers/stack maintain |
-| Edge case worry | Check empty, single, duplicates |
-
-### Extended dry-run columns
-
-| iter | key variables | container snapshot | output so far |
-|---:|---|---|---|
-
-Fill five rows from the matching Java main example in the sibling .java file.
-
-### Interview say-aloud (30s)
-
-> I recognize the pattern, use the right structure for the invariant, avoid brute time because each element is handled once.
-
-### Follow-up Q&A
-
-**Q: In-place?** Only if allowed.  
-**Q: Unsorted input?** State preprocessing.
-
-## 16. Quick revision
-
-One line: **Group Anagrams = Map + canonical key + optimal method in `GroupAnagrams.java`.**
-
----
-
-## 17. Pattern used
-
-See **`Arrays_Hashing_Common_Patterns.md`**.
-
----
-
-## 18. Next problem
-
-**Problem 05 — Top K Frequent Elements**
-
----
-
----
-
-## Repository Java (full)
-
-Align with `../GroupAnagrams.java`.
-
-```java
-package DSA.ArraysHashing;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-/*
-Problem: Group Anagrams
-
-Group strings that are anagrams of each other.
-
-Example:
-  ["eat","tea","tan","ate","nat","bat"]
-  → [["bat"],["nat","tan"],["ate","eat","tea"]]  (order within groups may vary)
-
-Approach: Map canonical key → list of words
-Time: O(n * k log k) with sorted key, k = max word length
-*/
-
-public class GroupAnagrams {
-
-    private static String sortedKey(String word) {
-        char[] chars = word.toCharArray();
-        Arrays.sort(chars);
-        return new String(chars);
-    }
-
-    public static List<List<String>> groupAnagrams(String[] strs) {
-        Map<String, List<String>> groups = new HashMap<>();
-
-        for (String word : strs) {
-            String key = sortedKey(word);
-            groups.computeIfAbsent(key, k -> new ArrayList<>()).add(word);
-        }
-        return new ArrayList<>(groups.values());
-    }
-
-    public static void main(String[] args) {
-        String[] input = { "eat", "tea", "tan", "ate", "nat", "bat" };
-        List<List<String>> result = groupAnagrams(input);
-        for (List<String> group : result) {
-            System.out.println(group);
-        }
-    }
-}
-```
+| Sorted key grouping | `groupAnagrams` / `sortedKey` |

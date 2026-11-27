@@ -14,6 +14,22 @@ DSA/ArraysHashing/
 └── *.java          ← runnable programs (package DSA.ArraysHashing)
 ```
 
+### How to read each problem (simple loop)
+
+For every `Problem_XX_*.md` + matching `.java`:
+
+1. Read the **problem + mental picture** in the note (no code yet).
+2. Read **Approach 1 (brute)** — idea, why, complexity, when to use.
+3. Read **optimal / alternatives** — why we pick this structure (Map vs Set vs sort…).
+4. Open the Java file — each method is labeled `APPROACH 1 / 2 / …` with short “why” comments.
+5. Run `main` and match the dry run table in the note.
+
+**Rule:** Notes explain *why*. Java shows *how*. Method names in the note match method names in Java.
+
+Core problems rewritten this way: **01 Two Sum → 08 Subarray Sum Equals K**.
+
+Company drills from old `cubic` / `Wise` live **in this folder** too (`MergeIntervals`, `FrequencyMapPatterns`, …) — study them after Problems 01–08.
+
 ---
 
 ## 1. What is “Arrays & Hashing”?

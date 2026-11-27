@@ -1,340 +1,334 @@
 # Problem 01 — Two Sum
 
-> **Pattern:** HashMap complement  
-> **Goal:** Interview-ready: mental model, brute force, optimal approach, dry run, complexity, edge cases, and what to say aloud.
+> **Pattern:** HashMap complement (value → index)  
+> **Java file:** `../TwoSum.java`  
+> **Goal:** Understand every approach — what it does, why we pick it, and which Java method is which.
 
 ---
 
 ## 1. Problem statement
 
-Given `nums` and `target`, return two indices whose values sum to `target`.
+Given an integer array `nums` and an integer `target`, return **two indices** `i` and `j` such that:
 
-Work through the examples in the matching `.java` file `main` method and on LeetCode (if applicable).
+```text
+nums[i] + nums[j] == target
+i != j
+```
 
-### Constraints (typical)
+Exactly one valid answer exists (LeetCode assumption). You may return the indices in any order.
 
-- Input sizes up to `10^5` (sometimes `10^4`) — aim for **O(n)** or **O(n log n)** unless constraints are tiny.
-- Read whether the problem wants **indices**, **values**, or **counts**.
+### Example 1
+
+```text
+Input:  nums = [2, 7, 11, 15], target = 9
+Output: [0, 1]
+```
+
+Because `2 + 7 = 9`.
+
+### Example 2
+
+```text
+Input:  nums = [3, 2, 4], target = 6
+Output: [1, 2]
+```
+
+Because `2 + 4 = 6` (not `3 + 3` — we need **two different indices**).
+
+### Example 3
+
+```text
+Input:  nums = [3, 3], target = 6
+Output: [0, 1]
+```
+
+Same value twice is fine — different indices.
+
+### Constraints (typical LeetCode)
+
+- `2 <= nums.length <= 10^4`
+- Exactly one solution
+- Return **indices**, not values
 
 ---
 
 ## 2. Mental picture
 
-Before coding, draw the array and ask: **what do I need to remember from earlier positions?**
+You stand at one number and ask:
 
-- If you need “the other value that completes a pair” → **hash map / set**.
-- If you need “sum of a contiguous block” with negatives allowed → **prefix sum + frequency map**, not sliding window by default.
-- If the array is **sorted** and you discard half the range → **binary search**, not hashing.
+> “Have I already seen the other half of this pair?”
 
-Re-open **`notes/Arrays_Hashing_Common_Patterns.md`** and name the pattern letter (A–H for hashing, A–G for binary search) that matches this problem.
+```text
+nums = [3, 2, 4], target = 6
+
+At index 0: value 3 → need 3.  Not seen yet. Remember 3 → 0
+At index 1: value 2 → need 4.  Not seen yet. Remember 2 → 1
+At index 2: value 4 → need 2.  Yes — 2 was at index 1 → answer [1, 2]
+```
+
+That “have I seen the complement?” question is why a **HashMap** fits.
+
+### Jargon — explained once
+
+| Term | Meaning here |
+|---|---|
+| **Complement** | The other number you need: `target - nums[i]` |
+| **HashMap** | Fast lookup by key. We store `value → index` |
+| **Brute force** | Check every possible pair with nested loops |
+| **One pass** | Walk the array once while building the map |
 
 ---
 
 ## 3. How to start thinking
 
-1. State brute force complexity honestly (often `O(n²)`).
-2. Identify the **bottleneck** (re-scanning, re-multiplying, re-walking chains).
-3. Choose the structure: `Map`, `Set`, prefix map, or binary search bounds.
-4. Write the **invariant** in one sentence before coding.
+1. What must I return? **Indices**, not the numbers themselves.
+2. Simplest correct idea? Try every pair → brute force.
+3. Bottleneck? Nested loops → `O(n²)`.
+4. Can I remember past numbers? Yes → map of value → index.
+5. When do I check the map? **Before** inserting the current number (so I never use the same index twice).
 
 ---
 
-## 4. Approach 1 — Brute force
+## 4. Approach 1 — Brute force (check every pair)
 
-Implement the definition directly: nested loops, full rescans, or linear search on sorted data.
+### Idea
 
-**Why mention it in interviews:** It proves you understand the problem and gives a correct baseline before optimizing.
+For every index `i`, try every later index `j` and see if `nums[i] + nums[j] == target`.
 
-**Typical complexity:** `O(n²)` or `O(n)` on sorted data — too slow when `n` is large.
+### Why mention it?
 
----
+It proves you understand the problem. In interviews, say this first, then improve it.
 
-## 5. Approach 2 — Optimal
+### Java method
 
-Open the optimal method in the Java file below. While reading:
+`twoSumBruteForce` in `TwoSum.java`
 
-1. Name each variable (`prefix`, `seen`, `left`, `right`, …).
-2. Say why each update is safe (no missed answers).
-3. Trace one small example on paper (see section 7).
+```java
+public static int[] twoSumBruteForce(int[] nums, int target) {
+    for (int i = 0; i < nums.length; i++) {
+        for (int j = i + 1; j < nums.length; j++) {
+            if (nums[i] + nums[j] == target) {
+                return new int[] { i, j };
+            }
+        }
+    }
+    return new int[] { -1, -1 };
+}
+```
 
-**Target complexity:** See section 9 — usually **O(n)** or **O(log n)** with **O(n)** or **O(1)** extra space.
-
----
-
-## 6. Hardest part (slow down here)
-
-For **Two Sum**, candidates usually slip on **boundary conditions** and **off-by-one** updates.
-
-- Re-read the optimal method comments in Java.
-- Compare your mental model to the pattern section in `Arrays_Hashing_Common_Patterns.md`.
-- If you use a map, ask: what is the **key** and what does the **value** mean?
-
----
-
-## 7. Detailed dry run
+### Dry run
 
 `nums = [3, 2, 4]`, `target = 6`
 
-| i | nums[i] | complement (6 − x) | map after step | result |
-|---:|---:|---:|---|---|
-| 0 | 3 | 3 | {3→0} | continue |
-| 1 | 2 | 4 | {3→0, 2→1} | continue |
-| 2 | 4 | 2 | {3→0, 2→1} | **2 in map** → return [1, 2] |
+| i | j | pair | sum | result |
+|---|---|---|---|---|
+| 0 | 1 | 3+2 | 5 | continue |
+| 0 | 2 | 3+4 | 7 | continue |
+| 1 | 2 | 2+4 | 6 | **return [1, 2]** |
 
-Rule: **check complement before** `put`, so you never reuse the same index twice.
+### Complexity
+
+| Measure | Value | Why |
+|---|---|---|
+| **Time** | `O(n²)` | Nested loops |
+| **Extra space** | `O(1)` | No map |
+
+### Limitation
+
+Too slow when `n` is large (`10^4`–`10^5`). Correct, but not interview-final.
+
+### When would you still use it?
+
+Tiny arrays, or when interviewer asks for the simplest correct solution first.
 
 ---
 
-## 8. Why the optimal approach is correct
+## 5. Approach 2 — HashMap one pass (optimal — what we use)
 
-Give a **one-paragraph proof sketch**:
+### Core idea
 
-- Hashing: “When we are at index `i`, the structure contains exactly the information we need from indices `< i`.”
-- Prefix map: “Each subarray sum equals difference of two prefix sums; we count valid earlier prefixes.”
-- Binary search: “The answer always lies in `[left, right]`; each step discards a half that cannot contain it.”
+While walking left → right:
+
+1. Compute `complement = target - nums[i]`
+2. If `complement` is already in the map → return `[map.get(complement), i]`
+3. Else store `nums[i] → i` for future lookups
+
+### Why this approach?
+
+- We need **fast “have I seen X?”** → HashMap is average `O(1)` lookup
+- We need **indices** → store value → index (not just a Set)
+- One pass is enough because every earlier number is already in the map
+
+### Why not a Set?
+
+A Set only remembers values. Two Sum needs the **index** of the complement. Map wins.
+
+### Why not sort + two pointers?
+
+Sorting destroys original indices (unless you keep index pairs). Also Two Sum I usually wants the first solution in one unordered pass. (Two Sum II on a **sorted** array is a different problem — two pointers.)
+
+### Java method
+
+`twoSum` in `TwoSum.java`
+
+```java
+public static int[] twoSum(int[] nums, int target) {
+    Map<Integer, Integer> valueToIndex = new HashMap<>();
+
+    for (int i = 0; i < nums.length; i++) {
+        int complement = target - nums[i];
+        if (valueToIndex.containsKey(complement)) {
+            return new int[] { valueToIndex.get(complement), i };
+        }
+        valueToIndex.put(nums[i], i);
+    }
+    return new int[] { -1, -1 };
+}
+```
+
+### Dry run (step by step)
+
+`nums = [3, 2, 4]`, `target = 6`
+
+| i | nums[i] | complement | map before check | action |
+|---|---|---|---|---|
+| 0 | 3 | 3 | `{}` | 3 not in map → put `{3→0}` |
+| 1 | 2 | 4 | `{3→0}` | 4 not in map → put `{3→0, 2→1}` |
+| 2 | 4 | 2 | `{3→0, 2→1}` | **2 is in map** → return `[1, 2]` |
+
+### Critical rule
+
+**Check before put.** If you put first, then for `[3, 3]` with target `6` you might wrongly reuse the same index.
+
+### Complexity
+
+| Measure | Value | Why |
+|---|---|---|
+| **Time** | `O(n)` | One pass; map ops average `O(1)` |
+| **Extra space** | `O(n)` | Map can hold every element |
+
+---
+
+## 6. What else could we use? (and why we usually don’t)
+
+| Approach | Time | Space | Use when? |
+|---|---|---|---|
+| Brute force nested loops | `O(n²)` | `O(1)` | Tiny n; explain first |
+| **HashMap one pass (our choice)** | `O(n)` | `O(n)` | Need indices; unordered array |
+| Sort + two pointers | `O(n log n)` | `O(n)` if keep indices | OK if allowed; messier for indices |
+| HashSet of values | `O(n)` | `O(n)` | Only if you need values, **not** indices |
+
+**Interview default for Two Sum I:** HashMap one pass.
+
+---
+
+## 7. Hardest part (slow down here)
+
+### Mistake A — Put before check
+
+```java
+// WRONG order
+valueToIndex.put(nums[i], i);
+if (valueToIndex.containsKey(complement)) { ... }
+```
+
+For `nums = [3, 3], target = 6`, after putting first `3`, complement `3` is already “seen” as the same index.
+
+**Fix:** check first, then put.
+
+### Mistake B — Returning values instead of indices
+
+Problem asks for indices. Map value must be the **index**.
+
+### Mistake C — Thinking you need two passes
+
+One pass is enough: earlier numbers are already stored when you look for the complement.
+
+---
+
+## 8. Why the optimal approach never misses the answer
+
+When we are at index `i`, the map contains **exactly** the values from indices `0 .. i-1` with their indices.
+
+If any earlier index `j` forms a pair with `i`, then `nums[j]` equals `target - nums[i]`, so it is in the map. We find it.
+
+If no earlier index works, we store `nums[i]` and continue. The unique solution (guaranteed) will be found when its second index is visited.
 
 ---
 
 ## 9. Complexity comparison
 
-| Method | Time | Extra space |
-|---|---:|---:|
-| Brute | See your brute implementation | Usually `O(1)` |
-| Optimal | Per pattern cheat sheet in `Arrays_Hashing_Common_Patterns.md` | Usually `O(n)` for hash structures |
+| Approach | Java method | Time | Extra space | Interview? |
+|---|---|---|---|---|
+| Brute force | `twoSumBruteForce` | `O(n²)` | `O(1)` | Start here verbally |
+| HashMap one pass | `twoSum` | `O(n)` | `O(n)` | **Final answer** |
 
 ---
 
 ## 10. Edge cases
 
-Build a tiny table before you submit:
-
-| Case | Expected behavior |
-|---|---|
-| Minimum length input | Single element / pair |
-| All equal values | Duplicates / freq / first-last BS |
-| Negatives (if allowed) | Prefix map still works; sliding sum may not |
-| Empty / null | Return `0`, `false`, or `-1` per spec |
+| Input | Expected | What it checks |
+|---|---|---|
+| `[2,7,11,15], 9` | `[0,1]` | Classic |
+| `[3,2,4], 6` | `[1,2]` | Not the first element pairing with itself |
+| `[3,3], 6` | `[0,1]` | Duplicate values, different indices |
+| Negative numbers | works | Complement can be negative |
 
 ---
 
 ## 11. Common mistakes
 
-- Using the wrong loop condition (`left < right` vs `left <= right`).
-- Forgetting `prefixCount.put(0, 1)` on subarray-sum problems.
-- Starting a consecutive walk from **every** element (re-sums chains).
-- Returning immediately on first binary-search hit when the problem asks for **first/last** occurrence.
+1. Put into map before checking complement.
+2. Return values instead of indices.
+3. Using a Set when you need indices.
+4. Forgetting `i != j` (same-index reuse).
+5. Sorting without tracking original indices.
 
 ---
 
-## 12. Interview — say this aloud
+## 12. How to recognise this pattern
 
-> “I'll start with brute force to confirm the definition, then optimize. For this problem the right tool is **hashmap complement**. I'll maintain [map/set/prefix/left-right] so each step is one pass / logarithmic. Let me trace a small example, then I'll code the optimal solution.”
+Look for:
 
-Then code the **optimal** method from memory, not brute force.
+- “Find two numbers that sum to target”
+- Need **indices** from an unordered array
+- One solution guaranteed (or first solution)
 
----
+Ask:
 
-## 13. Follow-ups
+> Can I remember past values in a map and look up `target - current`?
 
-- Ask yourself: “What if the array were sorted?” “What if we need indices not values?” “What if `k` changes?”
-- Link to the **next problem** in this folder’s roadmap in `Arrays_Hashing_Common_Patterns.md`.
-
----
-
-## 14. Complete runnable Java
-
-Package: `DSA.ArraysHashing`  
-File: `../TwoSum.java`
-
-```java
-package DSA.ArraysHashing;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-
-/*
-Problem: Two Sum
-
-Given an integer array nums and an integer target, return indices i and j
-such that nums[i] + nums[j] == target and i != j. Exactly one solution exists.
-
-Examples:
-  nums = [2, 7, 11, 15], target = 9  →  [0, 1]
-  nums = [3, 2, 4], target = 6       →  [1, 2]
-
-Approach: One pass HashMap — complement lookup
-Time: O(n)   Space: O(n)
-*/
-
-public class TwoSum {
-
-    // BRUTE: check every pair
-    public static int[] twoSumBruteForce(int[] nums, int target) {
-        for (int i = 0; i < nums.length; i++) {
-            for (int j = i + 1; j < nums.length; j++) {
-                if (nums[i] + nums[j] == target) {
-                    return new int[] { i, j };
-                }
-            }
-        }
-        return new int[] { -1, -1 };
-    }
-
-    // OPTIMAL: store value → index; look for target - nums[i]
-    public static int[] twoSum(int[] nums, int target) {
-        Map<Integer, Integer> valueToIndex = new HashMap<>();
-
-        for (int i = 0; i < nums.length; i++) {
-            int complement = target - nums[i];
-            if (valueToIndex.containsKey(complement)) {
-                return new int[] { valueToIndex.get(complement), i };
-            }
-            valueToIndex.put(nums[i], i);
-        }
-        return new int[] { -1, -1 };
-    }
-
-    public static void main(String[] args) {
-        int[] a = { 2, 7, 11, 15 };
-        System.out.println("Brute:  " + Arrays.toString(twoSumBruteForce(a, 9)));
-        System.out.println("Optimal:" + Arrays.toString(twoSum(a, 9)));
-
-        int[] b = { 3, 2, 4 };
-        System.out.println("Optimal:" + Arrays.toString(twoSum(b, 6)));
-    }
-}
-```
-
-Run `main` after implementing from memory.
+If yes → HashMap complement.
 
 ---
 
-## 15. Practice checklist
+## 13. Interview explanation — say this aloud
 
-- [ ] Implement brute force without looking.
-- [ ] Implement optimal without looking.
-- [ ] Trace one example on paper.
-- [ ] State time and space complexity.
-- [ ] List three edge cases from section 10.
+“Brute force checks every pair in `O(n²)`. I can do one pass with a HashMap from value to index. At each index `i`, I look for `target - nums[i]` in the map. If it exists, I return that stored index and `i`. If not, I store `nums[i] → i`. I check before inserting so I never reuse the same index. Time `O(n)`, space `O(n)`.”
 
 ---
 
+## 14. Interview follow-ups
+
+### Q1. What if the array is already sorted?
+
+Use two pointers (Two Sum II) — `O(n)` time, `O(1)` space — no map needed.
+
+### Q2. What if there are multiple answers?
+
+Clarify: return any? all? Then adjust (don’t return early; collect pairs carefully with duplicates).
+
+### Q3. What if I must use `O(1)` extra space?
+
+Sort a copy of (value, index) pairs, then two pointers — `O(n log n)` time.
+
 ---
 
-## Depth addendum — extended workbook
+## 15. Link to Java — which method is which
 
-### Mental picture (second angle)
-
-Sketch input on paper and mark **what changes each loop iteration**. If the pattern uses a stack, queue, heap, or map, write its contents as a column beside the array/tree.
-
-### Brute force reminder
-
-State the naive approach in one sentence, its time/space, and **one sentence why** the optimal pattern beats it.
-
-### Hardest-part drill
-
-| Before coding | After understanding |
+| Approach | Method in `TwoSum.java` |
 |---|---|
-| Unsure what moves | Name the invariant pointers/stack maintain |
-| Edge case worry | Check empty, single, duplicates |
+| Brute force | `twoSumBruteForce` |
+| Optimal HashMap | `twoSum` |
 
-### Extended dry-run columns
-
-| iter | key variables | container snapshot | output so far |
-|---:|---|---|---|
-
-Fill five rows from the matching Java main example in the sibling .java file.
-
-### Interview say-aloud (30s)
-
-> I recognize the pattern, use the right structure for the invariant, avoid brute time because each element is handled once.
-
-### Follow-up Q&A
-
-**Q: In-place?** Only if allowed.  
-**Q: Unsorted input?** State preprocessing.
-
-## 16. Quick revision
-
-One line: **Two Sum = HashMap complement + optimal method in `TwoSum.java`.**
-
----
-
-## 17. Pattern used
-
-See **`Arrays_Hashing_Common_Patterns.md`**.
-
----
-
-## 18. Next problem
-
-**Problem 02 — Contains Duplicate**
-
----
-
----
-
-## Repository Java (full)
-
-Align with `../TwoSum.java`.
-
-```java
-package DSA.ArraysHashing;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-
-/*
-Problem: Two Sum
-
-Given an integer array nums and an integer target, return indices i and j
-such that nums[i] + nums[j] == target and i != j. Exactly one solution exists.
-
-Examples:
-  nums = [2, 7, 11, 15], target = 9  →  [0, 1]
-  nums = [3, 2, 4], target = 6       →  [1, 2]
-
-Approach: One pass HashMap — complement lookup
-Time: O(n)   Space: O(n)
-*/
-
-public class TwoSum {
-
-    // BRUTE: check every pair
-    public static int[] twoSumBruteForce(int[] nums, int target) {
-        for (int i = 0; i < nums.length; i++) {
-            for (int j = i + 1; j < nums.length; j++) {
-                if (nums[i] + nums[j] == target) {
-                    return new int[] { i, j };
-                }
-            }
-        }
-        return new int[] { -1, -1 };
-    }
-
-    // OPTIMAL: store value → index; look for target - nums[i]
-    public static int[] twoSum(int[] nums, int target) {
-        Map<Integer, Integer> valueToIndex = new HashMap<>();
-
-        for (int i = 0; i < nums.length; i++) {
-            int complement = target - nums[i];
-            if (valueToIndex.containsKey(complement)) {
-                return new int[] { valueToIndex.get(complement), i };
-            }
-            valueToIndex.put(nums[i], i);
-        }
-        return new int[] { -1, -1 };
-    }
-
-    public static void main(String[] args) {
-        int[] a = { 2, 7, 11, 15 };
-        System.out.println("Brute:  " + Arrays.toString(twoSumBruteForce(a, 9)));
-        System.out.println("Optimal:" + Arrays.toString(twoSum(a, 9)));
-
-        int[] b = { 3, 2, 4 };
-        System.out.println("Optimal:" + Arrays.toString(twoSum(b, 6)));
-    }
-}
-```
+Run `main` to print both approaches on sample inputs.

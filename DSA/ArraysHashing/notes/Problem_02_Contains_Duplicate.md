@@ -1,352 +1,289 @@
 # Problem 02 — Contains Duplicate
 
-> **Pattern:** HashSet  
-> **Goal:** Interview-ready: mental model, brute force, optimal approach, dry run, complexity, edge cases, and what to say aloud.
+> **Pattern:** Seen-before check (HashSet / sort / frequency)  
+> **Java file:** `../ContainsDuplicate.java`  
+> **Goal:** Know every approach, why we pick HashSet in interviews, and which Java method is which.
 
 ---
 
 ## 1. Problem statement
 
-Return true if any value appears at least twice.
+Given an integer array `nums`, return `true` if any value appears **at least twice**. Return `false` if every element is distinct.
 
-Work through the examples in the matching `.java` file `main` method and on LeetCode (if applicable).
+### Example 1
+
+```text
+Input:  [1, 2, 3, 1]
+Output: true
+```
+
+`1` appears twice.
+
+### Example 2
+
+```text
+Input:  [1, 2, 3, 4]
+Output: false
+```
+
+All unique.
+
+### Example 3
+
+```text
+Input:  [1, 1, 1, 3, 3, 4, 3, 2, 4, 2]
+Output: true
+```
 
 ### Constraints (typical)
 
-- Input sizes up to `10^5` (sometimes `10^4`) — aim for **O(n)** or **O(n log n)** unless constraints are tiny.
-- Read whether the problem wants **indices**, **values**, or **counts**.
+- `1 <= nums.length <= 10^5`
+- Aim for **O(n)** time if possible
 
 ---
 
 ## 2. Mental picture
 
-Before coding, draw the array and ask: **what do I need to remember from earlier positions?**
+As you walk the array, ask:
 
-- If you need “the other value that completes a pair” → **hash map / set**.
-- If you need “sum of a contiguous block” with negatives allowed → **prefix sum + frequency map**, not sliding window by default.
-- If the array is **sorted** and you discard half the range → **binary search**, not hashing.
+> “Have I already seen this number?”
 
-Re-open **`notes/Arrays_Hashing_Common_Patterns.md`** and name the pattern letter (A–H for hashing, A–G for binary search) that matches this problem.
+```text
+nums = [1, 2, 3, 1]
+
+seen: {}
+1 → not seen → add {1}
+2 → not seen → add {1,2}
+3 → not seen → add {1,2,3}
+1 → already in seen → true
+```
+
+That question is exactly what a **HashSet** answers in average `O(1)`.
+
+### Jargon
+
+| Term | Meaning here |
+|---|---|
+| **HashSet** | Collection that stores unique values; `add` returns false if already present |
+| **Frequency map** | Map from value → how many times it appears |
+| **Adjacent after sort** | Duplicates sit next to each other after sorting |
 
 ---
 
 ## 3. How to start thinking
 
-1. State brute force complexity honestly (often `O(n²)`).
-2. Identify the **bottleneck** (re-scanning, re-multiplying, re-walking chains).
-3. Choose the structure: `Map`, `Set`, prefix map, or binary search bounds.
-4. Write the **invariant** in one sentence before coding.
+1. What am I detecting? A value that appears more than once.
+2. Brute force? For each index, scan the rest of the array.
+3. Can sorting help? Yes — duplicates become neighbors.
+4. Can a Set help? Yes — “seen before?” in one pass.
+5. Do I need counts? Only if the problem asked “how many times” — here a Set is enough.
 
 ---
 
-## 4. Approach 1 — Brute force
+## 4. Approach 1 — Brute force (nested scan)
 
-Implement the definition directly: nested loops, full rescans, or linear search on sorted data.
+### Idea
 
-**Why mention it in interviews:** It proves you understand the problem and gives a correct baseline before optimizing.
+For each `i`, scan `j = i+1 .. n-1`. If `nums[i] == nums[j]`, return true.
 
-**Typical complexity:** `O(n²)` or `O(n)` on sorted data — too slow when `n` is large.
+### Why mention it?
 
----
+Shows you understand “duplicate = same value at two indices”.
 
-## 5. Approach 2 — Optimal
+### Complexity
 
-Open the optimal method in the Java file below. While reading:
-
-1. Name each variable (`prefix`, `seen`, `left`, `right`, …).
-2. Say why each update is safe (no missed answers).
-3. Trace one small example on paper (see section 7).
-
-**Target complexity:** See section 9 — usually **O(n)** or **O(log n)** with **O(n)** or **O(1)** extra space.
-
----
-
-## 6. Hardest part (slow down here)
-
-For **Contains Duplicate**, candidates usually slip on **boundary conditions** and **off-by-one** updates.
-
-- Re-read the optimal method comments in Java.
-- Compare your mental model to the pattern section in `Arrays_Hashing_Common_Patterns.md`.
-- If you use a map, ask: what is the **key** and what does the **value** mean?
-
----
-
-## 7. Detailed dry run
-
-Pick the **smallest interesting example** from `main` in the Java file.
-
-| Step | What to write on paper |
+| Time | Extra space |
 |---|---|
-| Initialization | Empty map/set, `left/right`, or `prefix=0` + `{0:1}` if prefix problem |
-| Each index | Show map/set after the step; or show which half of the array remains in BS |
-| Answer | Final return value |
+| `O(n²)` | `O(1)` |
 
-Do this once with the video off. Interviewers care that you can trace without running the IDE.
+### Limitation
 
----
+Too slow for `n = 10^5`.
 
-## 8. Why the optimal approach is correct
+### When to use
 
-Give a **one-paragraph proof sketch**:
-
-- Hashing: “When we are at index `i`, the structure contains exactly the information we need from indices `< i`.”
-- Prefix map: “Each subarray sum equals difference of two prefix sums; we count valid earlier prefixes.”
-- Binary search: “The answer always lies in `[left, right]`; each step discards a half that cannot contain it.”
+Tiny arrays only. We do **not** keep this as a separate method in Java for interview practice — focus on the three practical approaches below.
 
 ---
 
-## 9. Complexity comparison
+## 5. Approach 2 — Sort, then compare neighbors
 
-| Method | Time | Extra space |
-|---|---:|---:|
-| Brute | See your brute implementation | Usually `O(1)` |
-| Optimal | Per pattern cheat sheet in `Arrays_Hashing_Common_Patterns.md` | Usually `O(n)` for hash structures |
+### Idea
 
----
+1. Sort the array.
+2. Walk once; if `nums[i] == nums[i-1]`, duplicate found.
 
-## 10. Edge cases
+```text
+Before: [3, 1, 2, 1]
+After:  [1, 1, 2, 3]
+              ^  ^
+         equal → true
+```
 
-Build a tiny table before you submit:
+### Why does it work?
 
-| Case | Expected behavior |
+Sorting groups equal values together. Any duplicate must sit next to its twin.
+
+### Java method
+
+`containsDuplicateSort` in `ContainsDuplicate.java`
+
+### Trade-offs
+
+| Pros | Cons |
 |---|---|
-| Minimum length input | Single element / pair |
-| All equal values | Duplicates / freq / first-last BS |
-| Negatives (if allowed) | Prefix map still works; sliding sum may not |
-| Empty / null | Return `0`, `false`, or `-1` per spec |
+| Extra space `O(1)` if in-place sort allowed | Destroys original order |
+| Easy to explain | Time `O(n log n)` |
+
+### When to use
+
+Interviewer wants **low extra memory** and allows modifying the array (or you sort a copy).
 
 ---
 
-## 11. Common mistakes
+## 6. Approach 3 — HashSet (optimal for interviews — what we use)
 
-- Using the wrong loop condition (`left < right` vs `left <= right`).
-- Forgetting `prefixCount.put(0, 1)` on subarray-sum problems.
-- Starting a consecutive walk from **every** element (re-sums chains).
-- Returning immediately on first binary-search hit when the problem asks for **first/last** occurrence.
+### Core idea
 
----
+```text
+seen = empty set
+for each x in nums:
+    if x already in seen → return true
+    else add x
+return false
+```
 
-## 12. Interview — say this aloud
+In Java, `seen.add(x)` returns `false` when `x` was already present — one clean check.
 
-> “I'll start with brute force to confirm the definition, then optimize. For this problem the right tool is **hashset**. I'll maintain [map/set/prefix/left-right] so each step is one pass / logarithmic. Let me trace a small example, then I'll code the optimal solution.”
+### Why this approach?
 
-Then code the **optimal** method from memory, not brute force.
+- One pass, average `O(1)` membership test
+- Does not need counts — presence is enough
+- Does not destroy the array
 
----
+### Why Set instead of Map?
 
-## 13. Follow-ups
+We only care “seen or not”, not “how many times”. A Map frequency works but stores more than we need.
 
-- Ask yourself: “What if the array were sorted?” “What if we need indices not values?” “What if `k` changes?”
-- Link to the **next problem** in this folder’s roadmap in `Arrays_Hashing_Common_Patterns.md`.
+### Java method
 
----
-
-## 14. Complete runnable Java
-
-Package: `DSA.ArraysHashing`  
-File: `../ContainsDuplicate.java`
+`containsDuplicateSet` in `ContainsDuplicate.java`
 
 ```java
-package DSA.ArraysHashing;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-/*
-Problem: Contains Duplicate
-
-Return true if any value appears at least twice in nums.
-
-Examples:
-  [1,2,3,1]     → true
-  [1,2,3,4]     → false
-  [1,1,1,3,3,4] → true
-
-Approaches: Sort adjacent compare | HashSet | Frequency map
-Time: O(n) optimal   Space: O(n)
-*/
-
-public class ContainsDuplicate {
-
-    public static boolean containsDuplicateSort(int[] nums) {
-        Arrays.sort(nums);
-        for (int i = 1; i < nums.length; i++) {
-            if (nums[i] == nums[i - 1]) {
-                return true;
-            }
+public static boolean containsDuplicateSet(int[] nums) {
+    Set<Integer> seen = new HashSet<>();
+    for (int x : nums) {
+        if (!seen.add(x)) {
+            return true;  // add failed → already present
         }
-        return false;
     }
-
-    public static boolean containsDuplicateSet(int[] nums) {
-        Set<Integer> seen = new HashSet<>();
-        for (int x : nums) {
-            if (!seen.add(x)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static boolean containsDuplicateFreq(int[] nums) {
-        Map<Integer, Integer> freq = new HashMap<>();
-        for (int x : nums) {
-            int count = freq.getOrDefault(x, 0) + 1;
-            if (count > 1) {
-                return true;
-            }
-            freq.put(x, count);
-        }
-        return false;
-    }
-
-    public static void main(String[] args) {
-        int[] a = { 1, 2, 3, 1 };
-        int[] b = { 1, 2, 3, 4 };
-        System.out.println("Set:  " + containsDuplicateSet(a) + " / " + containsDuplicateSet(b));
-        System.out.println("Sort: " + containsDuplicateSort(a) + " / " + containsDuplicateSort(b));
-    }
+    return false;
 }
 ```
 
-Run `main` after implementing from memory.
+### Dry run
 
----
+`[1, 2, 3, 1]`
 
-## 15. Practice checklist
+| x | seen before | add result | action |
+|---|---|---|---|
+| 1 | `{}` | true | continue, `{1}` |
+| 2 | `{1}` | true | continue, `{1,2}` |
+| 3 | `{1,2}` | true | continue, `{1,2,3}` |
+| 1 | `{1,2,3}` | **false** | return true |
 
-- [ ] Implement brute force without looking.
-- [ ] Implement optimal without looking.
-- [ ] Trace one example on paper.
-- [ ] State time and space complexity.
-- [ ] List three edge cases from section 10.
+### Complexity
 
----
-
----
-
-## Depth addendum — extended workbook
-
-### Mental picture (second angle)
-
-Sketch input on paper and mark **what changes each loop iteration**. If the pattern uses a stack, queue, heap, or map, write its contents as a column beside the array/tree.
-
-### Brute force reminder
-
-State the naive approach in one sentence, its time/space, and **one sentence why** the optimal pattern beats it.
-
-### Hardest-part drill
-
-| Before coding | After understanding |
+| Measure | Value |
 |---|---|
-| Unsure what moves | Name the invariant pointers/stack maintain |
-| Edge case worry | Check empty, single, duplicates |
-
-### Extended dry-run columns
-
-| iter | key variables | container snapshot | output so far |
-|---:|---|---|---|
-
-Fill five rows from the matching Java main example in the sibling .java file.
-
-### Interview say-aloud (30s)
-
-> I recognize the pattern, use the right structure for the invariant, avoid brute time because each element is handled once.
-
-### Follow-up Q&A
-
-**Q: In-place?** Only if allowed.  
-**Q: Unsorted input?** State preprocessing.
-
-## 16. Quick revision
-
-One line: **Contains Duplicate = HashSet + optimal method in `ContainsDuplicate.java`.**
+| **Time** | `O(n)` average |
+| **Extra space** | `O(n)` worst case (all unique) |
 
 ---
 
-## 17. Pattern used
+## 7. Approach 4 — Frequency map (works, usually overkill)
 
-See **`Arrays_Hashing_Common_Patterns.md`**.
+### Idea
+
+Count occurrences; if any count becomes `> 1`, return true.
+
+### Java method
+
+`containsDuplicateFreq`
+
+### Why mention it?
+
+Same family as anagram / top-k frequency problems. Good to know — but for **this** problem a Set is cleaner.
+
+### When to use
+
+If the problem changes to “return counts” or “elements appearing more than k times”.
 
 ---
 
-## 18. Next problem
+## 8. What we use and why
 
-**Problem 03 — Valid Anagram**
+| Approach | Java method | Time | Space | Use when |
+|---|---|---|---|---|
+| Nested scan | *(verbal only)* | `O(n²)` | `O(1)` | Explain first |
+| Sort + adjacent | `containsDuplicateSort` | `O(n log n)` | `O(1)` / `O(n)` copy | Memory tight |
+| **HashSet** | `containsDuplicateSet` | `O(n)` | `O(n)` | **Default interview answer** |
+| Freq map | `containsDuplicateFreq` | `O(n)` | `O(n)` | Need counts later |
+
+**Interview default:** HashSet one pass.
 
 ---
 
+## 9. Hardest part
+
+### Mistake — Using List.contains
+
+`List.contains` is `O(n)` each time → overall `O(n²)`. Use `HashSet`.
+
+### Mistake — Sorting then forgetting you mutated input
+
+If caller needs original order, sort a **copy**.
+
+### Mistake — Thinking early exit is wrong
+
+Returning as soon as a duplicate appears is correct and faster in practice.
+
 ---
 
-## Repository Java (full)
+## 10. Complexity comparison
 
-Align with `../ContainsDuplicate.java`.
+| Approach | Time | Extra space |
+|---|---|---|
+| Brute nested | `O(n²)` | `O(1)` |
+| Sort + scan | `O(n log n)` | `O(1)` in-place |
+| HashSet | `O(n)` | `O(n)` |
+| Freq map | `O(n)` | `O(n)` |
 
-```java
-package DSA.ArraysHashing;
+---
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+## 11. Edge cases
 
-/*
-Problem: Contains Duplicate
+| Input | Expected | Checks |
+|---|---|---|
+| `[1]` | false | Single element |
+| `[1,1]` | true | Immediate duplicate |
+| `[1,2,3,4]` | false | All unique |
+| Large n, one late duplicate | true | Must scan far |
 
-Return true if any value appears at least twice in nums.
+---
 
-Examples:
-  [1,2,3,1]     → true
-  [1,2,3,4]     → false
-  [1,1,1,3,3,4] → true
+## 12. Interview explanation — say this aloud
 
-Approaches: Sort adjacent compare | HashSet | Frequency map
-Time: O(n) optimal   Space: O(n)
-*/
+“Brute force is nested loops — `O(n²)`. I can sort and compare neighbors — `O(n log n)`. Best for interviews: a HashSet. Walk once; if `add` fails, the value was already seen, return true. Time `O(n)`, space `O(n)`. I use a Set instead of a Map because I only need presence, not counts.”
 
-public class ContainsDuplicate {
+---
 
-    public static boolean containsDuplicateSort(int[] nums) {
-        Arrays.sort(nums);
-        for (int i = 1; i < nums.length; i++) {
-            if (nums[i] == nums[i - 1]) {
-                return true;
-            }
-        }
-        return false;
-    }
+## 13. Link to Java
 
-    public static boolean containsDuplicateSet(int[] nums) {
-        Set<Integer> seen = new HashSet<>();
-        for (int x : nums) {
-            if (!seen.add(x)) {
-                return true;
-            }
-        }
-        return false;
-    }
+| Approach | Method |
+|---|---|
+| Sort + adjacent | `containsDuplicateSort` |
+| HashSet (preferred) | `containsDuplicateSet` |
+| Frequency map | `containsDuplicateFreq` |
 
-    public static boolean containsDuplicateFreq(int[] nums) {
-        Map<Integer, Integer> freq = new HashMap<>();
-        for (int x : nums) {
-            int count = freq.getOrDefault(x, 0) + 1;
-            if (count > 1) {
-                return true;
-            }
-            freq.put(x, count);
-        }
-        return false;
-    }
-
-    public static void main(String[] args) {
-        int[] a = { 1, 2, 3, 1 };
-        int[] b = { 1, 2, 3, 4 };
-        System.out.println("Set:  " + containsDuplicateSet(a) + " / " + containsDuplicateSet(b));
-        System.out.println("Sort: " + containsDuplicateSort(a) + " / " + containsDuplicateSort(b));
-    }
-}
-```
+Run `main` to compare Set vs Sort on sample arrays.
