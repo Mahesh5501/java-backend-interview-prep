@@ -1,7 +1,8 @@
 # Problem 03 — Daily Temperatures
 
-> **Pattern:** Monotonic decreasing stack of indices
-> **Goal:** For each day, days until a warmer temperature.
+> **Pattern:** Monotonic decreasing stack of indices  
+> **Java file:** `../DailyTemperatures.java`  
+> **Goal:** Understand every approach — what it does, why we pick it, and which Java method is which.  
 > **LeetCode:** 739
 
 ---
@@ -123,7 +124,19 @@ Stack holds indices of days waiting for a warmer future day.
 
 ---
 
-## 5b. Complexity intuition (optimal)
+## 5b. Approach 3 — Left-to-right monotonic stack
+
+### Idea
+
+Walk left → right; pop colder days from stack while current is warmer; assign distances when popping.
+
+### Java method
+
+`dailyTemperaturesLeftToRight` in `../DailyTemperatures.java`
+
+---
+
+## 5c. Complexity intuition (optimal)
 
 Each element is pushed and popped at most once → linear time when traversal is single-pass.
 

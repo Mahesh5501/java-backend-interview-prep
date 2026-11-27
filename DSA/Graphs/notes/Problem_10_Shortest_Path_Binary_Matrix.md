@@ -206,6 +206,17 @@ Enumerate states without memo — exponential. Optimal visits each vertex/edge o
 
 **Q: Weighted?** Dijkstra. **Q: Multi-source?** Seed queue with all sources.
 
+## Link to Java — which method is which
+
+| Approach | Method in `ShortestPathBinaryMatrix.java` |
+|---|---|
+| Brute — DFS enumerate paths | `shortestPathBinaryMatrixBrute` |
+| BFS 8-direction (preferred) | `shortestPathBinaryMatrix` |
+
+Run `main` to compare DFS vs BFS path length.
+
+---
+
 ## 16. Quick revision
 
 1. **Pattern:** BFS 8-direction.

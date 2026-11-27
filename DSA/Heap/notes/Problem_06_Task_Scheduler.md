@@ -296,6 +296,18 @@ Fill five rows from the matching Java main example in the sibling .java file.
 **Q: In-place?** Only if allowed.  
 **Q: Unsorted input?** State preprocessing.
 
+## 15. Link to Java — which method is which
+
+| Approach | Method in `TaskScheduler.java` |
+|---|---|
+| Brute — resort each round | `leastIntervalBrute` |
+| Max-heap greedy (preferred) | `leastInterval` |
+| Closed-form formula | `leastIntervalFormula` |
+
+Run `main` to compare heap vs formula on sample tasks.
+
+---
+
 ## 16. Quick revision
 
 Pattern: **Pattern D — Scheduling**.

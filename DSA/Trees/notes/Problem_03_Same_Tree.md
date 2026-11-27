@@ -1,5 +1,7 @@
 # Problem 03 — Same Tree
 
+> **Java file:** `../SameTree.java`
+
 > **Pattern:** Parallel DFS
 > **Goal:** Check structural equality.
 > **LeetCode:** 100
@@ -56,11 +58,11 @@ Can you recognise the stack/structure pattern, state invariants clearly, impleme
 
 ### Idea
 
-DFS compare.
+Preorder flatten with null sentinels; compare lists.
 
 ### Key method
 
-`isSameTree()` in `../SameTree.java`
+`isSameTreeBrute()` in `../SameTree.java`
 
 ### Dry run (summary)
 
@@ -216,6 +218,17 @@ Brute is `isSameTree()` at `O(n)`. I use `isSameTree()` at `O(n)` because Struct
 **Why space `O(h)`?**  Auxiliary structure size dominates (stack, heap, or recursion depth).
 
 **Can we beat `O(n)`?**  Usually not for this model of the problem; follow-ups may allow linear or O(n log k) only.
+
+---
+
+## Link to Java — which method is which
+
+| Approach | Method in `SameTree` |
+|---|---|
+| Flatten compare (brute) | `isSameTreeBrute` |
+| Recursive (optimal) | `isSameTree` |
+
+Run `main` to print all approaches on sample inputs.
 
 ---
 

@@ -206,6 +206,17 @@ Enumerate states without memo — exponential. Optimal visits each vertex/edge o
 
 **Q: Weighted?** Dijkstra. **Q: Multi-source?** Seed queue with all sources.
 
+## Link to Java — which method is which
+
+| Approach | Method in `RottingOranges.java` |
+|---|---|
+| Brute — scan grid every minute | `orangesRottingBrute` |
+| Multi-source BFS (preferred) | `orangesRotting` |
+
+Run `main` to compare scan simulation vs BFS.
+
+---
+
 ## 16. Quick revision
 
 1. **Pattern:** Multi-source BFS.

@@ -2,9 +2,14 @@ package DSA.DynamicProgramming;
 
 /*
  * Problem 02 — House Robber (LeetCode 198)
+
+See notes/Problem_02_House_Robber.md — every approach below matches the note.
  */
 public class HouseRobber {
 
+    // APPROACH 1: BRUTE RECURSION
+    // At each house: rob it (skip next) or skip — try both branches.
+    // Time: O(2^n)   Extra space: O(n) stack
     public static int robBrute(int[] nums) {
         return robFrom(0, nums);
     }
@@ -16,6 +21,9 @@ public class HouseRobber {
         return Math.max(nums[i] + robFrom(i + 2, nums), robFrom(i + 1, nums));
     }
 
+    // APPROACH 2: ROLLING DP (OPTIMAL — what we use)
+    // Track best loot if previous house was skipped vs taken.
+    // Time: O(n)   Extra space: O(1)
     public static int rob(int[] nums) {
         int prev2 = 0, prev1 = 0;
         for (int x : nums) {

@@ -1,5 +1,7 @@
 # Problem 09 — Construct Binary Tree from Preorder and Inorder
 
+> **Java file:** `../ConstructBinaryTreeFromPreorderInorder.java`
+
 > **Pattern:** Divide by inorder root index
 > **Goal:** Reconstruct tree from traversals.
 > **LeetCode:** 105
@@ -56,11 +58,11 @@ Can you recognise the stack/structure pattern, state invariants clearly, impleme
 
 ### Idea
 
-Hash map + recursive partition.
+Find root in inorder with linear scan each recursion.
 
 ### Key method
 
-`buildTree()` in `../ConstructBinaryTreeFromPreorderInorder.java`
+`buildTreeBrute()` in `../ConstructBinaryTreeFromPreorderInorder.java`
 
 ### Dry run (summary)
 
@@ -216,6 +218,17 @@ Brute is `buildTree()` at `O(n)`. I use `buildTree()` at `O(n)` because Unique m
 **Why space `O(n)`?**  Auxiliary structure size dominates (stack, heap, or recursion depth).
 
 **Can we beat `O(n)`?**  Usually not for this model of the problem; follow-ups may allow linear or O(n log k) only.
+
+---
+
+## Link to Java — which method is which
+
+| Approach | Method in `ConstructBinaryTreeFromPreorderInorder` |
+|---|---|
+| Linear inorder scan (brute) | `buildTreeBrute` |
+| HashMap indices (optimal) | `buildTree` |
+
+Run `main` to print all approaches on sample inputs.
 
 ---
 

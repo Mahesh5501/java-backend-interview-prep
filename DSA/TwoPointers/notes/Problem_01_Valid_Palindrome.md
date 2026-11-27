@@ -135,7 +135,9 @@ This tells us: start with brute force for confidence, then switch to two pointer
 
 A palindrome looks identical forward and backward. Reversing the cleaned string gives you the backward view. If both views match, the input satisfies the rules.
 
-### Java method (LeetCode-style cleaning)
+### Java method
+
+`validPalindromeBruteForce` in `ValidPalindrome.java`
 
 ```java
 public static boolean validPalindromeBruteForce(String s) {
@@ -223,7 +225,9 @@ Char:   r   a   c   e   a   c   r
         e  !=  a  →  return false
 ```
 
-### Optimal Java method (full LeetCode rules)
+### Java method
+
+`validPalindrome` in `ValidPalindrome.java` (optimal — full LeetCode rules)
 
 ```java
 public static boolean validPalindrome(String s) {
@@ -512,9 +516,10 @@ There is no nested “try every pair” loop. Pointers only march inward.
 
 The repo file `../ValidPalindrome.java` includes:
 
-1. **Brute force** — reverse entire string (simple strings like `madam`; not LeetCode cleaning).
-2. **Two pointers** — simple lowercase strings, no skip logic.
-3. **`validPalindrome`** — full LeetCode rules (skip + case).
+1. **`validPalindromeBruteForce`** — clean, reverse, compare (Approach 1 above).
+2. **`bruteForce`** — reverse entire string (simple strings like `madam`).
+3. **`twoPointers`** — simple lowercase strings, no skip logic.
+4. **`validPalindrome`** — full LeetCode rules (skip + case).
 
 Copy into your IDE as **`ValidPalindrome.java`** (lives in `java/`).
 
@@ -525,9 +530,20 @@ Copy into your IDE as **`ValidPalindrome.java`** (lives in `java/`).
 
 public class ValidPalindrome {
 
-    // APPROACH 1: BRUTE FORCE
-    // Reverse the string and compare it with the original.
-    // Time: O(n), Auxiliary space: O(n).
+    // APPROACH 1: CLEAN, REVERSE, COMPARE
+    public static boolean validPalindromeBruteForce(String s) {
+        StringBuilder cleaned = new StringBuilder();
+        for (int i = 0; i < s.length(); i++) {
+            char current = s.charAt(i);
+            if (Character.isLetterOrDigit(current)) {
+                cleaned.append(Character.toLowerCase(current));
+            }
+        }
+        String reversed = new StringBuilder(cleaned).reverse().toString();
+        return cleaned.toString().equals(reversed);
+    }
+
+    // APPROACH 2: BRUTE FORCE (simple strings)
     public static boolean bruteForce(String s) {
 
         StringBuilder reversed = new StringBuilder(s);
@@ -536,7 +552,7 @@ public class ValidPalindrome {
         return s.equals(reversed.toString());  // equals() compares contents, unlike ==.
     }
 
-    // APPROACH 2: TWO POINTERS
+    // APPROACH 3: TWO POINTERS
     // Compare characters at opposite ends and move inward.
     // Time: O(n), Auxiliary space: O(1).
     // Assumption: lowercase English letters only.
@@ -558,7 +574,7 @@ public class ValidPalindrome {
         return true;
     }
 
-    // APPROACH 3: FULL LEETCODE VERSION
+    // APPROACH 4: FULL LEETCODE VERSION
     // Ignore punctuation, spaces, and letter case.
     // Time: O(n), Auxiliary space: O(1).
     public static boolean validPalindrome(String s) {
@@ -608,6 +624,7 @@ public class ValidPalindrome {
         for (String s : testCases) {
 
             System.out.println("Input: " + s);
+            System.out.println("Clean + reverse: " + validPalindromeBruteForce(s));
             System.out.println("Brute force: " + bruteForce(s));
             System.out.println("Two pointers: " + twoPointers(s));
             System.out.println("Full version: " + validPalindrome(s));
@@ -622,6 +639,7 @@ public class ValidPalindrome {
 | Method | When |
 |---|---|
 | `validPalindrome()` | LeetCode / real interview wording |
+| `validPalindromeBruteForce()` | Easiest correct brute with full rules |
 | `twoPointers()` | Teaching core pointer movement on clean strings |
 | `bruteForce()` | Quick intuition only |
 
@@ -675,7 +693,20 @@ Reusable templates live in **`Two_Pointers_Common_Patterns.md`**. This file is t
 
 ---
 
-## 20. Next problem
+## 20. Link to Java — which method is which
+
+| Approach | Method in `ValidPalindrome.java` |
+|---|---|
+| Clean + reverse + compare | `validPalindromeBruteForce` |
+| Simple reverse compare | `bruteForce` |
+| Two pointers (simple string) | `twoPointers` |
+| Full LeetCode (skip + case) | `validPalindrome` |
+
+Run `main` to print all approaches on sample inputs.
+
+---
+
+## 21. Next problem
 
 When you are ready:
 

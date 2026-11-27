@@ -5,6 +5,12 @@ import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map;
 
+/*
+Problem: Valid Parentheses
+
+See notes/Problem_01_Valid_Parentheses.md — every approach below matches the note.
+*/
+
 /**
  * LeetCode 20 — Valid Parentheses
  * Pattern: Stack validation (LIFO nesting)
@@ -27,6 +33,7 @@ public class ValidParentheses {
   }
 
   // APPROACH 2: STACK — push openers, match closers against peek
+  // Why: one pass; closers must match the most recent unmatched opener (LIFO).
   // Time: O(n), Space: O(n)
   public static boolean isValidOpeners(String s) {
     Deque<Character> stack = new ArrayDeque<>();
@@ -49,6 +56,7 @@ public class ValidParentheses {
   }
 
   // APPROACH 3: STACK — push expected closing bracket (interview favourite)
+  // Why: on opener we already know which closer must come next — fewer branches on close.
   // Time: O(n), Space: O(n)
   public static boolean isValid(String s) {
     Deque<Character> stack = new ArrayDeque<>();
@@ -71,6 +79,7 @@ public class ValidParentheses {
   }
 
   // APPROACH 4: MAP + STACK (same logic, explicit pairs)
+  // Why: map scales if bracket types grow beyond three fixed pairs.
   public static boolean isValidWithMap(String s) {
     Map<Character, Character> pairs = new HashMap<>();
     pairs.put(')', '(');

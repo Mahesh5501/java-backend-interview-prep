@@ -1,5 +1,11 @@
 package DSA.TwoPointers;
 
+/*
+Problem: Trapping Rain Water
+
+See notes/Problem_08_Trapping_Rain_Water.md — every approach below matches the note.
+*/
+
 import java.util.Arrays;
 
 public class TrappingRainWater {

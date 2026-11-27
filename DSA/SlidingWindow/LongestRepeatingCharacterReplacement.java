@@ -1,18 +1,21 @@
 package DSA.SlidingWindow;
 
 /*
- * =============================================================================
- * Problem 05 — Longest Repeating Character Replacement (LeetCode 424)
- * Pattern:    Variable window + frequency counts
- * Valid when: windowLength - maxFrequency <= k
- * =============================================================================
- */
+Problem: Longest Repeating Character Replacement (LeetCode 424)
+
+At most k character changes — return longest substring that can become all one letter.
+
+Examples:
+  s = "AABABBA", k = 1 → 4
+
+See notes/Problem_05_Longest_Repeating_Character_Replacement.md — every approach below matches the note.
+*/
+
 public class LongestRepeatingCharacterReplacement {
 
-    // -------------------------------------------------------------------------
-    // Approach 1 — Brute force: try every substring, count replacements needed
-    // Time: O(n^2)   Space: O(1) for count array per window
-    // -------------------------------------------------------------------------
+    // APPROACH 1: BRUTE FORCE (every start, extend while len - maxFreq <= k)
+    // Why: direct validity check per window.
+    // Time: O(n^2)   Extra space: O(1) — int[26] per inner stretch
     public static int characterReplacementBruteForce(String s, int k) {
         if (s == null || s.isEmpty()) {
             return 0;
@@ -41,10 +44,9 @@ public class LongestRepeatingCharacterReplacement {
         return best;
     }
 
-    // -------------------------------------------------------------------------
-    // Approach 2 — Optimal: sliding window with int[26] frequencies
-    // Time: O(n)   Space: O(1) — fixed 26 slots
-    // -------------------------------------------------------------------------
+    // APPROACH 2: SLIDING WINDOW + int[26] FREQUENCIES (OPTIMAL)
+    // Why: invalid when windowLen - maxFreq > k → shrink with while from left.
+    // Time: O(n)   Extra space: O(1)
     public static int characterReplacement(String s, int k) {
         if (s == null || s.isEmpty()) {
             return 0;
@@ -79,7 +81,7 @@ public class LongestRepeatingCharacterReplacement {
     public static void main(String[] args) {
         System.out.println("s = \"AABABBA\", k = 1");
         System.out.println("Brute:   " + characterReplacementBruteForce("AABABBA", 1));
-        System.out.println("Optimal: " + characterReplacement("AABABBA", 1));
+        System.out.println("Window:  " + characterReplacement("AABABBA", 1));
         System.out.println();
 
         System.out.println("s = \"ABAB\", k = 2 -> " + characterReplacement("ABAB", 2));

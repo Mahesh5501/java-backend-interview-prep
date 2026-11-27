@@ -1,5 +1,11 @@
 package DSA.TwoPointers;
 
+/*
+Problem: Squares of a Sorted Array
+
+See notes/Problem_10_Squares_of_a_Sorted_Array.md — every approach below matches the note.
+*/
+
 import java.util.Arrays;
 
 public class SquaresOfASortedArray {

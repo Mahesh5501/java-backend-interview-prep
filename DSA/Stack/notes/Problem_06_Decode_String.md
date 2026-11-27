@@ -1,7 +1,8 @@
 # Problem 06 — Decode String
 
-> **Pattern:** Nested string stack
-> **Goal:** Expand k[encoded] patterns to a plain string.
+> **Pattern:** Nested string stack  
+> **Java file:** `../DecodeString.java`  
+> **Goal:** Understand every approach — what it does, why we pick it, and which Java method is which.  
 > **LeetCode:** 394
 
 ---

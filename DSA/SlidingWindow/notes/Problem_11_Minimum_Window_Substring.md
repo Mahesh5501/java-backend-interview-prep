@@ -2,7 +2,8 @@
 
 > **Pattern:** Variable-size sliding window — **shortest** valid window  
 > **LeetCode:** 76  
-> **Goal:** Return the **smallest** substring of `s` that contains **every** character in `t` (including duplicates). If impossible, return `""`.
+> **Goal:** Return the **smallest** substring of `s` that contains **every** character in `t` (including duplicates). If impossible, return `""`.  
+> **Java file:** `../MinimumWindowSubstring.java`  
 
 ---
 
@@ -70,6 +71,10 @@ Same spirit as **Problem 03 — Minimum Size Subarray Sum**, but validity is **f
 
 ## 4. Approach 1 — Brute force
 
+### Java method
+
+`minWindowBruteForce`
+
 ### Idea
 
 For each start index `i`, grow end `j` until `s[i..j]` covers `t`. Track the shortest window found.
@@ -99,6 +104,10 @@ Good for understanding **what “covers” means** — not for interviews at lar
 ---
 
 ## 5. Approach 2 — Optimal sliding window + frequency maps
+
+### Java method
+
+`minWindow`
 
 ### Two maps + one counter
 
@@ -288,9 +297,20 @@ A: Problem 12 is **longest** window with **at most K distinct** — opposite goa
 
 ---
 
-## 15. Complete runnable Java class
+## Link to Java
 
-`MinimumWindowSubstring.java` — brute + optimal + `main`.
+| Approach | Method |
+|---|---|
+| Brute force | `minWindowBruteForce` |
+| Need / formed window (optimal) | `minWindow` |
+
+Run `main` in the Java class to exercise every approach.
+
+---
+
+## 15. Runnable Java
+
+Use **Link to Java** above; open the file and run `main`.
 
 ---
 

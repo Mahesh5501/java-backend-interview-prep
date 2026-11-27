@@ -3,10 +3,57 @@ package DSA.Graphs;
 import java.util.*;
 
 /*
- * Problem 03 — Course Schedule (LeetCode 207)
+Problem: Course Schedule (LeetCode 207)
+
+See notes/Problem_03_Course_Schedule.md — every approach below matches the note.
  */
 public class CourseSchedule {
 
+    // APPROACH 1: BRUTE BACKTRACKING ALL ORDERINGS
+    // Try to place courses respecting prereqs — exponential but validates understanding.
+    // Time: O(n!) worst   Extra space: O(n)
+    public static boolean canFinishBrute(int numCourses, int[][] prerequisites) {
+        List<List<Integer>> adj = new ArrayList<>();
+        int[] indegree = new int[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            adj.add(new ArrayList<>());
+        }
+        for (int[] p : prerequisites) {
+            adj.get(p[1]).add(p[0]);
+            indegree[p[0]]++;
+        }
+        boolean[] used = new boolean[numCourses];
+        return backtrack(numCourses, indegree, adj, used, 0);
+    }
+
+    private static boolean backtrack(int n, int[] indegree, List<List<Integer>> adj, boolean[] used, int taken) {
+        if (taken == n) {
+            return true;
+        }
+        for (int c = 0; c < n; c++) {
+            if (used[c] || indegree[c] > 0) {
+                continue;
+            }
+            used[c] = true;
+            List<Integer> freed = new ArrayList<>();
+            for (int v : adj.get(c)) {
+                indegree[v]--;
+                freed.add(v);
+            }
+            if (backtrack(n, indegree, adj, used, taken + 1)) {
+                return true;
+            }
+            used[c] = false;
+            for (int v : freed) {
+                indegree[v]++;
+            }
+        }
+        return false;
+    }
+
+    // APPROACH 2: KAHN TOPOLOGICAL SORT (OPTIMAL — BFS)
+    // Repeatedly take zero-indegree courses.
+    // Time: O(V + E)   Extra space: O(V + E)
     public static boolean canFinishKahn(int numCourses, int[][] prerequisites) {
         List<List<Integer>> adj = new ArrayList<>();
         int[] indegree = new int[numCourses];
@@ -37,6 +84,9 @@ public class CourseSchedule {
         return taken == numCourses;
     }
 
+    // APPROACH 3: CYCLE DETECTION DFS (three-color)
+    // Visiting state on stack detects cycles in prereq graph.
+    // Time: O(V + E)   Extra space: O(V)
     public static boolean canFinishDFS(int numCourses, int[][] prerequisites) {
         List<List<Integer>> adj = new ArrayList<>();
         for (int i = 0; i < numCourses; i++) {
@@ -71,6 +121,7 @@ public class CourseSchedule {
     public static void main(String[] args) {
         int n = 2;
         int[][] prereq = { { 1, 0 } };
+        System.out.println("Brute can finish: " + canFinishBrute(n, prereq));
         System.out.println("Kahn can finish: " + canFinishKahn(n, prereq));
         System.out.println("DFS can finish: " + canFinishDFS(n, prereq));
 

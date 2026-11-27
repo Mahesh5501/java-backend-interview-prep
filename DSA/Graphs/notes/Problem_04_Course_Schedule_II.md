@@ -69,7 +69,7 @@ Each canonical state processed once (with correct visited / dist relax rules).
 
 ### Java entry points
 
-File: `../CourseScheduleII.java` — use `findOrder`.
+File: `../CourseScheduleII.java` — `findOrderBrute`, `findOrder`.
 
 ---
 
@@ -205,6 +205,17 @@ Enumerate states without memo — exponential. Optimal visits each vertex/edge o
 ### Follow-up Q&A
 
 **Q: Weighted?** Dijkstra. **Q: Multi-source?** Seed queue with all sources.
+
+## Link to Java — which method is which
+
+| Approach | Method in `CourseScheduleII.java` |
+|---|---|
+| Brute — backtrack valid order | `findOrderBrute` |
+| Kahn topological sort (preferred) | `findOrder` |
+
+Run `main` to compare brute vs Kahn order.
+
+---
 
 ## 16. Quick revision
 

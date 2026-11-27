@@ -1,40 +1,36 @@
 package DSA.SlidingWindow;
 
+import java.util.Arrays;
+
 /*
 Problem: Permutation in String (LeetCode 567)
-Given strings s1 and s2, return true if s2 contains a permutation of s1.
 
-A permutation has the same character counts as s1 (same letters, any order).
+Return true if s2 contains a permutation of s1 (same character counts).
 
-Example:
-s1 = "ab", s2 = "eidbaooo" → true
+Examples:
+  s1 = "ab", s2 = "eidbaooo" → true
 
-Expected Approach:
-Fixed window of length s1.length() + frequency counts.
+See notes/Problem_08_Permutation_in_String.md — every approach below matches the note.
 */
 
 public class PermutationInString {
 
-    // =====================================================
-    // APPROACH 1: BRUTE FORCE (every window, sort/compare)
-    // Time Complexity: O(n * k log k) where k = |s1|
-    // Auxiliary Space: O(k)
-    // =====================================================
-
-  public static boolean checkInclusionBruteForce(String s1, String s2) {
-
+    // APPROACH 1: BRUTE FORCE (sort s1 and each window of s2)
+    // Why: sorted window equals sorted pattern ⇔ permutation.
+    // Time: O(n * k log k)   Extra space: O(k)
+    public static boolean checkInclusionBruteForce(String s1, String s2) {
         if (s1.length() > s2.length()) {
             return false;
         }
 
         char[] pattern = s1.toCharArray();
-        java.util.Arrays.sort(pattern);
+        Arrays.sort(pattern);
         int k = s1.length();
 
         for (int start = 0; start <= s2.length() - k; start++) {
             char[] window = s2.substring(start, start + k).toCharArray();
-            java.util.Arrays.sort(window);
-            if (java.util.Arrays.equals(pattern, window)) {
+            Arrays.sort(window);
+            if (Arrays.equals(pattern, window)) {
                 return true;
             }
         }
@@ -42,15 +38,10 @@ public class PermutationInString {
         return false;
     }
 
-
-    // =====================================================
-    // APPROACH 2: FIXED WINDOW + FREQUENCY (OPTIMAL)
-    // Time Complexity: O(n)
-    // Auxiliary Space: O(1) — int[26]
-    // =====================================================
-
-  public static boolean checkInclusion(String s1, String s2) {
-
+    // APPROACH 2: FIXED WINDOW + int[26] FREQUENCY (OPTIMAL)
+    // Why: slide window of |s1|; compare need vs window counts in O(26).
+    // Time: O(n)   Extra space: O(1)
+    public static boolean checkInclusion(String s1, String s2) {
         if (s1.length() > s2.length()) {
             return false;
         }
@@ -65,7 +56,6 @@ public class PermutationInString {
         int k = s1.length();
 
         for (int right = 0; right < s2.length(); right++) {
-
             window[s2.charAt(right) - 'a']++;
 
             int left = right - k + 1;
@@ -92,20 +82,13 @@ public class PermutationInString {
         return true;
     }
 
-
-    // =====================================================
-    // MAIN METHOD
-    // =====================================================
-
     public static void main(String[] args) {
-
         String s1 = "ab";
         String s2 = "eidbaooo";
 
         System.out.println("s1 = \"" + s1 + "\", s2 = \"" + s2 + "\"");
         System.out.println("Brute:  " + checkInclusionBruteForce(s1, s2));
-        System.out.println("Window: " + checkInclusion(s1, s2)); // true
-
-        System.out.println(checkInclusion("ab", "eidboaoo")); // false
+        System.out.println("Window: " + checkInclusion(s1, s2));
+        System.out.println("Window: " + checkInclusion("ab", "eidboaoo"));
     }
 }

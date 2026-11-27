@@ -3,6 +3,12 @@ package DSA.Stack;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
+/*
+Problem: Decode String
+
+See notes/Problem_06_Decode_String.md — every approach below matches the note.
+*/
+
 /**
  * LeetCode 394 — Decode String
  * Pattern: Stack of (prefix string, repeat count) states

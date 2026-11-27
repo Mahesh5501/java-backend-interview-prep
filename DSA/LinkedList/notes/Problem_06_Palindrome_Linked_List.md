@@ -1,5 +1,7 @@
 # Problem 06 — Palindrome Linked List
 
+> **Java file:** `../PalindromeLinkedList.java`
+
 > **Pattern:** Find middle + reverse half
 > **Goal:** Check if list values form a palindrome.
 > **LeetCode:** 234
@@ -226,6 +228,17 @@ Brute is `bruteForce()` at `O(n)`. I use `isPalindrome()` at `O(n)` because Half
 **Why space `O(1)`?**  Auxiliary structure size dominates (stack, heap, or recursion depth).
 
 **Can we beat `O(n)`?**  Usually not for this model of the problem; follow-ups may allow linear or O(n log k) only.
+
+---
+
+## Link to Java — which method is which
+
+| Approach | Method in `PalindromeLinkedList` |
+|---|---|
+| Brute force | `bruteForce` |
+| Reverse half (optimal) | `isPalindrome` |
+
+Run `main` to print all approaches on sample inputs.
 
 ---
 

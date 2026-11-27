@@ -2,7 +2,8 @@
 
 > **Pattern:** Variable-size sliding window — **at most K** zeros inside  
 > **LeetCode:** 1004  
-> **Goal:** Longest contiguous subarray of 1’s if you may flip at most `k` zeros to 1’s.
+> **Goal:** Longest contiguous subarray of 1’s if you may flip at most `k` zeros to 1’s.  
+> **Java file:** `../MaxConsecutiveOnesIII.java`  
 
 ---
 
@@ -73,6 +74,10 @@ Same template as “at most 2 distinct fruits” — only the validity test chan
 
 ## 4. Approach 1 — Brute force (every subarray)
 
+### Java method
+
+`longestOnesBruteForce`
+
 ### Idea
 
 For every start index, extend `end` until zeros exceed `k`. Track best length.
@@ -118,6 +123,10 @@ Too slow for `n = 10^5`. Need each index to enter/leave once.
 ---
 
 ## 5. Approach 2 — Optimal sliding window
+
+### Java method
+
+`longestOnes`
 
 ### Step-by-step
 
@@ -312,6 +321,17 @@ A: Simple scan — no window.
 
 **Q: What if we can flip **any** value, not only 0→1?**  
 A: Not this problem; constraint is binary.
+
+---
+
+## Link to Java
+
+| Approach | Method |
+|---|---|
+| Brute force | `longestOnesBruteForce` |
+| Sliding window (optimal) | `longestOnes` |
+
+Run `main` in the Java class to exercise every approach.
 
 ---
 

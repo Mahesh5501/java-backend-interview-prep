@@ -1,5 +1,7 @@
 # Problem 02 — Middle of Linked List
 
+> **Java file:** `../MiddleOfLinkedList.java`
+
 > **Pattern:** Fast / slow pointers
 > **Goal:** Return middle node (second middle if even length).
 > **LeetCode:** 876
@@ -219,6 +221,17 @@ Brute is `bruteForce()` at `O(n)`. I use `middleNode()` at `O(n)` because When f
 **Why space `O(1)`?**  Auxiliary structure size dominates (stack, heap, or recursion depth).
 
 **Can we beat `O(n)`?**  Usually not for this model of the problem; follow-ups may allow linear or O(n log k) only.
+
+---
+
+## Link to Java — which method is which
+
+| Approach | Method in `MiddleOfLinkedList` |
+|---|---|
+| Brute force | `bruteForce` |
+| Fast & slow (optimal) | `middleNode` |
+
+Run `main` to print all approaches on sample inputs.
 
 ---
 

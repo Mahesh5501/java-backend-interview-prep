@@ -206,6 +206,17 @@ Enumerate states without memo — exponential. Optimal visits each vertex/edge o
 
 **Q: Weighted?** Dijkstra. **Q: Multi-source?** Seed queue with all sources.
 
+## Link to Java — which method is which
+
+| Approach | Type / method in `WordDictionary.java` |
+|---|---|
+| Brute — list scan | `WordDictionaryList.addWord`, `WordDictionaryList.search` |
+| Trie + DFS on `'.'` (preferred) | `WordDictionary.addWord`, `WordDictionary.search` |
+
+Run `main` to compare list vs trie search.
+
+---
+
 ## 16. Quick revision
 
 1. **Pattern:** Trie + DFS wildcard.

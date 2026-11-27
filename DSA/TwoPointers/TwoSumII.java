@@ -1,5 +1,10 @@
 package DSA.TwoPointers;
 
+/*
+Problem: Two Sum II — Input Array Is Sorted
+
+See notes/Problem_02_Two_Sum_II.md — every approach below matches the note.
+*/
 
 import java.util.Arrays;
 import java.util.HashMap;

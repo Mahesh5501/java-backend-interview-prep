@@ -1,5 +1,7 @@
 # Problem 02 — Invert Binary Tree
 
+> **Java file:** `../InvertBinaryTree.java`
+
 > **Pattern:** Swap children DFS/BFS
 > **Goal:** Mirror the tree.
 > **LeetCode:** 226
@@ -56,11 +58,11 @@ Can you recognise the stack/structure pattern, state invariants clearly, impleme
 
 ### Idea
 
-Recursive swap — also brute equivalent.
+Level-order queue: swap left/right at every node.
 
 ### Key method
 
-`invertTree()` in `../InvertBinaryTree.java`
+`invertTreeBruteBFS()` in `../InvertBinaryTree.java`
 
 ### Dry run (summary)
 
@@ -218,6 +220,17 @@ Brute is `invertTree()` at `O(n)`. I use `invertTree()` at `O(n)` because Biject
 **Why space `O(h)`?**  Auxiliary structure size dominates (stack, heap, or recursion depth).
 
 **Can we beat `O(n)`?**  Usually not for this model of the problem; follow-ups may allow linear or O(n log k) only.
+
+---
+
+## Link to Java — which method is which
+
+| Approach | Method in `InvertBinaryTree` |
+|---|---|
+| BFS swap (brute) | `invertTreeBruteBFS` |
+| DFS recursive (optimal) | `invertTree` |
+
+Run `main` to print all approaches on sample inputs.
 
 ---
 

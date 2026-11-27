@@ -3,10 +3,12 @@ package DSA.LinkedList;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * LeetCode 234 — Palindrome Linked List
- * Pattern: Find middle, reverse second half, compare
- */
+/*
+Problem: Palindrome Linked List (LeetCode 234)
+
+See notes/Problem_06_Palindrome_Linked_List.md — every approach below matches the note.
+*/
+
 public class PalindromeLinkedList {
 
   // APPROACH 1: BRUTE — copy values to list, two indices

@@ -1,7 +1,8 @@
 # Problem 05 — Longest Repeating Character Replacement
 
 > **Pattern:** Variable window + **frequency array**  
-> **Goal:** Longest substring you can make with **only one letter** after at most `k` changes (LeetCode 424).
+> **Goal:** Longest substring you can make with **only one letter** after at most `k` changes (LeetCode 424).  
+> **Java file:** `../LongestRepeatingCharacterReplacement.java`  
 
 ---
 
@@ -63,6 +64,10 @@ A:3 B:2 → need 2 replacements  ≤ k=1  → INVALID → shrink left
 
 ## 4. Approach 1 — Brute force
 
+### Java method
+
+`characterReplacementBruteForce`
+
 For each start, extend end, maintain counts, check `len - maxFreq <= k`.
 
 Time `O(n²)`, space `O(1)` (26 counts per window).
@@ -84,6 +89,10 @@ for (int right = 0; right < s.length(); right++) {
     best = Math.max(best, right - left + 1);
 }
 ```
+
+### Java method
+
+`characterReplacement`
 
 ### Validity formula (memorize)
 
@@ -199,37 +208,16 @@ Use `'a'` offset or `HashMap`.
 
 ---
 
-## 14. Complete Java
+## Link to Java
 
-`../LongestRepeatingCharacterReplacement.java`
+| Approach | Method |
+|---|---|
+| Brute force | `characterReplacementBruteForce` |
+| Sliding window + int[26] (optimal) | `characterReplacement` |
 
-```java
-package DSA.SlidingWindow;
+Run `main` in the Java class to exercise every approach.
 
-public class LongestRepeatingCharacterReplacement {
-
-    public static int characterReplacement(String s, int k) {
-        if (s == null || s.isEmpty()) return 0;
-        int[] freq = new int[26];
-        int left = 0, maxFreq = 0, best = 0;
-        for (int right = 0; right < s.length(); right++) {
-            int idx = s.charAt(right) - 'A';
-            freq[idx]++;
-            maxFreq = Math.max(maxFreq, freq[idx]);
-            while ((right - left + 1) - maxFreq > k) {
-                freq[s.charAt(left) - 'A']--;
-                left++;
-            }
-            best = Math.max(best, right - left + 1);
-        }
-        return best;
-    }
-
-    public static void main(String[] args) {
-        System.out.println(characterReplacement("AABABBA", 1)); // 4
-    }
-}
-```
+---
 
 ```text
 "AABABBA", k=1 → 4

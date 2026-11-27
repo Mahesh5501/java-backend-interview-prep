@@ -206,6 +206,17 @@ Enumerate states without memo — exponential. Optimal visits each vertex/edge o
 
 **Q: Weighted?** Dijkstra. **Q: Multi-source?** Seed queue with all sources.
 
+## Link to Java — which method is which
+
+| Approach | Method in `WordSearchII.java` |
+|---|---|
+| Brute — DFS board per word | `findWordsBrute` |
+| Trie + shared board DFS (preferred) | `findWords` |
+
+Run `main` to compare brute vs trie on the sample board.
+
+---
+
 ## 16. Quick revision
 
 1. **Pattern:** Trie + grid DFS.

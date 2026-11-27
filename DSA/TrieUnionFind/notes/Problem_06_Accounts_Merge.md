@@ -206,6 +206,17 @@ Enumerate states without memo — exponential. Optimal visits each vertex/edge o
 
 **Q: Weighted?** Dijkstra. **Q: Multi-source?** Seed queue with all sources.
 
+## Link to Java — which method is which
+
+| Approach | Method in `AccountsMerge.java` |
+|---|---|
+| Brute — pairwise email overlap | `accountsMergeBrute` |
+| Union-Find via email map (preferred) | `accountsMerge` |
+
+Run `main` to compare brute vs map-based UF merge.
+
+---
+
 ## 16. Quick revision
 
 1. **Pattern:** Union-Find + graph.

@@ -299,6 +299,17 @@ Fill five rows from the matching Java main example in the sibling .java file.
 **Q: In-place?** Only if allowed.  
 **Q: Unsorted input?** State preprocessing.
 
+## 15. Link to Java — which method is which
+
+| Approach | Method in `ReorganizeString.java` |
+|---|---|
+| Brute — greedy with sorted freqs | `reorganizeStringBrute` |
+| Max-heap (preferred) | `reorganizeString` |
+
+Run `main` to compare sort-greedy vs heap reorganize.
+
+---
+
 ## 16. Quick revision
 
 Pattern: **Pattern D — Scheduling**.

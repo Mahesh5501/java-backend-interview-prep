@@ -108,6 +108,8 @@ The answer is some pair `(i, j)`. Brute force tries all of them.
 
 ### Java method
 
+`maxAreaBruteForce` in `ContainerWithMostWater.java`
+
 ```java
 public static int maxAreaBruteForce(int[] height) {
 
@@ -170,6 +172,10 @@ Progression to mention aloud:
 ---
 
 ## 6. Approach 2 — Optimal two pointers (greedy)
+
+### Java method
+
+`maxAreaTwoPointers` in `ContainerWithMostWater.java`
 
 ### Step 1 — Start at the widest container
 
@@ -550,7 +556,18 @@ Template details: **`Two_Pointers_Common_Patterns.md`**.
 
 ---
 
-## 20. Next problem
+## 20. Link to Java — which method is which
+
+| Approach | Method in `ContainerWithMostWater.java` |
+|---|---|
+| Brute force (every pair) | `maxAreaBruteForce` |
+| Two pointers (optimal) | `maxAreaTwoPointers` |
+
+Run `main` to print both approaches on sample input.
+
+---
+
+## 21. Next problem
 
 **Problem 04 — 3Sum**  
 Main concept: Sort first, fix one index, run Two Sum II inside, skip duplicates.

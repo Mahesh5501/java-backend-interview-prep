@@ -1,5 +1,7 @@
 # Problem 04 — Binary Tree Level Order Traversal
 
+> **Java file:** `../LevelOrderTraversal.java`
+
 > **Pattern:** BFS with queue
 > **Goal:** Return values grouped by depth level.
 > **LeetCode:** 102
@@ -56,11 +58,11 @@ Can you recognise the stack/structure pattern, state invariants clearly, impleme
 
 ### Idea
 
-BFS is standard.
+DFS buckets values by depth, then emit levels.
 
 ### Key method
 
-`levelOrder()` in `../LevelOrderTraversal.java`
+`levelOrderBruteDFS()` in `../LevelOrderTraversal.java`
 
 ### Dry run (summary)
 
@@ -229,6 +231,17 @@ Brute is `levelOrder()` at `O(n)`. I use `levelOrder()` at `O(n)` because Each n
 **Why space `O(n)`?**  Auxiliary structure size dominates (stack, heap, or recursion depth).
 
 **Can we beat `O(n)`?**  Usually not for this model of the problem; follow-ups may allow linear or O(n log k) only.
+
+---
+
+## Link to Java — which method is which
+
+| Approach | Method in `LevelOrderTraversal` |
+|---|---|
+| DFS depth buckets (brute) | `levelOrderBruteDFS` |
+| BFS queue (optimal) | `levelOrder` |
+
+Run `main` to print all approaches on sample inputs.
 
 ---
 

@@ -1,9 +1,11 @@
 package DSA.LinkedList;
 
-/**
- * LeetCode 19 — Remove Nth Node From End of List
- * Pattern: Dummy + fast ahead by n, then move together
- */
+/*
+Problem: Remove Nth Node From End of List (LeetCode 19)
+
+See notes/Problem_05_Remove_Nth_Node_From_End.md — every approach below matches the note.
+*/
+
 public class RemoveNthNode {
 
   // APPROACH 1: BRUTE — count length L, remove node at index L - n

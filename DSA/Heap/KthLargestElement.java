@@ -10,11 +10,25 @@ Note: "kth largest" is not the same as sorting in ascending order and picking in
 
 Example:
     nums = [3, 2, 1, 5, 6, 4], k = 2 -> 5
+
+See notes/Problem_01_Kth_Largest_Element.md — every approach below matches the note.
 */
 
 public class KthLargestElement {
 
-    // Min-heap of size k — root is the kth largest among kept elements.
+    // APPROACH 1: FULL SORT
+    // Sort ascending, take the k-th from the end.
+    // Why use it: simplest baseline; fine when k is close to n.
+    // Time: O(n log n)   Extra space: O(log n) sort stack
+    public static int findKthLargestSort(int[] nums, int k) {
+        Arrays.sort(nums);
+        return nums[nums.length - k];
+    }
+
+    // APPROACH 2: MIN-HEAP OF SIZE K (OPTIMAL — what we use in interviews)
+    // Root is smallest among the k largest kept — that value is the kth largest overall.
+    // Why heap: O(log k) per insert vs full sort when k << n.
+    // Time: O(n log k)   Extra space: O(k)
     public static int findKthLargest(int[] nums, int k) {
         PriorityQueue<Integer> minHeap = new PriorityQueue<>();
         for (int value : nums) {
@@ -24,11 +38,6 @@ public class KthLargestElement {
             }
         }
         return minHeap.peek();
-    }
-
-    public static int findKthLargestSort(int[] nums, int k) {
-        Arrays.sort(nums);
-        return nums[nums.length - k];
     }
 
     public static void main(String[] args) {

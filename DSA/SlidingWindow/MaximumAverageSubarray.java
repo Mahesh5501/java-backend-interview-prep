@@ -3,18 +3,21 @@ package DSA.SlidingWindow;
 import java.util.Arrays;
 
 /*
- * =============================================================================
- * Problem 02 — Maximum Average Subarray I (LeetCode 643)
- * Pattern:    Fixed-size sliding window (same as max sum, then divide by k)
- * Return:     double — maximum average of any subarray of length k
- * =============================================================================
- */
+Problem: Maximum Average Subarray I (LeetCode 643)
+
+Return the maximum average of any contiguous subarray of length k.
+
+Examples:
+  nums = [1, 12, -5, -6, 50, 3], k = 4 → 12.75
+
+See notes/Problem_02_Maximum_Average_Subarray.md — every approach below matches the note.
+*/
+
 public class MaximumAverageSubarray {
 
-    // -------------------------------------------------------------------------
-    // Approach 1 — Brute force
-    // Time: O(n * k)   Space: O(1)
-    // -------------------------------------------------------------------------
+    // APPROACH 1: BRUTE FORCE (sum each window, divide by k)
+    // Why: direct definition — compare (sum/k) for every start index.
+    // Time: O(n * k)   Extra space: O(1)
     public static double findMaxAverageBruteForce(int[] nums, int k) {
         if (nums == null || nums.length < k || k <= 0) {
             return 0.0;
@@ -32,11 +35,9 @@ public class MaximumAverageSubarray {
         return best;
     }
 
-    // -------------------------------------------------------------------------
-    // Approach 2 — Optimal: track max SUM in window, divide once at end
-    // (Dividing each step also works — we show both ideas in notes.)
-    // Time: O(n)   Space: O(1)
-    // -------------------------------------------------------------------------
+    // APPROACH 2: FIXED WINDOW — TRACK MAX SUM, DIVIDE ONCE (OPTIMAL)
+    // Why: fixed k → argmax(average) = argmax(sum); slide in O(1) per step.
+    // Time: O(n)   Extra space: O(1)
     public static double findMaxAverage(int[] nums, int k) {
         if (nums == null || nums.length < k || k <= 0) {
             return 0.0;
@@ -58,7 +59,9 @@ public class MaximumAverageSubarray {
         return (double) bestSum / k;
     }
 
-    // Alternative: update max average on every full window (matches mental model)
+    // APPROACH 3: GROW / SHRINK — UPDATE MAX AVERAGE EACH FULL WINDOW
+    // Why: compares (double) sum/k at every step — interview-friendly mental model.
+    // Time: O(n)   Extra space: O(1)
     public static double findMaxAveragePerStep(int[] nums, int k) {
         if (nums == null || nums.length < k || k <= 0) {
             return 0.0;
@@ -86,9 +89,9 @@ public class MaximumAverageSubarray {
         int k = 4;
 
         System.out.println("nums: " + Arrays.toString(nums) + ", k = " + k);
-        System.out.println("Brute Force:  " + findMaxAverageBruteForce(nums, k));
-        System.out.println("Optimal:      " + findMaxAverage(nums, k));
-        System.out.println("Per-step avg: " + findMaxAveragePerStep(nums, k));
+        System.out.println("Brute:    " + findMaxAverageBruteForce(nums, k));
+        System.out.println("Max sum:  " + findMaxAverage(nums, k));
+        System.out.println("Per-step: " + findMaxAveragePerStep(nums, k));
         System.out.println();
 
         System.out.println("Single element: " + findMaxAverage(new int[] { 5 }, 1));

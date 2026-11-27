@@ -1,7 +1,8 @@
 # Problem 01 — Maximum Sum of K Consecutive Elements
 
 > **Pattern:** Fixed-size Sliding Window  
-> **Goal:** Find the **largest sum** among all contiguous subarrays of **exactly** `k` elements.
+> **Goal:** Find the **largest sum** among all contiguous subarrays of **exactly** `k` elements.  
+> **Java file:** `../MaximumSumOfKElements.java`  
 
 ---
 
@@ -75,6 +76,10 @@ If you can say “sum = sum - leaving + entering,” you know the trick.
 
 ## 4. Approach 1 — Brute force
 
+### Java method
+
+`maxSumBruteForce`
+
 ### Idea
 
 For every start index `i` where a window of size `k` fits, add `k` elements.
@@ -121,6 +126,10 @@ Too slow when `n` and `k` are large.
 
 ## 5. Approach 2 — Optimal: fixed sliding window
 
+### Java method
+
+`maxSumFixedWindow`
+
 ### Steps
 
 1. Sum the first `k` elements → initial `windowSum`.
@@ -164,6 +173,16 @@ public static int maxSumFixedWindow(int[] arr, int k) {
     return best;
 }
 ```
+
+---
+
+## 5b. Approach 3 — Grow right, shrink left when length == k
+
+Same `O(n)` fixed-window idea with explicit `left` / `right`.
+
+### Java method
+
+`maxSumGrowShrink`
 
 ---
 
@@ -269,47 +288,17 @@ A: Fixed sum window still works; the max sum can be negative.
 
 ---
 
-## 14. Complete runnable Java
+## Link to Java
 
-Full source: `../MaximumSumOfKElements.java`.
+| Approach | Method |
+|---|---|
+| Brute force | `maxSumBruteForce` |
+| Fixed window (+enter −leave) | `maxSumFixedWindow` |
+| Grow / shrink when len == k | `maxSumGrowShrink` |
 
-```java
-package DSA.SlidingWindow;
+Run `main` in the Java class to exercise every approach.
 
-import java.util.Arrays;
-
-public class MaximumSumOfKElements {
-
-    public static int maxSumBruteForce(int[] arr, int k) {
-        if (arr == null || arr.length < k || k <= 0) return 0;
-        int best = Integer.MIN_VALUE;
-        for (int start = 0; start <= arr.length - k; start++) {
-            int sum = 0;
-            for (int i = start; i < start + k; i++) sum += arr[i];
-            best = Math.max(best, sum);
-        }
-        return best;
-    }
-
-    public static int maxSumFixedWindow(int[] arr, int k) {
-        if (arr == null || arr.length < k || k <= 0) return 0;
-        int windowSum = 0;
-        for (int i = 0; i < k; i++) windowSum += arr[i];
-        int best = windowSum;
-        for (int right = k; right < arr.length; right++) {
-            windowSum += arr[right];
-            windowSum -= arr[right - k];
-            best = Math.max(best, windowSum);
-        }
-        return best;
-    }
-
-    public static void main(String[] args) {
-        int[] nums = { 2, 1, 5, 1, 3, 2 };
-        System.out.println("Fixed Window: " + maxSumFixedWindow(nums, 3)); // 9
-    }
-}
-```
+---
 
 ```text
 Array: [2, 1, 5, 1, 3, 2], k = 3

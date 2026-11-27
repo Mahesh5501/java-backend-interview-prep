@@ -69,7 +69,7 @@ Each canonical state processed once (with correct visited / dist relax rules).
 
 ### Java entry points
 
-File: `../CloneGraph.java` — use `cloneBFS`, `cloneDFS`.
+File: `../CloneGraph.java` — `cloneBFS`, `cloneDFS`.
 
 ---
 
@@ -205,6 +205,17 @@ Enumerate states without memo — exponential. Optimal visits each vertex/edge o
 ### Follow-up Q&A
 
 **Q: Weighted?** Dijkstra. **Q: Multi-source?** Seed queue with all sources.
+
+## Link to Java — which method is which
+
+| Approach | Method in `CloneGraph.java` |
+|---|---|
+| BFS + clone map | `cloneBFS` |
+| DFS + clone map (either is fine) | `cloneDFS` |
+
+Run `main` to compare BFS vs DFS clones on the sample graph.
+
+---
 
 ## 16. Quick revision
 

@@ -1,5 +1,7 @@
 # Problem 01 — Reverse Linked List
 
+> **Java file:** `../ReverseLinkedList.java`
+
 > **Pattern:** Three-pointer reversal
 > **Goal:** Return head of reversed singly linked list.
 > **LeetCode:** 206
@@ -138,10 +140,17 @@ Step: 1→null, 2→1, 3→2, return 3
 
 ---
 
-## 7b. Extra variants in the Java file
+## 6. Approach 3 — Recursive reversal
 
-- reverseRecursive
+### Idea
 
+Recurse to end, then flip links on the way back.
+
+### Key method
+
+`reverseRecursive()` in `../ReverseLinkedList.java`
+
+---
 ---
 
 ## 7c. Paper-trace template
@@ -227,6 +236,18 @@ Brute is `bruteForce()` at `O(n)`. I use `reverseList()` at `O(n)` because Each 
 **Why space `O(1)`?**  Auxiliary structure size dominates (stack, heap, or recursion depth).
 
 **Can we beat `O(n)`?**  Usually not for this model of the problem; follow-ups may allow linear or O(n log k) only.
+
+---
+
+## Link to Java — which method is which
+
+| Approach | Method in `ReverseLinkedList` |
+|---|---|
+| Brute force | `bruteForce` |
+| Iterative (optimal) | `reverseList` |
+| Recursive | `reverseRecursive` |
+
+Run `main` to print all approaches on sample inputs.
 
 ---
 

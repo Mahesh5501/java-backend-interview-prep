@@ -89,7 +89,9 @@ nums:  [ 0  0  1  1  1  2  2  3  3  4 ]
 
 A set never stores the same value twice. LinkedHashSet keeps **first-seen order**, which for a sorted input is still `0,1,2,3,4`.
 
-### Java
+### Java method
+
+`removeDuplicatesBruteForce` in `RemoveDuplicatesFromSortedArray.java`
 
 ```java
 public static int removeDuplicatesBruteForce(int[] nums) {
@@ -186,7 +188,9 @@ Return `W + 1 = 5`.
 
 Duplicate values only move **read**. They never move **write**.
 
-### Java
+### Java method
+
+`removeDuplicatesTwoPointers` in `RemoveDuplicatesFromSortedArray.java` (optimal)
 
 ```java
 public static int removeDuplicatesTwoPointers(int[] nums) {
@@ -463,7 +467,18 @@ Related pattern name: **two pointers for in-place filtering** (also used in Move
 
 ---
 
-## 19. Next problem
+## 19. Link to Java — which method is which
+
+| Approach | Method in `RemoveDuplicatesFromSortedArray.java` |
+|---|---|
+| LinkedHashSet / extra structure | `removeDuplicatesBruteForce` |
+| Read / write pointers (optimal) | `removeDuplicatesTwoPointers` |
+
+Run `main` to print both approaches on sample input.
+
+---
+
+## 20. Next problem
 
 **Problem 07 — Valid Palindrome II**  
 Main concept: opposite pointers again, plus **one allowed skip** when characters mismatch (branching).

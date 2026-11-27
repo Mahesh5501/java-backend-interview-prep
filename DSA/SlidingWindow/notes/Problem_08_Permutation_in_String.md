@@ -2,7 +2,8 @@
 
 > **Pattern:** Fixed-size window — length `|s1|` + frequency counts  
 > **LeetCode:** 567  
-> **Goal:** Return `true` if `s2` contains **some contiguous substring** that is a **permutation** of `s1`.
+> **Goal:** Return `true` if `s2` contains **some contiguous substring** that is a **permutation** of `s1`.  
+> **Java file:** `../PermutationInString.java`  
 
 ---
 
@@ -68,6 +69,10 @@ Use `int[26]` for `a`–`z` — fast and interview-friendly.
 
 ## 4. Approach 1 — Brute force (sort each window)
 
+### Java method
+
+`checkInclusionBruteForce`
+
 ### Idea
 
 Sort characters of `s1` once. For each `start` in `s2`, take `s2[start..start+k-1]`, sort, compare.
@@ -86,6 +91,10 @@ Sorting every window is wasteful when counts update in constant time.
 ---
 
 ## 5. Approach 2 — Fixed window + frequency (optimal)
+
+### Java method
+
+`checkInclusion`
 
 ### Step-by-step
 
@@ -230,9 +239,20 @@ A: Normalize or separate counts for A/Z.
 
 ---
 
-## 15. Complete runnable Java class
+## Link to Java
 
-`PermutationInString.java` — brute + optimal + `main`.
+| Approach | Method |
+|---|---|
+| Brute force (sort windows) | `checkInclusionBruteForce` |
+| Fixed window + int[26] (optimal) | `checkInclusion` |
+
+Run `main` in the Java class to exercise every approach.
+
+---
+
+## 15. Runnable Java
+
+Use **Link to Java** above; open the file and run `main`.
 
 ---
 

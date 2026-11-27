@@ -1,5 +1,11 @@
 package DSA.TwoPointers;
 
+/*
+Problem: Container With Most Water
+
+See notes/Problem_03_Container_With_Most_Water.md — every approach below matches the note.
+*/
+
 import java.util.Arrays;
 
 public class ContainerWithMostWater {

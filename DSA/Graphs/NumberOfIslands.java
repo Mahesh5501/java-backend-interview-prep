@@ -1,12 +1,53 @@
 package DSA.Graphs;
 
+import java.util.ArrayDeque;
+
 /*
  * Problem 01 — Number of Islands (LeetCode 200)
  * Pattern: Grid DFS/BFS flood fill
+
+See notes/Problem_01_Number_of_Islands.md — every approach below matches the note.
  */
 public class NumberOfIslands {
 
-    // Brute is same visit pattern — optimal is DFS/BFS O(m·n)
+    // APPROACH 1: DFS + visited[][]
+    // Never mutate grid; mark visited when entering a land cell.
+    // Why use it: preserves input — needed when grid must stay unchanged.
+    // Time: O(m·n)   Extra space: O(m·n)
+    public static int countIslandsVisited(char[][] grid) {
+        if (grid == null || grid.length == 0) {
+            return 0;
+        }
+        int rows = grid.length, cols = grid[0].length;
+        boolean[][] visited = new boolean[rows][cols];
+        int count = 0;
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                if (grid[r][c] == '1' && !visited[r][c]) {
+                    count++;
+                    floodVisited(r, c, grid, visited);
+                }
+            }
+        }
+        return count;
+    }
+
+    private static void floodVisited(int r, int c, char[][] grid, boolean[][] visited) {
+        int rows = grid.length, cols = grid[0].length;
+        if (r < 0 || c < 0 || r >= rows || c >= cols || grid[r][c] != '1' || visited[r][c]) {
+            return;
+        }
+        visited[r][c] = true;
+        floodVisited(r + 1, c, grid, visited);
+        floodVisited(r - 1, c, grid, visited);
+        floodVisited(r, c + 1, grid, visited);
+        floodVisited(r, c - 1, grid, visited);
+    }
+
+    // APPROACH 2: IN-PLACE DFS SINK (OPTIMAL — what we use)
+    // Flip '1'→'0' while flooding — visited is encoded in the grid.
+    // Why use it: O(1) extra space; typical interview solution.
+    // Time: O(m·n)   Extra space: O(m·n) recursion stack worst case
     public static int countIslandsDFS(char[][] grid) {
         if (grid == null || grid.length == 0) {
             return 0;
@@ -36,6 +77,10 @@ public class NumberOfIslands {
         sink(r, c - 1, grid);
     }
 
+    // APPROACH 3: BFS QUEUE
+    // Same counting rule; mark neighbor when enqueueing to avoid duplicates.
+    // Why BFS: avoids deep recursion on snake-shaped islands.
+    // Time: O(m·n)   Extra space: O(min(m,n)) queue typical
     public static int countIslandsBFS(char[][] grid) {
         if (grid == null || grid.length == 0) {
             return 0;
@@ -44,7 +89,7 @@ public class NumberOfIslands {
         int count = 0;
         int[] dr = { 1, -1, 0, 0 };
         int[] dc = { 0, 0, 1, -1 };
-        java.util.ArrayDeque<int[]> q = new java.util.ArrayDeque<>();
+        ArrayDeque<int[]> q = new ArrayDeque<>();
 
         for (int r = 0; r < rows; r++) {
             for (int c = 0; c < cols; c++) {
@@ -77,9 +122,9 @@ public class NumberOfIslands {
                 { '0', '0', '1', '0', '0' },
                 { '0', '0', '0', '1', '1' },
         };
-        char[][] copy = deepCopy(grid);
-        System.out.println("DFS islands: " + countIslandsDFS(copy));
-        System.out.println("BFS islands: " + countIslandsBFS(deepCopy(grid)));
+        System.out.println("Visited: " + countIslandsVisited(deepCopy(grid)));
+        System.out.println("DFS:     " + countIslandsDFS(deepCopy(grid)));
+        System.out.println("BFS:     " + countIslandsBFS(deepCopy(grid)));
     }
 
     private static char[][] deepCopy(char[][] g) {

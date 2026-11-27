@@ -1,5 +1,7 @@
 # Problem 04 — Merge Two Sorted Lists
 
+> **Java file:** `../MergeTwoSortedLists.java`
+
 > **Pattern:** Merge with dummy head
 > **Goal:** Merge two sorted linked lists.
 > **LeetCode:** 21
@@ -221,6 +223,17 @@ Brute is `bruteForce()` at `O(n+m)`. I use `mergeTwoLists()` at `O(n+m)` because
 **Why space `O(1)`?**  Auxiliary structure size dominates (stack, heap, or recursion depth).
 
 **Can we beat `O(n+m)`?**  Usually not for this model of the problem; follow-ups may allow linear or O(n log k) only.
+
+---
+
+## Link to Java — which method is which
+
+| Approach | Method in `MergeTwoSortedLists` |
+|---|---|
+| Brute force | `bruteForce` |
+| Two-pointer merge (optimal) | `mergeTwoLists` |
+
+Run `main` to print all approaches on sample inputs.
 
 ---
 

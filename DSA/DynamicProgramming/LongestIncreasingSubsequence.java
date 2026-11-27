@@ -4,9 +4,32 @@ import java.util.Arrays;
 
 /*
  * Problem 04 — Longest Increasing Subsequence (LeetCode 300)
+
+See notes/Problem_04_Longest_Increasing_Subsequence.md — every approach below matches the note.
  */
 public class LongestIncreasingSubsequence {
 
+    // APPROACH 1: BRUTE — try all subsequences (small n only)
+    // Time: O(2^n)   Extra space: O(n)
+    public static int lengthOfLISBrute(int[] nums) {
+        return lisBrute(0, Integer.MIN_VALUE, nums);
+    }
+
+    private static int lisBrute(int i, int prev, int[] nums) {
+        if (i == nums.length) {
+            return 0;
+        }
+        int skip = lisBrute(i + 1, prev, nums);
+        int take = 0;
+        if (nums[i] > prev) {
+            take = 1 + lisBrute(i + 1, nums[i], nums);
+        }
+        return Math.max(skip, take);
+    }
+
+    // APPROACH 2: O(n^2) DP
+    // dp[i] = LIS length ending at i.
+    // Time: O(n^2)   Extra space: O(n)
     public static int lengthOfLISQuadratic(int[] nums) {
         int n = nums.length;
         int[] dp = new int[n];
@@ -23,6 +46,8 @@ public class LongestIncreasingSubsequence {
         return best;
     }
 
+    // APPROACH 3: PATIENCE SORTING / TAILS (OPTIMAL — what we use)
+    // Time: O(n log n)   Extra space: O(n)
     public static int lengthOfLIS(int[] nums) {
         int[] tails = new int[nums.length];
         int size = 0;
@@ -46,7 +71,8 @@ public class LongestIncreasingSubsequence {
 
     public static void main(String[] args) {
         int[] nums = { 10, 9, 2, 5, 3, 7, 101, 18 };
+        System.out.println("brute:   " + lengthOfLISBrute(new int[] { 4, 2, 3, 1 }));
+        System.out.println("n^2:     " + lengthOfLISQuadratic(nums));
         System.out.println("n log n: " + lengthOfLIS(nums));
-        System.out.println("n^2: " + lengthOfLISQuadratic(nums));
     }
 }

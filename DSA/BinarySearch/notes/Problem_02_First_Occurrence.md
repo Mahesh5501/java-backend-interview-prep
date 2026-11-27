@@ -1,65 +1,89 @@
 # Problem 02 — First Occurrence
 
-> **Pattern:** BS bias left  
-> **Goal:** Interview-ready: mental model, brute force, optimal approach, dry run, complexity, edge cases, and what to say aloud.
+> **Pattern:** Biased BS (left)  
+> **Java file:** `../FirstOccurrence.java`  
+> **Goal:** Understand every approach — what it does, why we pick it, and which Java method is which.
 
 ---
 
 ## 1. Problem statement
 
-First index of `target` in sorted array with duplicates.
+Sorted `nums` with duplicates. Return **first** index where `nums[i] == target`, or `-1`.
 
-Work through the examples in the matching `.java` file `main` method and on LeetCode (if applicable).
+### Example
+
+```text
+[1,2,2,2,3,4], target=2 → 1
+```
 
 ### Constraints (typical)
 
-- Input sizes up to `10^5` (sometimes `10^4`) — aim for **O(n)** or **O(n log n)** unless constraints are tiny.
-- Read whether the problem wants **indices**, **values**, or **counts**.
+- `n` up to `10^5` → prefer **O(log n)** when the array is sorted or the answer space is monotone.
+- Clarify return type: index, value, or count.
 
 ---
 
 ## 2. Mental picture
 
-Before coding, draw the array and ask: **what do I need to remember from earlier positions?**
+Duplicates form a contiguous block; first occurrence is the **leftmost** index in that block.
 
-- If you need “the other value that completes a pair” → **hash map / set**.
-- If you need “sum of a contiguous block” with negatives allowed → **prefix sum + frequency map**, not sliding window by default.
-- If the array is **sorted** and you discard half the range → **binary search**, not hashing.
-
-Re-open **`notes/Binary_Search_Common_Patterns.md`** and name the pattern letter (A–H for hashing, A–G for binary search) that matches this problem.
+Re-open **`notes/Binary_Search_Common_Patterns.md`** and name the pattern that matches this problem.
 
 ---
 
 ## 3. How to start thinking
 
-1. State brute force complexity honestly (often `O(n²)`).
-2. Identify the **bottleneck** (re-scanning, re-multiplying, re-walking chains).
-3. Choose the structure: `Map`, `Set`, prefix map, or binary search bounds.
-4. Write the **invariant** in one sentence before coding.
+1. State brute force honestly (usually linear scan or linear search on answer).
+2. Ask: can I **discard half** of candidates each step? → binary search.
+3. For biased BS: on equal `target`, which direction keeps searching?
+4. For answer-space BS: write a monotone `feasible(x)` first, then search `x`.
 
 ---
 
 ## 4. Approach 1 — Brute force
 
-Implement the definition directly: nested loops, full rescans, or linear search on sorted data.
+### Idea
 
-**Why mention it in interviews:** It proves you understand the problem and gives a correct baseline before optimizing.
+Scan left → right; return on first match.
 
-**Typical complexity:** `O(n²)` or `O(n)` on sorted data — too slow when `n` is large.
+### Why mention it?
+
+Correct baseline before you exploit sorted structure or monotonic feasibility.
+
+### Java method
+
+`searchFirstLinear` in `FirstOccurrence.java`
+
+### Complexity
+
+| Time | Extra space |
+|---|---|
+| `O(n)` | `O(1)` |
 
 ---
 
 ## 5. Approach 2 — Optimal
 
-Open the optimal method in the Java file below. While reading:
+### Idea
 
-1. Name each variable (`prefix`, `seen`, `left`, `right`, …).
-2. Say why each update is safe (no missed answers).
-3. Trace one small example on paper (see section 7).
+On match save `ans` and set `right = mid - 1` to keep searching left.
 
-**Target complexity:** See section 9 — usually **O(n)** or **O(log n)** with **O(n)** or **O(1)** extra space.
+### Why this approach?
+
+Fits the **First / lower bound on duplicate run.** pattern — logarithmic search instead of rescanning.
+
+### Java method
+
+`searchFirst` in `FirstOccurrence.java`
+
+### Complexity
+
+| Time | Extra space |
+|---|---|
+| `O(log n)` | `O(1)` |
 
 ---
+
 
 ## 6. Hardest part (slow down here)
 
@@ -97,10 +121,11 @@ Give a **one-paragraph proof sketch**:
 
 ## 9. Complexity comparison
 
-| Method | Time | Extra space |
-|---|---:|---:|
-| Brute | See your brute implementation | Usually `O(1)` |
-| Optimal | Per pattern cheat sheet in `Binary_Search_Common_Patterns.md` | Usually `O(n)` for hash structures |
+| Approach | Java method | Time | Extra space | Interview? |
+|---|---|---|---|---|
+| Brute force | `searchFirstLinear` | `O(n)` | `O(1)` | Start verbally |
+| Optimal | `searchFirst` | `O(log n)` | `O(1)` | **Final answer** |
+
 
 ---
 

@@ -12,6 +12,8 @@ Return any valid string or "" if impossible.
 Example:
     "aab" -> "aba"
     "aaab" -> ""
+
+See notes/Problem_08_Reorganize_String.md — every approach below matches the note.
 */
 
 public class ReorganizeString {
@@ -26,6 +28,53 @@ public class ReorganizeString {
         }
     }
 
+    // APPROACH 1: GREEDY WITH SORTED FREQUENCIES (BRUTE)
+    // Each step picks two largest remaining counts via array sort — no heap.
+    // Why use it: same greedy as heap, easier to trace on paper.
+    // Time: O(n · 26 log 26)   Extra space: O(26)
+    public static String reorganizeStringBrute(String s) {
+        int[] frequency = new int[26];
+        for (char ch : s.toCharArray()) {
+            frequency[ch - 'a']++;
+        }
+        int maxCount = 0;
+        for (int count : frequency) {
+            maxCount = Math.max(maxCount, count);
+        }
+        if (maxCount > (s.length() + 1) / 2) {
+            return "";
+        }
+        StringBuilder result = new StringBuilder(s.length());
+        while (result.length() < s.length()) {
+            int[] order = new int[26];
+            for (int i = 0; i < 26; i++) {
+                order[i] = i;
+            }
+            Arrays.sort(order, (a, b) -> Integer.compare(frequency[b], frequency[a]));
+            int picked = 0;
+            for (int i = 0; i < 26 && picked < 2; i++) {
+                int idx = order[i];
+                if (frequency[idx] == 0) {
+                    continue;
+                }
+                if (picked == 1 && result.charAt(result.length() - 1) == ('a' + idx)) {
+                    continue;
+                }
+                result.append((char) ('a' + idx));
+                frequency[idx]--;
+                picked++;
+            }
+            if (picked == 0) {
+                return "";
+            }
+        }
+        return result.toString();
+    }
+
+    // APPROACH 2: MAX-HEAP (OPTIMAL — what we use)
+    // Always place two largest frequencies alternately.
+    // Why heap: O(n log 26) without repeated full sorts.
+    // Time: O(n log 26)   Extra space: O(26)
     public static String reorganizeString(String s) {
         int[] frequency = new int[26];
         for (char ch : s.toCharArray()) {
@@ -76,8 +125,10 @@ public class ReorganizeString {
     public static void main(String[] args) {
         String[] samples = { "aab", "aaab", "vvvlo", "aabbcc" };
         for (String sample : samples) {
+            String brute = reorganizeStringBrute(sample);
             String answer = reorganizeString(sample);
-            System.out.println("Input: " + sample + " -> " + answer
+            System.out.println("Brute " + sample + " -> " + brute);
+            System.out.println("Heap  " + sample + " -> " + answer
                     + " (valid: " + isValidReorganization(sample, answer) + ")");
         }
     }

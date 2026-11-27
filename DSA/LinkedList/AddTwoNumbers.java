@@ -3,10 +3,12 @@ package DSA.LinkedList;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * LeetCode 2 — Add Two Numbers
- * Pattern: Walk both lists with carry; dummy head for result
- */
+/*
+Problem: Add Two Numbers (LeetCode 2)
+
+See notes/Problem_07_Add_Two_Numbers.md — every approach below matches the note.
+*/
+
 public class AddTwoNumbers {
 
   // APPROACH 1: BRUTE — convert to integers (only safe for small lists in theory)
@@ -63,7 +65,7 @@ public class AddTwoNumbers {
     return dummy.next;
   }
 
-  // APPROACH 3: SAFE brute — collect digits then add with grade-school carry on lists
+  // APPROACH 3: SAFE BRUTE — digit lists + carry (no int overflow)
   public static ListNode bruteForceListAdd(ListNode l1, ListNode l2) {
     List<Integer> d1 = ListNode.toList(l1);
     List<Integer> d2 = ListNode.toList(l2);
@@ -102,6 +104,10 @@ public class AddTwoNumbers {
     ListNode sum = addTwoNumbers(ListNode.of(2, 4, 3), ListNode.of(5, 6, 4));
     System.out.print("Sum (optimal): ");
     ListNode.print(sum);
+
+    ListNode intBrute = bruteForceSmall(ListNode.of(2, 4, 3), ListNode.of(5, 6, 4));
+    System.out.print("Sum (int brute): ");
+    ListNode.print(intBrute);
 
     ListNode brute = bruteForceListAdd(ListNode.of(9, 9, 9, 9, 9, 9, 9), ListNode.of(9, 9, 9, 9));
     System.out.print("Long lists (list add): ");

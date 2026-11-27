@@ -1,5 +1,7 @@
 # Problem 06 — Lowest Common Ancestor of a BST
 
+> **Java file:** `../LowestCommonAncestorBST.java`
+
 > **Pattern:** BST search walk
 > **Goal:** Find LCA of two nodes in a BST.
 > **LeetCode:** 235
@@ -56,7 +58,7 @@ Can you recognise the stack/structure pattern, state invariants clearly, impleme
 
 ### Idea
 
-Iterative walk from root.
+Record root-to-p and root-to-q paths; last common node.
 
 ### Key method
 
@@ -121,6 +123,14 @@ If both sides of node, this node is LCA.
 Each element is pushed and popped at most once → linear time when traversal is single-pass.
 
 ---
+
+
+
+## 6b. Approach 3 — Iterative BST walk
+
+### Key method
+
+`lowestCommonAncestorIterative()` in `../LowestCommonAncestorBST.java`
 
 ## 6. Hardest part
 
@@ -219,6 +229,18 @@ Brute is `lowestCommonAncestor()` at `O(h)`. I use `lowestCommonAncestor()` at `
 **Why space `O(1)`?**  Auxiliary structure size dominates (stack, heap, or recursion depth).
 
 **Can we beat `O(h)`?**  Usually not for this model of the problem; follow-ups may allow linear or O(n log k) only.
+
+---
+
+## Link to Java — which method is which
+
+| Approach | Method in `LowestCommonAncestorBST` |
+|---|---|
+| Root paths (brute) | `lowestCommonAncestorBrute` |
+| BST walk (optimal) | `lowestCommonAncestor` |
+| Iterative walk | `lowestCommonAncestorIterative` |
+
+Run `main` to print all approaches on sample inputs.
 
 ---
 

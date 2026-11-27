@@ -9,12 +9,15 @@ Examples:
   [1,3,5,7,9], target=7 → 3
   [1,3,5,7,9], target=4 → -1
 
-Time: O(log n)   Space: O(1)
+See notes/Problem_01_Classic_Binary_Search.md — every approach below matches the note.
 */
 
 public class BinarySearch {
 
-    // BRUTE: linear scan
+    // APPROACH 1: LINEAR SCAN
+    // Walk every index until target found.
+    // Why use it: baseline when array is tiny or unsorted (violates sorted assumption).
+    // Time: O(n)   Extra space: O(1)
     public static int searchLinear(int[] nums, int target) {
         for (int i = 0; i < nums.length; i++) {
             if (nums[i] == target) {
@@ -24,7 +27,10 @@ public class BinarySearch {
         return -1;
     }
 
-    // OPTIMAL: binary search on sorted array
+    // APPROACH 2: CLASSIC BINARY SEARCH (OPTIMAL on sorted data)
+    // Halve search range using nums[mid] vs target; left <= right while invariant holds.
+    // Why BS: sorted order lets us discard half the indices each step.
+    // Time: O(log n)   Extra space: O(1)
     public static int search(int[] nums, int target) {
         int left = 0;
         int right = nums.length - 1;

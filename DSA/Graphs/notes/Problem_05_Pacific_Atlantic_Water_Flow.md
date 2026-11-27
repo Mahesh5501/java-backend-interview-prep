@@ -69,7 +69,7 @@ Each canonical state processed once (with correct visited / dist relax rules).
 
 ### Java entry points
 
-File: `../PacificAtlanticWaterFlow.java` — use `pacificAtlantic`.
+File: `../PacificAtlanticWaterFlow.java` — `pacificAtlanticBrute`, `pacificAtlantic`.
 
 ---
 
@@ -205,6 +205,17 @@ Enumerate states without memo — exponential. Optimal visits each vertex/edge o
 ### Follow-up Q&A
 
 **Q: Weighted?** Dijkstra. **Q: Multi-source?** Seed queue with all sources.
+
+## Link to Java — which method is which
+
+| Approach | Method in `PacificAtlanticWaterFlow.java` |
+|---|---|
+| Brute — per-cell forward DFS | `pacificAtlanticBrute` |
+| Reverse DFS from ocean borders (preferred) | `pacificAtlantic` |
+
+Run `main` to verify brute and optimal agree on the sample grid.
+
+---
 
 ## 16. Quick revision
 

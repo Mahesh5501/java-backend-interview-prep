@@ -293,6 +293,17 @@ Fill five rows from the matching Java main example in the sibling .java file.
 **Q: In-place?** Only if allowed.  
 **Q: Unsorted input?** State preprocessing.
 
+## 15. Link to Java — which method is which
+
+| Approach | Method in `MergeKSortedLists.java` |
+|---|---|
+| Merge pairs repeatedly | `mergeKListsBrute` |
+| Min-heap of list heads (preferred) | `mergeKLists` |
+
+Run `main` to merge sample k lists.
+
+---
+
 ## 16. Quick revision
 
 Pattern: **Pattern B — K-way merge**.

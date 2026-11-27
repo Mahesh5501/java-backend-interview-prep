@@ -95,7 +95,9 @@ If you can explain “read every cell, write non-zeros to the front, zero the ta
 
 You visit values in left-to-right order. Non-zeros land in the temp array in that same order. Zeros fill the end. So the output rules are satisfied.
 
-### Java
+### Java method
+
+`moveZeroesBruteForce` in `MoveZeroes.java`
 
 ```java
 public static void moveZeroesBruteForce(int[] nums) {
@@ -197,7 +199,9 @@ nums:   1  3  12  0  0
 
 Zeros are **not** written during the scan. They are “left behind” or overwritten later. The final loop paints the tail with `0`.
 
-### Java (optimal)
+### Java method
+
+`moveZeroesTwoPointers` in `MoveZeroes.java` (optimal)
 
 ```java
 public static void moveZeroesTwoPointers(int[] nums) {
@@ -481,7 +485,18 @@ Reusable rule from `Two_Pointers_Common_Patterns.md`:
 
 ---
 
-## 19. Next problem
+## 19. Link to Java — which method is which
+
+| Approach | Method in `MoveZeroes.java` |
+|---|---|
+| Extra array copy | `moveZeroesBruteForce` |
+| Read / write pointers (optimal) | `moveZeroesTwoPointers` |
+
+Run `main` to print both approaches on sample input.
+
+---
+
+## 20. Next problem
 
 **Problem 06 — Remove Duplicates from Sorted Array**  
 Main concept: read / write again — but now you return the **new length** and the array is **sorted**.

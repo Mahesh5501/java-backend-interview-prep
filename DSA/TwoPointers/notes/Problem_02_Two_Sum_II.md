@@ -125,6 +125,8 @@ Every pair of distinct indices is tried. The unique solution will appear.
 
 ### Java method
 
+`twoSumBruteForce` in `TwoSumII.java`
+
 ```java
 public static int[] twoSumBruteForce(int[] numbers, int target) {
 
@@ -177,6 +179,8 @@ Interviews often compare:
 - **Two Sum II (sorted)** → Two pointers also `O(n)` but `O(1)` extra space.
 
 ### Java method
+
+`twoSumHashMap` in `TwoSumII.java`
 
 ```java
 public static int[] twoSumHashMap(int[] numbers, int target) {
@@ -244,7 +248,9 @@ while left < right:
 | `sum < target` | Need a bigger sum | `left++` |
 | `sum > target` | Need a smaller sum | `right--` |
 
-### Optimal Java method
+### Java method
+
+`twoSumTwoPointers` in `TwoSumII.java` (optimal)
 
 ```java
 public static int[] twoSumTwoPointers(int[] numbers, int target) {
@@ -642,7 +648,19 @@ Shared pattern notes: **`Two_Pointers_Common_Patterns.md`**.
 
 ---
 
-## 20. Next problem
+## 20. Link to Java — which method is which
+
+| Approach | Method in `TwoSumII.java` |
+|---|---|
+| Brute force (every pair) | `twoSumBruteForce` |
+| HashMap one pass | `twoSumHashMap` |
+| Two pointers (optimal) | `twoSumTwoPointers` |
+
+Run `main` to print all approaches on sample inputs.
+
+---
+
+## 21. Next problem
 
 **Problem 03 — Container With Most Water**  
 Main concept: Opposite pointers still — but you move the **shorter wall**, not the sum.

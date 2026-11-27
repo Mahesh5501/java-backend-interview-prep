@@ -1,7 +1,8 @@
 # Problem 05 — Largest Rectangle in Histogram
 
-> **Pattern:** Monotonic increasing index stack
-> **Goal:** Maximum rectangle area under histogram.
+> **Pattern:** Monotonic increasing index stack  
+> **Java file:** `../LargestRectangleHistogram.java`  
+> **Goal:** Understand every approach — what it does, why we pick it, and which Java method is which.  
 > **LeetCode:** 84
 
 ---

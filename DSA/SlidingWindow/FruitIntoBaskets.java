@@ -5,30 +5,21 @@ import java.util.Map;
 
 /*
 Problem: Fruit Into Baskets (LeetCode 904)
-You have two baskets. Each basket can hold only one type of fruit.
-Pick one fruit from every tree (starting from any tree), moving to the right.
-You must stop when you hit a third distinct type.
 
-Return the maximum number of fruits you can pick.
+At most 2 distinct fruit types in the window — max trees you can pick.
 
-Example:
-fruits = [1,2,1] → 3
-fruits = [0,1,2,2] → 3
+Examples:
+  fruits = [1,2,1] → 3
 
-Expected Approach:
-Variable sliding window — at most 2 distinct types (HashMap counts).
+See notes/Problem_07_Fruit_Into_Baskets.md — every approach below matches the note.
 */
 
 public class FruitIntoBaskets {
 
-    // =====================================================
     // APPROACH 1: BRUTE FORCE (every starting index)
-    // Time Complexity: O(n^2)
-    // Auxiliary Space: O(1) types tracked per inner loop
-    // =====================================================
-
-  public static int totalFruitBruteForce(int[] fruits) {
-
+    // Why: extend end until more than 2 distinct types.
+    // Time: O(n^2)   Extra space: O(1) — map size ≤ 3 briefly
+    public static int totalFruitBruteForce(int[] fruits) {
         int best = 0;
 
         for (int start = 0; start < fruits.length; start++) {
@@ -45,21 +36,15 @@ public class FruitIntoBaskets {
         return best;
     }
 
-
-    // =====================================================
-    // APPROACH 2: SLIDING WINDOW + MAP (OPTIMAL)
-    // Time Complexity: O(n)
-    // Auxiliary Space: O(1) — at most 3 keys in map briefly
-    // =====================================================
-
-  public static int totalFruit(int[] fruits) {
-
+    // APPROACH 2: SLIDING WINDOW + MAP COUNTS (OPTIMAL)
+    // Why: shrink while distinct types > 2; remove key when count hits 0.
+    // Time: O(n)   Extra space: O(1) — at most 3 keys briefly
+    public static int totalFruit(int[] fruits) {
         Map<Integer, Integer> count = new HashMap<>();
         int left = 0;
         int best = 0;
 
         for (int right = 0; right < fruits.length; right++) {
-
             int type = fruits[right];
             count.put(type, count.getOrDefault(type, 0) + 1);
 
@@ -78,15 +63,9 @@ public class FruitIntoBaskets {
         return best;
     }
 
-
-    // =====================================================
-    // MAIN METHOD
-    // =====================================================
-
     public static void main(String[] args) {
-
-        System.out.println(totalFruit(new int[] { 1, 2, 1 }));     // 3
-        System.out.println(totalFruit(new int[] { 0, 1, 2, 2 }));  // 3
-        System.out.println(totalFruitBruteForce(new int[] { 1, 2, 1 })); // 3
+        System.out.println("Brute:  " + totalFruitBruteForce(new int[] { 1, 2, 1 }));
+        System.out.println("Window: " + totalFruit(new int[] { 1, 2, 1 }));
+        System.out.println("Window: " + totalFruit(new int[] { 0, 1, 2, 2 }));
     }
 }

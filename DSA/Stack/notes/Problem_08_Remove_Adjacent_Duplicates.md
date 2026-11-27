@@ -1,7 +1,8 @@
 # Problem 08 — Remove All Adjacent Duplicates In String
 
-> **Pattern:** Cancellation stack
-> **Goal:** Collapse adjacent duplicate pairs until stable.
+> **Pattern:** Cancellation stack  
+> **Java file:** `../RemoveAdjacentDuplicates.java`  
+> **Goal:** Understand every approach — what it does, why we pick it, and which Java method is which.  
 > **LeetCode:** 1047
 
 ---
@@ -118,7 +119,19 @@ If char equals stack top, pop (cancel); else push.
 
 ---
 
-## 5b. Complexity intuition (optimal)
+## 5b. Approach 3 — StringBuilder as stack
+
+### Idea
+
+Same cancel-on-peek logic using `StringBuilder` (no explicit `Deque`).
+
+### Java method
+
+`removeDuplicatesStringBuilder` in `../RemoveAdjacentDuplicates.java`
+
+---
+
+## 5c. Complexity intuition (optimal)
 
 Each element is pushed and popped at most once → linear time when traversal is single-pass.
 

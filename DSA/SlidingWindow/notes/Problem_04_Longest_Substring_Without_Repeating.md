@@ -1,7 +1,8 @@
 # Problem 04 — Longest Substring Without Repeating Characters
 
 > **Pattern:** Variable-size window + **HashSet** (or HashMap)  
-> **Goal:** Length of longest substring with **all distinct** characters (LeetCode 3).
+> **Goal:** Length of longest substring with **all distinct** characters (LeetCode 3).  
+> **Java file:** `../LongestSubstringWithoutRepeating.java`  
 
 ---
 
@@ -62,6 +63,10 @@ s:  a b c a b c b b
 
 ## 4. Approach 1 — Brute force
 
+### Java method
+
+`lengthOfLongestSubstringBruteForce`
+
 For each start, extend end while chars are unique (use a set per inner loop).
 
 Time `O(n²)` worst case, space `O(Σ)`.
@@ -69,6 +74,10 @@ Time `O(n²)` worst case, space `O(Σ)`.
 ---
 
 ## 5. Approach 2 — Sliding window + HashSet
+
+### Java method
+
+`lengthOfLongestSubstring`
 
 ### Loop
 
@@ -95,6 +104,16 @@ Rare but possible with pathological patterns — standard pattern for repeat at 
 | 3 | a | dup→shrink | bca | 3 | 3 |
 | 4 | b | dup→shrink | cab | 3 | 3 |
 | ... | | | | | 3 |
+
+---
+
+## 5b. Approach 3 — HashMap last index (jump left)
+
+Store last seen index; jump `left` past the previous duplicate.
+
+### Java method
+
+`lengthOfLongestSubstringMap`
 
 ---
 
@@ -195,38 +214,17 @@ Different problem — use frequency map and shrink when distinct > K.
 
 ---
 
-## 14. Complete Java
+## Link to Java
 
-`../LongestSubstringWithoutRepeating.java` — brute, set, and map versions.
+| Approach | Method |
+|---|---|
+| Brute force | `lengthOfLongestSubstringBruteForce` |
+| Sliding window + HashSet | `lengthOfLongestSubstring` |
+| HashMap last index | `lengthOfLongestSubstringMap` |
 
-```java
-package DSA.SlidingWindow;
+Run `main` in the Java class to exercise every approach.
 
-import java.util.HashSet;
-import java.util.Set;
-
-public class LongestSubstringWithoutRepeating {
-
-    public static int lengthOfLongestSubstring(String s) {
-        if (s == null || s.isEmpty()) return 0;
-        int left = 0, best = 0;
-        Set<Character> window = new HashSet<>();
-        for (int right = 0; right < s.length(); right++) {
-            char incoming = s.charAt(right);
-            while (window.contains(incoming)) {
-                window.remove(s.charAt(left++));
-            }
-            window.add(incoming);
-            best = Math.max(best, right - left + 1);
-        }
-        return best;
-    }
-
-    public static void main(String[] args) {
-        System.out.println(lengthOfLongestSubstring("abcabcbb")); // 3
-    }
-}
-```
+---
 
 ```text
 "abcabcbb" → 3

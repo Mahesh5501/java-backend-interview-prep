@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * LeetCode 21 — Merge Two Sorted Lists
- * Pattern: Dummy head + tail pointer
- */
+/*
+Problem: Merge Two Sorted Lists (LeetCode 21)
+
+See notes/Problem_04_Merge_Two_Sorted_Lists.md — every approach below matches the note.
+*/
+
 public class MergeTwoSortedLists {
 
   // APPROACH 1: BRUTE — collect values, sort, build new list

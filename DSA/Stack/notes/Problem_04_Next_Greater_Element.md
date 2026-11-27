@@ -1,7 +1,8 @@
 # Problem 04 — Next Greater Element
 
-> **Pattern:** Monotonic stack + hash map
-> **Goal:** Map each nums1 element to next greater in nums2.
+> **Pattern:** Monotonic stack + hash map  
+> **Java file:** `../NextGreaterElement.java`  
+> **Goal:** Understand every approach — what it does, why we pick it, and which Java method is which.  
 > **LeetCode:** 496
 
 ---
@@ -144,7 +145,9 @@ nums2 [1,3,4,2]: map 3→4, 1→3 from stack
 
 ## 7b. Extra variants in the Java file
 
-- nextGreaterForArray
+| Variant | Java method |
+|---|---|
+| Single-array next greater (LC 503 style) | `nextGreaterForArray` |
 
 ---
 

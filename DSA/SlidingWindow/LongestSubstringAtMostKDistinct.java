@@ -5,28 +5,20 @@ import java.util.Map;
 
 /*
 Problem: Longest Substring with At Most K Distinct Characters
-(Classic / LintCode 386 / LeetCode Premium 159)
-Given a string s and an integer k, return the length of the longest
-substring of s with at most k distinct characters.
+
+Return length of longest substring of s with at most k distinct characters.
 
 Examples:
-s = "eceba", k = 2 → 3 ("ece")
-s = "aa", k = 1 → 2
+  s = "eceba", k = 2 → 3
 
-Note: Fruit Into Baskets (Problem 07) is the same pattern with k = 2 on an array.
-
-Expected Approach:
-Variable sliding window + HashMap character counts.
+See notes/Problem_12_Longest_Substring_At_Most_K_Distinct.md — every approach below matches the note.
 */
 
 public class LongestSubstringAtMostKDistinct {
 
-    // =====================================================
     // APPROACH 1: BRUTE FORCE (every starting index)
-    // Time Complexity: O(n^2)
-    // Auxiliary Space: O(k)
-    // =====================================================
-
+    // Why: extend until distinct count > k.
+    // Time: O(n^2)   Extra space: O(k)
     public static int lengthAtMostKDistinctBruteForce(String s, int k) {
         if (s == null || s.isEmpty() || k <= 0) {
             return 0;
@@ -49,13 +41,9 @@ public class LongestSubstringAtMostKDistinct {
         return best;
     }
 
-
-    // =====================================================
-    // APPROACH 2: SLIDING WINDOW + MAP (OPTIMAL)
-    // Time Complexity: O(n)
-    // Auxiliary Space: O(k) — at most k+1 keys briefly
-    // =====================================================
-
+    // APPROACH 2: SLIDING WINDOW + MAP COUNTS (OPTIMAL)
+    // Why: shrink while map.size() > k; remove key at count 0.
+    // Time: O(n)   Extra space: O(k)
     public static int lengthAtMostKDistinct(String s, int k) {
         if (s == null || s.isEmpty() || k <= 0) {
             return 0;
@@ -84,17 +72,10 @@ public class LongestSubstringAtMostKDistinct {
         return best;
     }
 
-
-    // =====================================================
-    // MAIN METHOD
-    // =====================================================
-
     public static void main(String[] args) {
-
-        System.out.println(lengthAtMostKDistinct("eceba", 2)); // 3
-        System.out.println(lengthAtMostKDistinct("aa", 1));    // 2
-        System.out.println(lengthAtMostKDistinct("abc", 3));     // 3
-
-        System.out.println(lengthAtMostKDistinctBruteForce("eceba", 2)); // 3
+        System.out.println("Brute:  " + lengthAtMostKDistinctBruteForce("eceba", 2));
+        System.out.println("Window: " + lengthAtMostKDistinct("eceba", 2));
+        System.out.println("Window: " + lengthAtMostKDistinct("aa", 1));
+        System.out.println("Window: " + lengthAtMostKDistinct("abc", 3));
     }
 }

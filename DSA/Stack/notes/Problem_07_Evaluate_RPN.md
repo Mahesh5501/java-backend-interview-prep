@@ -1,7 +1,8 @@
 # Problem 07 — Evaluate RPN
 
-> **Pattern:** Operand stack
-> **Goal:** Evaluate postfix expression.
+> **Pattern:** Operand stack  
+> **Java file:** `../EvaluateRPN.java`  
+> **Goal:** Understand every approach — what it does, why we pick it, and which Java method is which.  
 > **LeetCode:** 150
 
 ---
@@ -56,11 +57,11 @@ Can you recognise the stack/structure pattern, state invariants clearly, impleme
 
 ### Idea
 
-Same as optimal (explicit teaching).
+Use `ArrayList` as an operand stack (push/pop at end) — same postfix rules as the optimal deque.
 
 ### Key method
 
-`evalRPN()` in `../EvaluateRPN.java`
+`evalRPNBrute()` in `../EvaluateRPN.java`
 
 ### Dry run (summary)
 

@@ -1,7 +1,8 @@
 # Problem 02 — Min Stack
 
-> **Pattern:** Auxiliary min stack
-> **Goal:** O(1) push, pop, top, getMin.
+> **Pattern:** Auxiliary min stack  
+> **Java file:** `../MinStack.java`  
+> **Goal:** Understand every approach — what it does, why we pick it, and which Java method is which.  
 > **LeetCode:** 155
 
 ---
@@ -60,7 +61,7 @@ Scan entire stack whenever getMin is called.
 
 ### Key method
 
-`MinStackBrute()` in `../MinStack.java`
+Inner class `MinStackBrute` in `../MinStack.java` (`getMin()` scans the stack)
 
 ### Dry run (summary)
 
@@ -81,21 +82,27 @@ Use brute on the whiteboard to validate examples before you commit to the optima
 
 ---
 
-## 5. Approach 2 — Optimal
+## 5. Approach 2 — Single stack of pairs
 
 ### Idea
 
-Push running min onto mins deque alongside values.
-
-### Steps
-
-State the loop invariant.
-Maintain auxiliary structure.
-Return aggregated answer.
+One deque stores `[value, minSoFar]` pairs so `getMin()` reads the second field.
 
 ### Key method
 
-`push()` in `../MinStack.java`
+Inner class `MinStackPairs` in `../MinStack.java`
+
+---
+
+## 5b. Approach 3 — Dual deque (optimal — LeetCode API)
+
+### Idea
+
+`values` stack plus parallel `mins` stack; always pop both together.
+
+### Key method
+
+`MinStack` instance methods `push` / `pop` / `top` / `getMin` in `../MinStack.java`
 
 ```java
 public void push(int val) {
@@ -113,7 +120,7 @@ Parallel stack stores minimum-so-far after each push.
 
 ---
 
-## 5b. Complexity intuition (optimal)
+## 5c. Complexity intuition (optimal)
 
 Each element is pushed and popped at most once → linear time when traversal is single-pass.
 

@@ -1,7 +1,9 @@
 package DSA.Trees;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
+import java.util.List;
 
 /*
 Problem: Kth Smallest Element in a BST (LeetCode 230)
@@ -10,12 +12,34 @@ Return the kth smallest value (1-indexed) in the BST.
 
 Example:
     root = [3, 1, 4, null, 2], k = 1 -> 1
-    k = 3 -> 3
+
+See notes/Problem_10_Kth_Smallest_in_BST.md — every approach below matches the note.
 */
 
 public class KthSmallestInBST {
 
-    // Iterative inorder — stops once we have read k values.
+    // APPROACH 1: BRUTE — full inorder list, return element at k-1
+    // Time: O(n)   Extra space: O(n)
+    public static int kthSmallestBrute(TreeNode root, int k) {
+        List<Integer> sorted = new ArrayList<>();
+        inorderCollect(root, sorted);
+        if (k < 1 || k > sorted.size()) {
+            throw new IllegalArgumentException("k out of range");
+        }
+        return sorted.get(k - 1);
+    }
+
+    private static void inorderCollect(TreeNode node, List<Integer> sorted) {
+        if (node == null) {
+            return;
+        }
+        inorderCollect(node.left, sorted);
+        sorted.add(node.val);
+        inorderCollect(node.right, sorted);
+    }
+
+    // APPROACH 2: ITERATIVE INORDER — stop at k (OPTIMAL for interviews)
+    // Time: O(h + k)   Extra space: O(h)
     public static int kthSmallest(TreeNode root, int k) {
         Deque<TreeNode> stack = new ArrayDeque<>();
         TreeNode current = root;
@@ -36,7 +60,7 @@ public class KthSmallestInBST {
         throw new IllegalArgumentException("k is larger than tree size");
     }
 
-    // Recursive inorder with counter (alternative style).
+    // APPROACH 3: RECURSIVE INORDER with counter
     public static int kthSmallestRecursive(TreeNode root, int k) {
         int[] state = { 0, 0 }; // [count, answer]
         inorder(root, k, state);
@@ -59,10 +83,10 @@ public class KthSmallestInBST {
     public static void main(String[] args) {
         TreeNode root = TreeNode.buildLevelOrder(new Integer[] { 3, 1, 4, null, 2 });
 
-        System.out.println("1st smallest (iterative): " + kthSmallest(root, 1)); // 1
-        System.out.println("3rd smallest (iterative): " + kthSmallest(root, 3)); // 3
+        System.out.println("k=1 brute:     " + kthSmallestBrute(root, 1));
+        System.out.println("k=3 iterative: " + kthSmallest(root, 3));
 
         TreeNode root2 = TreeNode.buildLevelOrder(new Integer[] { 3, 1, 4, null, 2 });
-        System.out.println("2nd smallest (recursive): " + kthSmallestRecursive(root2, 2)); // 2
+        System.out.println("k=2 recursive: " + kthSmallestRecursive(root2, 2));
     }
 }

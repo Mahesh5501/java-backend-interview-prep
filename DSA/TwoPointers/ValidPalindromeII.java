@@ -1,5 +1,11 @@
 package DSA.TwoPointers;
 
+/*
+Problem: Valid Palindrome II
+
+See notes/Problem_07_Valid_Palindrome_II.md — every approach below matches the note.
+*/
+
 public class ValidPalindromeII {
 
     // =====================================================

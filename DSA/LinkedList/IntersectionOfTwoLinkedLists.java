@@ -1,9 +1,11 @@
 package DSA.LinkedList;
 
-/**
- * LeetCode 160 — Intersection of Two Linked Lists
- * Pattern: Align lengths, or two-pointer head swap
- */
+/*
+Problem: Intersection of Two Linked Lists (LeetCode 160)
+
+See notes/Problem_08_Intersection_of_Two_Linked_Lists.md — every approach below matches the note.
+*/
+
 public class IntersectionOfTwoLinkedLists {
 
   // APPROACH 1: BRUTE — nested traversal (compare references)
@@ -22,7 +24,21 @@ public class IntersectionOfTwoLinkedLists {
     return null;
   }
 
-  // APPROACH 2: LENGTH ALIGNMENT
+  // APPROACH 2: TWO POINTERS — switch heads on null (OPTIMAL)
+  public static ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+    if (headA == null || headB == null) {
+      return null;
+    }
+    ListNode a = headA;
+    ListNode b = headB;
+    while (a != b) {
+      a = (a == null) ? headB : a.next;
+      b = (b == null) ? headA : b.next;
+    }
+    return a;
+  }
+
+  // APPROACH 3: LENGTH ALIGNMENT — skip leading nodes on longer list
   public static ListNode getIntersectionNodeByLength(ListNode headA, ListNode headB) {
     int lenA = ListNode.length(headA);
     int lenB = ListNode.length(headB);
@@ -46,20 +62,6 @@ public class IntersectionOfTwoLinkedLists {
       b = b.next;
     }
     return null;
-  }
-
-  // APPROACH 3: TWO POINTERS — switch heads on null (a walks A+B, b walks B+A)
-  public static ListNode getIntersectionNode(ListNode headA, ListNode headB) {
-    if (headA == null || headB == null) {
-      return null;
-    }
-    ListNode a = headA;
-    ListNode b = headB;
-    while (a != b) {
-      a = (a == null) ? headB : a.next;
-      b = (b == null) ? headA : b.next;
-    }
-    return a;
   }
 
   /** Build classic Y-shaped lists sharing tail from shared node. */

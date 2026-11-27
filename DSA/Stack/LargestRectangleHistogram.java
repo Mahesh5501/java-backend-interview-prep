@@ -4,6 +4,12 @@ import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Deque;
 
+/*
+Problem: Largest Rectangle in Histogram
+
+See notes/Problem_05_Largest_Rectangle_in_Histogram.md — every approach below matches the note.
+*/
+
 /**
  * LeetCode 84 — Largest Rectangle in Histogram
  * Pattern: Monotonic increasing stack of indices

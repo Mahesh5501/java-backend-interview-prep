@@ -3,7 +3,9 @@ package DSA.TrieUnionFind;
 import java.util.*;
 
 /*
- * Problem 03 — Word Search II (LeetCode 212)
+Problem: Word Search II (LeetCode 212)
+
+See notes/Problem_03_Word_Search_II.md — every approach below matches the note.
  */
 public class WordSearchII {
 
@@ -12,6 +14,57 @@ public class WordSearchII {
         String word;
     }
 
+    // APPROACH 1: DFS BOARD PER WORD (BRUTE)
+    // Why: for each word, run classic word-search — no shared prefix work.
+    // Time: O(W · m · n · 4^L)   Extra space: O(L)
+    public static List<String> findWordsBrute(char[][] board, String[] words) {
+        List<String> result = new ArrayList<>();
+        for (String w : words) {
+            if (existsWord(board, w)) {
+                result.add(w);
+            }
+        }
+        return result;
+    }
+
+    private static boolean existsWord(char[][] board, String word) {
+        int m = board.length, n = board[0].length;
+        for (int r = 0; r < m; r++) {
+            for (int c = 0; c < n; c++) {
+                if (dfsOne(board, r, c, word, 0, new boolean[m][n])) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private static boolean dfsOne(char[][] board, int r, int c, String word, int idx, boolean[][] vis) {
+        if (idx == word.length()) {
+            return true;
+        }
+        if (r < 0 || c < 0 || r >= board.length || c >= board[0].length || vis[r][c]) {
+            return false;
+        }
+        if (board[r][c] != word.charAt(idx)) {
+            return false;
+        }
+        vis[r][c] = true;
+        int[] dr = { 1, -1, 0, 0 };
+        int[] dc = { 0, 0, 1, -1 };
+        for (int d = 0; d < 4; d++) {
+            if (dfsOne(board, r + dr[d], c + dc[d], word, idx + 1, vis)) {
+                vis[r][c] = false;
+                return true;
+            }
+        }
+        vis[r][c] = false;
+        return false;
+    }
+
+    // APPROACH 2: TRIE + BOARD DFS (OPTIMAL — what we use)
+    // Why: one walk visits prefixes shared across many words; prune dead branches.
+    // Time: O(m · n · 4^L) with heavy pruning   Extra space: O(total letters)
     public static List<String> findWords(char[][] board, String[] words) {
         TrieNode root = buildTrie(words);
         List<String> result = new ArrayList<>();
@@ -70,6 +123,7 @@ public class WordSearchII {
                 { 'i', 'f', 'l', 'v' },
         };
         String[] words = { "oath", "pea", "eat", "rain" };
-        System.out.println("Found: " + findWords(board, words));
+        System.out.println("Trie:  " + findWords(board, words));
+        System.out.println("Brute: " + findWordsBrute(board, words));
     }
 }

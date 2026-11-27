@@ -6,6 +6,12 @@ import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map;
 
+/*
+Problem: Next Greater Element I (+ single-array variant)
+
+See notes/Problem_04_Next_Greater_Element.md — every approach below matches the note.
+*/
+
 /**
  * LeetCode 496 — Next Greater Element I
  * Pattern: Monotonic decreasing stack + hash map for nums2 lookup

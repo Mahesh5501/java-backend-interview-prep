@@ -1,9 +1,11 @@
 package DSA.LinkedList;
 
-/**
- * LeetCode 876 — Middle of the Linked List
- * Pattern: Fast & slow pointers (slow moves 1, fast moves 2)
- */
+/*
+Problem: Middle of the Linked List (LeetCode 876)
+
+See notes/Problem_02_Middle_of_Linked_List.md — every approach below matches the note.
+*/
+
 public class MiddleOfLinkedList {
 
   // APPROACH 1: BRUTE — two passes: count length, walk to mid

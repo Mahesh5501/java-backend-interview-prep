@@ -101,7 +101,9 @@ For every index `skipIndex`:
 
 If at most one delete can fix the string, that delete removes one specific index. Brute force tries every index, so it finds the right one.
 
-### Java (core loop)
+### Java method
+
+`validPalindromeBruteForce` in `ValidPalindromeII.java`
 
 ```java
 public static boolean validPalindromeBruteForce(String s) {
@@ -200,7 +202,9 @@ Deleting `c` gives the effective string `"aba"`.
 | Chars match | Both move inward — still have 0 or 1 delete budget unused |
 | First mismatch | **Stop** looping; spend the one delete on left **or** right; inner check uses **no** more deletes |
 
-### Java
+### Java method
+
+`validPalindromeTwoPointers` in `ValidPalindromeII.java` (optimal)
 
 ```java
 public static boolean validPalindromeTwoPointers(String s) {
@@ -501,7 +505,18 @@ Reusable idea:
 
 ---
 
-## 19. Next problem
+## 19. Link to Java — which method is which
+
+| Approach | Method in `ValidPalindromeII.java` |
+|---|---|
+| Try deleting each character | `validPalindromeBruteForce` |
+| Two pointers + one skip (optimal) | `validPalindromeTwoPointers` |
+
+Run `main` to print both approaches on sample inputs.
+
+---
+
+## 20. Next problem
 
 Continue the Two Pointers roadmap — common next topics include **sorting + opposite pointers**, **linked list cycle (slow/fast)**, or **minimum window** style problems. Pick the next numbered file in your preparation guide when ready.
 </think>

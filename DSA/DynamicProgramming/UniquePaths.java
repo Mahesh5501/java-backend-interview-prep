@@ -4,9 +4,13 @@ import java.util.Arrays;
 
 /*
  * Problem 05 — Unique Paths (LeetCode 62)
+
+See notes/Problem_05_Unique_Paths.md — every approach below matches the note.
  */
 public class UniquePaths {
 
+    // APPROACH 1: BRUTE DFS
+    // Time: O(C(m+n-2,m-1))   Extra space: O(m+n) stack
     public static int uniquePathsBrute(int m, int n) {
         return dfs(0, 0, m, n);
     }
@@ -21,6 +25,8 @@ public class UniquePaths {
         return dfs(r + 1, c, m, n) + dfs(r, c + 1, m, n);
     }
 
+    // APPROACH 2: 1-ROW DP (OPTIMAL — what we use)
+    // Time: O(m·n)   Extra space: O(n)
     public static int uniquePaths(int m, int n) {
         int[] dp = new int[n];
         Arrays.fill(dp, 1);

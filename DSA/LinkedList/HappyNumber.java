@@ -3,14 +3,14 @@ package DSA.LinkedList;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * LeetCode 202 — Happy Number
- *
- * <p>Pattern: Floyd fast / slow cycle detection — same family as {@link LinkedListCycle}.
- * Digits are not stored in {@link ListNode}; each integer is a node and {@code next} is the sum of
- * squares of its digits. A happy number eventually reaches {@code 1}; an unhappy number enters a
- * cycle that never includes {@code 1}.
- */
+/*
+Problem: Happy Number (LeetCode 202)
+
+Each integer is a node; next = sum of squares of digits. Floyd / HashSet — same family as Linked List Cycle.
+
+See notes/Problem_09_Happy_Number.md — every approach below matches the note.
+*/
+
 public class HappyNumber {
 
   /**

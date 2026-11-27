@@ -1,5 +1,7 @@
 # Problem 09 — Happy Number
 
+> **Java file:** `../HappyNumber.java`
+
 > **Pattern:** Fast & Slow pointers (Floyd cycle detection) — **same family as Linked List Cycle (Problem 03)**  
 > **Goal:** Return `true` if `n` is a happy number.  
 > **LeetCode:** 202
@@ -383,6 +385,17 @@ A: **Pattern = Fast & Slow pointers (same family as Linked List Cycle).** It tra
 **Why Floyd O(1) space?** Only two int pointers — no set.
 
 **Can we beat Floyd?** Same asymptotic; HashSet is easier to explain first.
+
+---
+
+## Link to Java — which method is which
+
+| Approach | Method in `HappyNumber` |
+|---|---|
+| HashSet | `isHappyHashSet` |
+| Floyd (optimal) | `isHappyFloyd` |
+
+Run `main` to print all approaches on sample inputs.
 
 ---
 

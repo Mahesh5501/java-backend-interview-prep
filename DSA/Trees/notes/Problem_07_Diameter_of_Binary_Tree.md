@@ -1,5 +1,7 @@
 # Problem 07 — Diameter of Binary Tree
 
+> **Java file:** `../DiameterOfBinaryTree.java`
+
 > **Pattern:** DFS height + global max
 > **Goal:** Longest path between any two nodes (edges count).
 > **LeetCode:** 543
@@ -56,11 +58,11 @@ Can you recognise the stack/structure pattern, state invariants clearly, impleme
 
 ### Idea
 
-Post-order height returns; update best.
+For every node, recompute left/right heights — O(n²) worst.
 
 ### Key method
 
-`diameterOfBinaryTree()` in `../DiameterOfBinaryTree.java`
+`diameterBrute()` in `../DiameterOfBinaryTree.java`
 
 ### Dry run (summary)
 
@@ -220,6 +222,17 @@ Brute is `diameterOfBinaryTree()` at `O(n)`. I use `diameterOfBinaryTree()` at `
 **Why space `O(h)`?**  Auxiliary structure size dominates (stack, heap, or recursion depth).
 
 **Can we beat `O(n)`?**  Usually not for this model of the problem; follow-ups may allow linear or O(n log k) only.
+
+---
+
+## Link to Java — which method is which
+
+| Approach | Method in `DiameterOfBinaryTree` |
+|---|---|
+| Per-node heights (brute) | `diameterBrute` |
+| Single DFS (optimal) | `diameterOfBinaryTree` |
+
+Run `main` to print all approaches on sample inputs.
 
 ---
 

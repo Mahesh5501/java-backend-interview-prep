@@ -1,5 +1,7 @@
 # Problem 07 — Add Two Numbers
 
+> **Java file:** `../AddTwoNumbers.java`
+
 > **Pattern:** Digit lists + carry
 > **Goal:** Add numbers stored as reversed digit lists.
 > **LeetCode:** 2
@@ -133,6 +135,18 @@ Lengths differ — null checks.
 
 ---
 
+## 6. Approach 3 — List-digit brute (no overflow)
+
+### Idea
+
+Copy digits to lists, add with carry like grade school, rebuild a result list — safe for long inputs.
+
+### Key method
+
+`bruteForceListAdd()` in `../AddTwoNumbers.java`
+
+---
+
 ## 7. Detailed dry run
 
 ```text
@@ -224,6 +238,18 @@ Brute is `bruteForceSmall()` at `O(n)`. I use `addTwoNumbers()` at `O(max(n,m))`
 **Why space `O(max(n,m))`?**  Auxiliary structure size dominates (stack, heap, or recursion depth).
 
 **Can we beat `O(max(n,m))`?**  Usually not for this model of the problem; follow-ups may allow linear or O(n log k) only.
+
+---
+
+## Link to Java — which method is which
+
+| Approach | Method in `AddTwoNumbers` |
+|---|---|
+| Int conversion brute | `bruteForceSmall` |
+| Digit walk (optimal) | `addTwoNumbers` |
+| List-digit brute | `bruteForceListAdd` |
+
+Run `main` to print all approaches on sample inputs.
 
 ---
 

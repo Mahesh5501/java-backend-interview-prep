@@ -1,5 +1,8 @@
 package DSA.Trees;
 
+import java.util.ArrayDeque;
+import java.util.Queue;
+
 /*
 Problem: Maximum Depth of Binary Tree (LeetCode 104)
 
@@ -9,12 +12,41 @@ Given the root of a binary tree, return its maximum depth
 Example:
     root = [3, 9, 20, null, null, 15, 7]
     Output: 3
+
+See notes/Problem_01_Maximum_Depth_Binary_Tree.md — every approach below matches the note.
 */
 
 public class MaximumDepthBinaryTree {
 
-    // DFS: depth of empty tree is 0; otherwise 1 + best of subtrees.
-    // Time O(n), space O(h) for recursion.
+    // APPROACH 1: BRUTE — BFS level counting (clear but uses a queue)
+    // Why: mirrors "how many layers?" without recursion.
+    // Time: O(n)   Extra space: O(n) worst-case queue
+    public static int maxDepthBruteBFS(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        Queue<TreeNode> queue = new ArrayDeque<>();
+        queue.add(root);
+        int depth = 0;
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            depth++;
+            for (int i = 0; i < size; i++) {
+                TreeNode node = queue.poll();
+                if (node.left != null) {
+                    queue.add(node.left);
+                }
+                if (node.right != null) {
+                    queue.add(node.right);
+                }
+            }
+        }
+        return depth;
+    }
+
+    // APPROACH 2: DFS RECURSIVE (OPTIMAL — interview default)
+    // Why: one-line recurrence; space is only recursion height.
+    // Time: O(n)   Extra space: O(h)
     public static int maxDepthDFS(TreeNode root) {
         if (root == null) {
             return 0;
@@ -26,11 +58,10 @@ public class MaximumDepthBinaryTree {
 
     public static void main(String[] args) {
         TreeNode root = TreeNode.buildLevelOrder(new Integer[] { 3, 9, 20, null, null, 15, 7 });
-        System.out.println("Maximum depth: " + maxDepthDFS(root)); // 3
+        System.out.println("BFS depth:  " + maxDepthBruteBFS(root));
+        System.out.println("DFS depth:  " + maxDepthDFS(root));
 
-        TreeNode single = new TreeNode(1);
-        System.out.println("Single node depth: " + maxDepthDFS(single)); // 1
-
-        System.out.println("Empty tree depth: " + maxDepthDFS(null)); // 0
+        System.out.println("Empty tree: " + maxDepthDFS(null));
+        System.out.println("Single node: " + maxDepthDFS(new TreeNode(1)));
     }
 }

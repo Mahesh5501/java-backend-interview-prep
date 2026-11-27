@@ -3,10 +3,15 @@ package DSA.Graphs;
 import java.util.*;
 
 /*
- * Problem 08 — Network Delay Time (LeetCode 743)
+Problem: Network Delay Time (LeetCode 743)
+
+See notes/Problem_08_Network_Delay_Time.md — every approach below matches the note.
  */
 public class NetworkDelayTime {
 
+    // APPROACH 2: DIJKSTRA MIN-HEAP (OPTIMAL — what we use)
+    // Relax edges from smallest known distance; skip stale heap entries.
+    // Time: O(E log V)   Extra space: O(V + E)
     public static int networkDelayTime(int[][] times, int n, int k) {
         List<List<int[]>> adj = new ArrayList<>();
         for (int i = 0; i <= n; i++) {
@@ -48,7 +53,9 @@ public class NetworkDelayTime {
         return ans;
     }
 
-    // Brute: Bellman-Ford style relaxation (educational) — O(V·E)
+    // APPROACH 1: BELLMAN-FORD RELAXATION (BRUTE)
+    // Repeat up to V-1 rounds relaxing every edge — correct on these LC inputs.
+    // Time: O(V·E)   Extra space: O(V)
     public static int networkDelayBellmanFord(int[][] times, int n, int k) {
         int[] dist = new int[n + 1];
         Arrays.fill(dist, Integer.MAX_VALUE);

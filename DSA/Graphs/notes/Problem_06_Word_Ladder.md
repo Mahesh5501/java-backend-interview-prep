@@ -206,6 +206,17 @@ Enumerate states without memo — exponential. Optimal visits each vertex/edge o
 
 **Q: Weighted?** Dijkstra. **Q: Multi-source?** Seed queue with all sources.
 
+## Link to Java — which method is which
+
+| Approach | Method in `WordLadder.java` |
+|---|---|
+| Brute — DFS over mutations | `ladderLengthBrute` |
+| BFS levels (preferred) | `ladderLength` |
+
+Run `main` to compare DFS vs BFS ladder length.
+
+---
+
 ## 16. Quick revision
 
 1. **Pattern:** BFS on implicit graph.

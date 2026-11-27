@@ -283,6 +283,17 @@ Fill five rows from the matching Java main example in the sibling .java file.
 **Q: In-place?** Only if allowed.  
 **Q: Unsorted input?** State preprocessing.
 
+## 15. Link to Java — which method is which
+
+| Approach | Method in `KClosestPoints.java` |
+|---|---|
+| Sort by distance | `kClosestSort` |
+| Size-k max-heap (preferred) | `kClosest` |
+
+Run `main` to compare sort vs heap for k closest points.
+
+---
+
 ## 16. Quick revision
 
 Pattern: **Pattern A — Top-K**.

@@ -3,6 +3,12 @@ package DSA.Stack;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
+/*
+Problem: Remove Adjacent Duplicates
+
+See notes/Problem_08_Remove_Adjacent_Duplicates.md — every approach below matches the note.
+*/
+
 /**
  * LeetCode 1047 — Remove All Adjacent Duplicates In String
  * Pattern: Stack cancellation on push

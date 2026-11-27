@@ -290,6 +290,17 @@ Fill five rows from the matching Java main example in the sibling .java file.
 **Q: In-place?** Only if allowed.  
 **Q: Unsorted input?** State preprocessing.
 
+## 15. Link to Java — which method is which
+
+| Approach | Method in `LastStoneWeight.java` |
+|---|---|
+| Brute — resort every smash | `lastStoneWeightBrute` |
+| Max-heap (preferred) | `lastStoneWeight` |
+
+Run `main` to compare resort vs heap smash simulation.
+
+---
+
 ## 16. Quick revision
 
 Pattern: **Pattern E — Greedy heap**.

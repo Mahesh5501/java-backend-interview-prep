@@ -9,9 +9,7 @@ Return minimum capacity to ship all within days days.
 Example:
   weights = [1,2,3,4,5,6,7,8,9,10], days = 5  →  15
 
-Approach: BS on capacity between max(weights) and sum(weights);
-feasible(cap) = greedy days to ship <= days
-Time: O(n log sum)   Space: O(1)
+See notes/Problem_10_Capacity_To_Ship_Packages.md — every approach below matches the note.
 */
 
 public class CapacityToShipPackages {
@@ -29,6 +27,10 @@ public class CapacityToShipPackages {
         return days;
     }
 
+    // APPROACH 1: LINEAR SEARCH ON CAPACITY
+    // Try every cap from max(weights) to sum(weights).
+    // Why: validates greedy day-count predicate before binary search.
+    // Time: O(n * sum(weights))   Extra space: O(1)
     public static int shipWithinDaysBrute(int[] weights, int days) {
         int low = 0;
         int high = 0;
@@ -44,6 +46,10 @@ public class CapacityToShipPackages {
         return high;
     }
 
+    // APPROACH 2: BINARY SEARCH ON CAPACITY (OPTIMAL)
+    // Monotonic: larger capacity never needs more days than smaller capacity.
+    // Why BS: find minimum feasible capacity in log(sum) steps.
+    // Time: O(n log sum(weights))   Extra space: O(1)
     public static int shipWithinDays(int[] weights, int days) {
         int low = 0;
         int high = 0;

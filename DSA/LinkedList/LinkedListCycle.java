@@ -3,10 +3,12 @@ package DSA.LinkedList;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * LeetCode 141 — Linked List Cycle
- * Pattern: Fast & slow (Floyd); alternative hash set
- */
+/*
+Problem: Linked List Cycle (LeetCode 141)
+
+See notes/Problem_03_Linked_List_Cycle.md — every approach below matches the note.
+*/
+
 public class LinkedListCycle {
 
   // APPROACH 1: BRUTE / HASH SET — track visited nodes

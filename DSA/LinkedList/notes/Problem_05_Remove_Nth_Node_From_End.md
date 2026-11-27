@@ -1,5 +1,7 @@
 # Problem 05 — Remove Nth Node From End of List
 
+> **Java file:** `../RemoveNthNode.java`
+
 > **Pattern:** Two pointers n apart
 > **Goal:** Remove the nth node from the end in one pass.
 > **LeetCode:** 19
@@ -219,6 +221,17 @@ Brute is `bruteForce()` at `O(n)`. I use `removeNthFromEnd()` at `O(n)` because 
 **Why space `O(1)`?**  Auxiliary structure size dominates (stack, heap, or recursion depth).
 
 **Can we beat `O(n)`?**  Usually not for this model of the problem; follow-ups may allow linear or O(n log k) only.
+
+---
+
+## Link to Java — which method is which
+
+| Approach | Method in `RemoveNthNode` |
+|---|---|
+| Brute force | `bruteForce` |
+| Two pointers (optimal) | `removeNthFromEnd` |
+
+Run `main` to print all approaches on sample inputs.
 
 ---
 

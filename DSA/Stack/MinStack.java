@@ -3,13 +3,20 @@ package DSA.Stack;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
+/*
+Problem: Min Stack (O(1) getMin)
+
+See notes/Problem_02_Min_Stack.md — every approach below matches the note.
+*/
+
 /**
  * LeetCode 155 — Min Stack
  * Pattern: Auxiliary stack (or paired nodes) for O(1) getMin
  */
 public class MinStack {
 
-  // --- Optimal design used by LeetCode instance methods ---
+  // APPROACH 3: DUAL DEQUE — values + running mins (OPTIMAL — LeetCode instance API)
+  // Why two stacks: pop top and min together; min deque always mirrors prefix minimum.
   private final Deque<Integer> values = new ArrayDeque<>();
   private final Deque<Integer> mins = new ArrayDeque<>();
 
@@ -32,7 +39,8 @@ public class MinStack {
     return mins.peek();
   }
 
-  // APPROACH 1: BRUTE FORCE — scan all values on each getMin()
+  // APPROACH 1: BRUTE — scan entire stack on every getMin()
+  // Why mention: shows cost before adding auxiliary structure.
   static class MinStackBrute {
     private final Deque<Integer> stack = new ArrayDeque<>();
 
@@ -57,7 +65,8 @@ public class MinStack {
     }
   }
 
-  // APPROACH 2: SINGLE STACK OF PAIRS (value, minSoFar) — same idea, one deque
+  // APPROACH 2: SINGLE STACK OF PAIRS (value, minSoFar)
+  // Why: one deque instead of two; store min snapshot on each node.
   static class MinStackPairs {
     private final Deque<long[]> stack = new ArrayDeque<>();
 

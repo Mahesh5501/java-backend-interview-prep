@@ -1,5 +1,7 @@
 # Problem 08 — Binary Tree Right Side View
 
+> **Java file:** `../RightSideView.java`
+
 > **Pattern:** BFS last of level / DFS right first
 > **Goal:** Visible nodes from the right.
 > **LeetCode:** 199
@@ -56,11 +58,11 @@ Can you recognise the stack/structure pattern, state invariants clearly, impleme
 
 ### Idea
 
-Level order track last.
+DFS right child before left; last write per depth wins.
 
 ### Key method
 
-`rightSideView()` in `../RightSideView.java`
+`rightSideViewBruteDFS()` in `../RightSideView.java`
 
 ### Dry run (summary)
 
@@ -222,6 +224,17 @@ Brute is `rightSideView()` at `O(n)`. I use `rightSideView()` at `O(n)` because 
 **Why space `O(n)`?**  Auxiliary structure size dominates (stack, heap, or recursion depth).
 
 **Can we beat `O(n)`?**  Usually not for this model of the problem; follow-ups may allow linear or O(n log k) only.
+
+---
+
+## Link to Java — which method is which
+
+| Approach | Method in `RightSideView` |
+|---|---|
+| DFS right-first (brute) | `rightSideViewBruteDFS` |
+| BFS last per level (optimal) | `rightSideView` |
+
+Run `main` to print all approaches on sample inputs.
 
 ---
 

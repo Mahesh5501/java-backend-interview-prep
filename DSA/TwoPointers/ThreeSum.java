@@ -1,5 +1,11 @@
 package DSA.TwoPointers;
 
+/*
+Problem: 3Sum
+
+See notes/Problem_04_3Sum.md — every approach below matches the note.
+*/
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;

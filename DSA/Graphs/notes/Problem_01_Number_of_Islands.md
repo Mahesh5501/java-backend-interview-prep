@@ -67,6 +67,10 @@ DFS from (0,0):
 
 ## 4. Approach 1 — Brute with `visited[][]`
 
+### Java method
+
+`countIslandsVisited` in `NumberOfIslands.java`
+
 ### Idea
 
 Never change grid; on `'1'` not visited, `count++`, flood with `visited[r][c]=true`.
@@ -125,7 +129,15 @@ private static void sink(int r, int c, char[][] grid) {
 }
 ```
 
+### Java method
+
+`countIslandsDFS` in `NumberOfIslands.java`
+
 ### Approach 3 — BFS (`countIslandsBFS`)
+
+### Java method
+
+`countIslandsBFS` in `NumberOfIslands.java`
 
 Mark `'0'` **when enqueueing** a neighbor `'1'` — prevents duplicate queue entries.
 
@@ -268,6 +280,18 @@ Enumerate states without memo — exponential. Optimal visits each vertex/edge o
 ### Follow-up Q&A
 
 **Q: Weighted?** Dijkstra. **Q: Multi-source?** Seed queue with all sources.
+
+## Link to Java — which method is which
+
+| Approach | Method in `NumberOfIslands.java` |
+|---|---|
+| Brute — `visited[][]` | `countIslandsVisited` |
+| Optimal — in-place DFS | `countIslandsDFS` |
+| BFS flood fill | `countIslandsBFS` |
+
+Run `main` to compare all three on the sample grid.
+
+---
 
 ## 16. Quick revision
 

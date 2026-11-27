@@ -3,18 +3,22 @@ package DSA.SlidingWindow;
 import java.util.Arrays;
 
 /*
- * =============================================================================
- * Problem 03 — Minimum Size Subarray Sum (LeetCode 209)
- * Pattern:    Variable-size window — expand right, shrink left while valid
- * Condition:  sum of window >= target (array has positive integers only)
- * =============================================================================
- */
+Problem: Minimum Size Subarray Sum (LeetCode 209)
+
+Return the minimal length of a contiguous subarray whose sum is >= target.
+Assume positive integers only.
+
+Examples:
+  target = 7, nums = [2,3,1,2,4,3] → 2
+
+See notes/Problem_03_Minimum_Size_Subarray_Sum.md — every approach below matches the note.
+*/
+
 public class MinimumSizeSubarraySum {
 
-    // -------------------------------------------------------------------------
-    // Approach 1 — Brute force: every subarray
-    // Time: O(n^2)   Space: O(1)
-    // -------------------------------------------------------------------------
+    // APPROACH 1: BRUTE FORCE (every subarray from each start)
+    // Why: try every start, extend until sum >= target.
+    // Time: O(n^2)   Extra space: O(1)
     public static int minSubArrayLenBruteForce(int target, int[] nums) {
         if (nums == null || nums.length == 0) {
             return 0;
@@ -35,10 +39,9 @@ public class MinimumSizeSubarraySum {
         return best == Integer.MAX_VALUE ? 0 : best;
     }
 
-    // -------------------------------------------------------------------------
-    // Approach 2 — Optimal: sliding window
-    // Time: O(n)   Space: O(1)
-    // -------------------------------------------------------------------------
+    // APPROACH 2: VARIABLE SLIDING WINDOW — EXPAND RIGHT, SHRINK WHILE VALID (OPTIMAL)
+    // Why: each index enters and leaves at most once → shortest valid window per end.
+    // Time: O(n)   Extra space: O(1)
     public static int minSubArrayLen(int target, int[] nums) {
         if (nums == null || nums.length == 0) {
             return 0;
@@ -62,9 +65,10 @@ public class MinimumSizeSubarraySum {
     }
 
     public static void main(String[] args) {
-        System.out.println("target=7, nums=" + Arrays.toString(new int[] { 2, 3, 1, 2, 4, 3 }));
-        System.out.println("Brute:   " + minSubArrayLenBruteForce(7, new int[] { 2, 3, 1, 2, 4, 3 }));
-        System.out.println("Optimal: " + minSubArrayLen(7, new int[] { 2, 3, 1, 2, 4, 3 }));
+        int[] nums = { 2, 3, 1, 2, 4, 3 };
+        System.out.println("target=7, nums=" + Arrays.toString(nums));
+        System.out.println("Brute:   " + minSubArrayLenBruteForce(7, nums));
+        System.out.println("Window:  " + minSubArrayLen(7, nums));
         System.out.println();
 
         System.out.println("target=4, nums=[1,4,4] -> " + minSubArrayLen(4, new int[] { 1, 4, 4 }));

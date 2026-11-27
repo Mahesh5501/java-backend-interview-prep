@@ -291,6 +291,17 @@ Fill five rows from the matching Java main example in the sibling .java file.
 **Q: In-place?** Only if allowed.  
 **Q: Unsorted input?** State preprocessing.
 
+## 15. Link to Java — which method is which
+
+| Approach | Type / method in `FindMedianFromDataStream.java` |
+|---|---|
+| Brute — sorted list insert | `FindMedianBrute.addNum`, `FindMedianBrute.findMedian` |
+| Two heaps (preferred) | `FindMedianFromDataStream.addNum`, `FindMedianFromDataStream.findMedian` |
+
+Run `main` to compare sorted list vs two-heap median.
+
+---
+
 ## 16. Quick revision
 
 Pattern: **Pattern C — Dual heap**.

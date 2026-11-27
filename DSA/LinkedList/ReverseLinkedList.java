@@ -3,10 +3,17 @@ package DSA.LinkedList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * LeetCode 206 — Reverse Linked List
- * Pattern: Three-pointer in-place reversal
- */
+/*
+Problem: Reverse Linked List (LeetCode 206)
+
+Given the head of a singly linked list, reverse the list and return the new head.
+
+Example:
+  1 → 2 → 3 → 4 → 5  →  5 → 4 → 3 → 2 → 1
+
+See notes/Problem_01_Reverse_Linked_List.md — every approach below matches the note.
+*/
+
 public class ReverseLinkedList {
 
   // APPROACH 1: BRUTE — copy to list, reverse, rebuild
@@ -35,7 +42,7 @@ public class ReverseLinkedList {
     return prev;
   }
 
-  // APPROACH 3: RECURSIVE
+  // APPROACH 3: RECURSIVE — tail-call style rewind of next pointers
   public static ListNode reverseRecursive(ListNode head) {
     if (head == null || head.next == null) {
       return head;

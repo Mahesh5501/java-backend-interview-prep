@@ -3,7 +3,11 @@ package DSA.Graphs;
 import java.util.*;
 
 /*
- * Problem 02 — Clone Graph (LeetCode 133)
+Problem: Clone Graph (LeetCode 133)
+
+Deep-copy an undirected graph.
+
+See notes/Problem_02_Clone_Graph.md — every approach below matches the note.
  */
 public class CloneGraph {
 
@@ -17,6 +21,9 @@ public class CloneGraph {
         }
     }
 
+    // APPROACH 1: BFS + HASHMAP OLD→NEW
+    // Why: level-order creates each node once; wire neighbors as edges are discovered.
+    // Time: O(V + E)   Extra space: O(V)
     public static Node cloneBFS(Node node) {
         if (node == null) {
             return null;
@@ -38,6 +45,9 @@ public class CloneGraph {
         return map.get(node);
     }
 
+    // APPROACH 2: DFS + HASHMAP OLD→NEW (OPTIMAL — either BFS or DFS is fine)
+    // Why: recursion visits each node once; map breaks cycles on revisits.
+    // Time: O(V + E)   Extra space: O(V)
     public static Node cloneDFS(Node node) {
         if (node == null) {
             return null;
@@ -67,10 +77,10 @@ public class CloneGraph {
         three.neighbors = Arrays.asList(two, four);
         four.neighbors = Arrays.asList(one, three);
 
-        Node cloned = cloneDFS(one);
-        System.out.println("Clone root val: " + cloned.val);
-        System.out.println("Clone neighbors: " + cloned.neighbors.size());
-        System.out.println("Different object: " + (cloned != one));
-        System.out.println("Neighbor is clone: " + (cloned.neighbors.get(0) != two));
+        Node byBfs = cloneBFS(one);
+        Node byDfs = cloneDFS(one);
+        System.out.println("BFS clone val: " + byBfs.val + ", neighbors: " + byBfs.neighbors.size());
+        System.out.println("DFS clone val: " + byDfs.val + ", neighbors: " + byDfs.neighbors.size());
+        System.out.println("Different roots: " + (byBfs != one && byDfs != one));
     }
 }

@@ -6,17 +6,21 @@ import java.util.Map;
 import java.util.Set;
 
 /*
- * =============================================================================
- * Problem 04 — Longest Substring Without Repeating Characters (LeetCode 3)
- * Pattern:    Variable window + HashSet (or HashMap for jump-left)
- * =============================================================================
- */
+Problem: Longest Substring Without Repeating Characters (LeetCode 3)
+
+Return the length of the longest substring with all distinct characters.
+
+Examples:
+  s = "abcabcbb" → 3
+
+See notes/Problem_04_Longest_Substring_Without_Repeating.md — every approach below matches the note.
+*/
+
 public class LongestSubstringWithoutRepeating {
 
-    // -------------------------------------------------------------------------
-    // Approach 1 — Brute force: test every substring
-    // Time: O(n^2) or O(n^3) depending on duplicate check   Space: O(min(n,Σ))
-    // -------------------------------------------------------------------------
+    // APPROACH 1: BRUTE FORCE (every substring from each start)
+    // Why: baseline — break inner loop on first duplicate.
+    // Time: O(n^2)   Extra space: O(min(n, Σ))
     public static int lengthOfLongestSubstringBruteForce(String s) {
         if (s == null || s.isEmpty()) {
             return 0;
@@ -39,11 +43,9 @@ public class LongestSubstringWithoutRepeating {
         return best;
     }
 
-    // -------------------------------------------------------------------------
-    // Approach 2 — Optimal: sliding window + HashSet
-    // Shrink from left while current char is already in the set
-    // Time: O(n)   Space: O(min(n, alphabet size))
-    // -------------------------------------------------------------------------
+    // APPROACH 2: SLIDING WINDOW + HASHSET (OPTIMAL — DEFAULT INTERVIEW)
+    // Why: shrink left until duplicate is gone; each char enters/leaves once.
+    // Time: O(n)   Extra space: O(min(n, alphabet))
     public static int lengthOfLongestSubstring(String s) {
         if (s == null || s.isEmpty()) {
             return 0;
@@ -67,10 +69,9 @@ public class LongestSubstringWithoutRepeating {
         return best;
     }
 
-    // -------------------------------------------------------------------------
-    // Approach 3 — HashMap: store last index; jump left past duplicate
-    // Same O(n) time; fewer shrink steps in practice
-    // -------------------------------------------------------------------------
+    // APPROACH 3: HASHMAP LAST INDEX — JUMP LEFT PAST DUPLICATE
+    // Why: skip one-by-one shrinks — still O(n), fewer steps in practice.
+    // Time: O(n)   Extra space: O(Σ)
     public static int lengthOfLongestSubstringMap(String s) {
         if (s == null || s.isEmpty()) {
             return 0;
@@ -93,9 +94,9 @@ public class LongestSubstringWithoutRepeating {
 
     public static void main(String[] args) {
         System.out.println("s = \"abcabcbb\"");
-        System.out.println("Brute:  " + lengthOfLongestSubstringBruteForce("abcabcbb"));
-        System.out.println("Set:    " + lengthOfLongestSubstring("abcabcbb"));
-        System.out.println("Map:    " + lengthOfLongestSubstringMap("abcabcbb"));
+        System.out.println("Brute: " + lengthOfLongestSubstringBruteForce("abcabcbb"));
+        System.out.println("Set:   " + lengthOfLongestSubstring("abcabcbb"));
+        System.out.println("Map:   " + lengthOfLongestSubstringMap("abcabcbb"));
         System.out.println();
 
         System.out.println("\"bbbbb\"  -> " + lengthOfLongestSubstring("bbbbb"));

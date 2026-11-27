@@ -5,25 +5,20 @@ import java.util.Map;
 
 /*
 Problem: Minimum Window Substring (LeetCode 76)
-Given strings s and t, return the minimum window substring of s such that
-every character in t (including duplicates) is included in the window.
-If there is no such window, return "".
 
-Example:
-s = "ADOBECODEBANC", t = "ABC" → "BANC"
+Return smallest substring of s containing every char of t (with counts).
 
-Expected Approach:
-Variable sliding window (shortest valid) + need/window frequency maps + formed counter.
+Examples:
+  s = "ADOBECODEBANC", t = "ABC" → "BANC"
+
+See notes/Problem_11_Minimum_Window_Substring.md — every approach below matches the note.
 */
 
 public class MinimumWindowSubstring {
 
-    // =====================================================
-    // APPROACH 1: BRUTE FORCE (every starting index)
-    // Time Complexity: O(n^2 * |t|) typical with recount check
-    // Auxiliary Space: O(|t|)
-    // =====================================================
-
+    // APPROACH 1: BRUTE FORCE (every start, grow until cover t)
+    // Why: baseline — checks coverage per window.
+    // Time: O(n^2 * |t|) typical   Extra space: O(|t|)
     public static String minWindowBruteForce(String s, String t) {
         if (s == null || t == null || s.isEmpty() || t.isEmpty()) {
             return "";
@@ -83,13 +78,9 @@ public class MinimumWindowSubstring {
         return need;
     }
 
-
-    // =====================================================
     // APPROACH 2: SLIDING WINDOW + NEED / FORMED (OPTIMAL)
-    // Time Complexity: O(|s| + |t|)
-    // Auxiliary Space: O(|t|) for maps
-    // =====================================================
-
+    // Why: formed tracks satisfied distinct chars; shrink while valid for min length.
+    // Time: O(|s| + |t|)   Extra space: O(|t|)
     public static String minWindow(String s, String t) {
         if (s == null || t == null || s.isEmpty() || t.isEmpty()) {
             return "";
@@ -137,17 +128,10 @@ public class MinimumWindowSubstring {
         return bestLen == Integer.MAX_VALUE ? "" : s.substring(bestLeft, bestLeft + bestLen);
     }
 
-
-    // =====================================================
-    // MAIN METHOD
-    // =====================================================
-
     public static void main(String[] args) {
-
-        System.out.println(minWindow("ADOBECODEBANC", "ABC")); // BANC
-        System.out.println(minWindow("a", "a"));                 // a
-        System.out.println(minWindow("a", "aa"));                // (empty)
-
-        System.out.println(minWindowBruteForce("ADOBECODEBANC", "ABC")); // BANC
+        System.out.println("Brute:  " + minWindowBruteForce("ADOBECODEBANC", "ABC"));
+        System.out.println("Window: " + minWindow("ADOBECODEBANC", "ABC"));
+        System.out.println("Window: " + minWindow("a", "a"));
+        System.out.println("Window: " + minWindow("a", "aa"));
     }
 }

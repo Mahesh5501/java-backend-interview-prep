@@ -4,6 +4,12 @@ import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Deque;
 
+/*
+Problem: Daily Temperatures
+
+See notes/Problem_03_Daily_Temperatures.md — every approach below matches the note.
+*/
+
 /**
  * LeetCode 739 — Daily Temperatures
  * Pattern: Monotonic decreasing stack of indices

@@ -1,5 +1,11 @@
 package DSA.TwoPointers;
 
+/*
+Problem: Merge Sorted Array (simple two-array merge)
+
+See notes/Problem_09_Merge_Sorted_Array.md — every approach below matches the note.
+*/
+
 import java.util.Arrays;
 
 public class MergeSortedArray {

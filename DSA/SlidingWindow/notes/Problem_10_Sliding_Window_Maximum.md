@@ -2,7 +2,8 @@
 
 > **Pattern:** Fixed-size window + **monotonic deque** of indices  
 > **LeetCode:** 239  
-> **Goal:** For every contiguous window of size `k`, output the **maximum** element.
+> **Goal:** For every contiguous window of size `k`, output the **maximum** element.  
+> **Java file:** `../SlidingWindowMaximum.java`  
 
 ---
 
@@ -76,6 +77,10 @@ That structure is a **double-ended queue (deque)** kept in **decreasing value or
 
 ## 4. Approach 1 — Brute force
 
+### Java method
+
+`maxSlidingWindowBruteForce`
+
 ### Idea
 
 For each `start`, scan `start..start+k-1` for max.
@@ -104,6 +109,10 @@ Fails when `n` and `k` are large (~`10^10` operations).
 ---
 
 ## 5. Approach 2 — Monotonic deque of indices (optimal)
+
+### Java method
+
+`maxSlidingWindow`
 
 ### What the deque stores
 
@@ -272,9 +281,20 @@ A: Works `O(n log n)` — deque is `O(n)` and simpler here.
 
 ---
 
-## 15. Complete runnable Java class
+## Link to Java
 
-`SlidingWindowMaximum.java` — brute + deque + `main`.
+| Approach | Method |
+|---|---|
+| Brute force | `maxSlidingWindowBruteForce` |
+| Monotonic deque (optimal) | `maxSlidingWindow` |
+
+Run `main` in the Java class to exercise every approach.
+
+---
+
+## 15. Runnable Java
+
+Use **Link to Java** above; open the file and run `main`.
 
 ---
 

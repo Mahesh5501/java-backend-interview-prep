@@ -206,6 +206,17 @@ Enumerate states without memo — exponential. Optimal visits each vertex/edge o
 
 **Q: Weighted?** Dijkstra. **Q: Multi-source?** Seed queue with all sources.
 
+## Link to Java — which method is which
+
+| Approach | Method in `RedundantConnectionUF.java` |
+|---|---|
+| Brute — BFS reachability | `findRedundantConnectionBrute` |
+| Union-Find (preferred) | `findRedundantConnection` |
+
+Run `main` to compare BFS vs UF.
+
+---
+
 ## 16. Quick revision
 
 1. **Pattern:** Union-Find.

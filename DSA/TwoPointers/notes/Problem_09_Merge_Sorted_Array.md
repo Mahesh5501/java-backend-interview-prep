@@ -98,7 +98,9 @@ Ask yourself:
 
 Sorting always produces a sorted result. It does not use the fact that `a` and `b` were already sorted.
 
-### Java
+### Java method
+
+`mergeBruteForce` in `MergeSortedArray.java`
 
 ```java
 public static int[] mergeBruteForce(int[] a, int[] b) {
@@ -164,7 +166,9 @@ Because both arrays are sorted:
 
 So the smaller of those two is the next value for the merged answer.
 
-### Java
+### Java method
+
+`mergeTwoPointers` in `MergeSortedArray.java` (optimal)
 
 ```java
 public static int[] mergeTwoPointers(int[] a, int[] b) {
@@ -510,7 +514,18 @@ Ignore that until the simple two-array merge feels easy.
 
 ---
 
-## 19. Next problem
+## 19. Link to Java — which method is which
+
+| Approach | Method in `MergeSortedArray.java` |
+|---|---|
+| Copy both arrays + sort | `mergeBruteForce` |
+| Two pointers (optimal) | `mergeTwoPointers` |
+
+Run `main` to print both approaches on sample input.
+
+---
+
+## 20. Next problem
 
 **Problem 10 — Squares of a Sorted Array**  
 Main concept: compare absolute values at both ends

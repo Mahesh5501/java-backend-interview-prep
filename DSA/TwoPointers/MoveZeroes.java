@@ -1,5 +1,11 @@
 package DSA.TwoPointers;
 
+/*
+Problem: Move Zeroes
+
+See notes/Problem_05_Move_Zeroes.md — every approach below matches the note.
+*/
+
 import java.util.Arrays;
 
 public class MoveZeroes {

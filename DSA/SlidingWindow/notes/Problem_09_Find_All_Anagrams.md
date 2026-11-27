@@ -2,7 +2,8 @@
 
 > **Pattern:** Fixed-size window — length `|p|` + frequency counts  
 > **LeetCode:** 438  
-> **Goal:** Return **all start indices** in `s` where the substring is an **anagram** of `p`.
+> **Goal:** Return **all start indices** in `s` where the substring is an **anagram** of `p`.  
+> **Java file:** `../FindAllAnagramsInAString.java`  
 
 ---
 
@@ -66,6 +67,10 @@ slide:  --window[s[left]]
 
 ## 4. Approach 1 — Brute force
 
+### Java method
+
+`findAnagramsBruteForce`
+
 Sort `p` once. For each `start`, sort `s[start..start+k-1]`, if equal add `start`.
 
 Time `O(n · k log k)`.
@@ -73,6 +78,10 @@ Time `O(n · k log k)`.
 ---
 
 ## 5. Approach 2 — Fixed window + frequency (optimal)
+
+### Java method
+
+`findAnagrams`
 
 ### Code shape
 
@@ -220,9 +229,20 @@ A: Normalize case into counts first.
 
 ---
 
-## 15. Complete runnable Java class
+## Link to Java
 
-`FindAllAnagramsInAString.java` — brute + optimal + `main` → `[0, 6]` on classic example.
+| Approach | Method |
+|---|---|
+| Brute force (sort windows) | `findAnagramsBruteForce` |
+| Fixed window + int[26] (optimal) | `findAnagrams` |
+
+Run `main` in the Java class to exercise every approach.
+
+---
+
+## 15. Runnable Java
+
+Use **Link to Java** above; open the file and run `main`.
 
 ---
 

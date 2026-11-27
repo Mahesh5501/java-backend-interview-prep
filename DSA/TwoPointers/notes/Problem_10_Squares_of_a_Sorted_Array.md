@@ -96,10 +96,12 @@ nums:  [ ?,  ?,  small near 0,  ?,  ? ]
 
 It proves you understand the output format. One line of reasoning: “I can always sort.”
 
-### Java
+### Java method
+
+`sortedSquaresBruteForce` in `SquaresOfASortedArray.java`
 
 ```java
-public int[] sortedSquaresBruteForce(int[] nums) {
+public static int[] sortedSquaresBruteForce(int[] nums) {
     int[] squared = new int[nums.length];
     for (int i = 0; i < nums.length; i++) {
         squared[i] = nums[i] * nums[i];
@@ -131,6 +133,10 @@ Ignores that input was already sorted. We can do `O(n)`.
 ---
 
 ## 5. Approach 2 — Optimal: two pointers from both ends
+
+### Java method
+
+`sortedSquaresTwoPointers` in `SquaresOfASortedArray.java`
 
 ### Step-by-step
 
@@ -409,7 +415,18 @@ List each value written to `result` from index `4` down to `0`.
 
 ---
 
-## 18. Pattern used in this problem + roadmap complete
+## 18. Link to Java — which method is which
+
+| Approach | Method in `SquaresOfASortedArray.java` |
+|---|---|
+| Square every element + sort | `sortedSquaresBruteForce` |
+| Two pointers from ends (optimal) | `sortedSquaresTwoPointers` |
+
+Run `main` to print both approaches on sample input.
+
+---
+
+## 19. Pattern used in this problem + roadmap complete
 
 **Opposite-end two pointers comparing transformed values; fill answer backward.**
 

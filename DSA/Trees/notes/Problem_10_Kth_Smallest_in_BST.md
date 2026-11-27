@@ -1,5 +1,7 @@
 # Problem 10 — Kth Smallest Element in a BST
 
+> **Java file:** `../KthSmallestInBST.java`
+
 > **Pattern:** Inorder traversal
 > **Goal:** Return k-th smallest value.
 > **LeetCode:** 230
@@ -56,7 +58,7 @@ Can you recognise the stack/structure pattern, state invariants clearly, impleme
 
 ### Idea
 
-Inorder simulation.
+Full inorder list; answer is index k-1.
 
 ### Key method
 
@@ -139,9 +141,11 @@ k valid 1..n.
 
 ---
 
-## 7b. Extra variants in the Java file
+## 6b. Approach 3 — Recursive inorder
 
-- kthSmallestRecursive
+### Key method
+
+`kthSmallestRecursive()` in `../KthSmallestInBST.java`
 
 ---
 
@@ -228,6 +232,18 @@ Brute is `kthSmallest()` at `O(h+k)`. I use `kthSmallest()` at `O(h+k)` because 
 **Why space `O(h)`?**  Auxiliary structure size dominates (stack, heap, or recursion depth).
 
 **Can we beat `O(h+k)`?**  Usually not for this model of the problem; follow-ups may allow linear or O(n log k) only.
+
+---
+
+## Link to Java — which method is which
+
+| Approach | Method in `KthSmallestInBST` |
+|---|---|
+| Full inorder list (brute) | `kthSmallestBrute` |
+| Iterative inorder (optimal) | `kthSmallest` |
+| Recursive inorder | `kthSmallestRecursive` |
+
+Run `main` to print all approaches on sample inputs.
 
 ---
 

@@ -206,10 +206,22 @@ Enumerate states without memo — exponential. Optimal visits each vertex/edge o
 
 **Q: Weighted?** Dijkstra. **Q: Multi-source?** Seed queue with all sources.
 
+## Link to Java — which method is which
+
+| Approach | Method in `CourseSchedule.java` |
+|---|---|
+| Brute — backtrack orderings | `canFinishBrute` |
+| Kahn topological sort (preferred) | `canFinishKahn` |
+| DFS three-color cycle detect | `canFinishDFS` |
+
+Run `main` to compare all three on sample prereqs.
+
+---
+
 ## 16. Quick revision
 
 1. **Pattern:** Topological sort / cycle detect.
-2. **Methods:** `canFinishKahn`, `canFinishDFS`.
+2. **Methods:** `canFinishBrute`, `canFinishKahn`, `canFinishDFS`.
 3. **Build graph prereq[b]→a; Kahn indegree or DFS 3-color cycle.**
 4. Check **visited** and **edge direction**.
 5. Read `Graphs_Common_Patterns.md` or Trie/UF guide.

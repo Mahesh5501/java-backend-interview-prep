@@ -206,10 +206,21 @@ Enumerate states without memo — exponential. Optimal visits each vertex/edge o
 
 **Q: Weighted?** Dijkstra. **Q: Multi-source?** Seed queue with all sources.
 
+## Link to Java — which method is which
+
+| Approach | Method in `NumberOfProvinces.java` |
+|---|---|
+| DFS flood fill | `findCircleNumDFS` |
+| Union-Find (preferred) | `findCircleNumUF` |
+
+Run `main` to compare DFS vs UF province count.
+
+---
+
 ## 16. Quick revision
 
 1. **Pattern:** Union-Find / DFS.
-2. **Methods:** `findCircleNum`.
+2. **Methods:** `findCircleNumDFS`, `findCircleNumUF`.
 3. **Union or DFS count components.**
 4. Check **visited** and **edge direction**.
 5. Read `Graphs_Common_Patterns.md` or Trie/UF guide.

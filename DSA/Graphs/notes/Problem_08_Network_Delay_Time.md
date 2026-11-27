@@ -206,6 +206,17 @@ Enumerate states without memo — exponential. Optimal visits each vertex/edge o
 
 **Q: Weighted?** Dijkstra. **Q: Multi-source?** Seed queue with all sources.
 
+## Link to Java — which method is which
+
+| Approach | Method in `NetworkDelayTime.java` |
+|---|---|
+| Brute — Bellman-Ford relaxation | `networkDelayBellmanFord` |
+| Dijkstra min-heap (preferred) | `networkDelayTime` |
+
+Run `main` to compare Bellman-Ford vs Dijkstra on the sample network.
+
+---
+
 ## 16. Quick revision
 
 1. **Pattern:** Dijkstra.

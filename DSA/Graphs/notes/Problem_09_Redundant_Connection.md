@@ -69,7 +69,7 @@ Each canonical state processed once (with correct visited / dist relax rules).
 
 ### Java entry points
 
-File: `../RedundantConnection.java` — use `findRedundantConnection`.
+File: `../RedundantConnection.java` — `findRedundantConnectionBrute`, `findRedundantConnection`, `isValidTree`.
 
 ---
 
@@ -205,6 +205,18 @@ Enumerate states without memo — exponential. Optimal visits each vertex/edge o
 ### Follow-up Q&A
 
 **Q: Weighted?** Dijkstra. **Q: Multi-source?** Seed queue with all sources.
+
+## Link to Java — which method is which
+
+| Approach | Method in `RedundantConnection.java` |
+|---|---|
+| Brute — BFS reachability before each edge | `findRedundantConnectionBrute` |
+| Union-Find (preferred) | `findRedundantConnection` |
+| Valid tree check | `isValidTree` |
+
+Run `main` to compare BFS vs Union-Find redundant edge.
+
+---
 
 ## 16. Quick revision
 

@@ -3,18 +3,21 @@ package DSA.SlidingWindow;
 import java.util.Arrays;
 
 /*
- * =============================================================================
- * Problem 01 — Maximum Sum of K Consecutive Elements
- * Pattern:    Fixed-size sliding window
- * Idea:       Keep window size exactly k — add entering, subtract leaving
- * =============================================================================
- */
+Problem: Maximum Sum of K Consecutive Elements
+
+Return the maximum sum among all contiguous subarrays of length exactly k.
+
+Examples:
+  arr = [2, 1, 5, 1, 3, 2], k = 3 → 9
+
+See notes/Problem_01_Maximum_Sum_of_K_Elements.md — every approach below matches the note.
+*/
+
 public class MaximumSumOfKElements {
 
-    // -------------------------------------------------------------------------
-    // Approach 1 — Brute force: try every window of size k
-    // Time: O(n * k)   Space: O(1)
-    // -------------------------------------------------------------------------
+    // APPROACH 1: BRUTE FORCE (every window of size k)
+    // Why: try every start index — always correct baseline.
+    // Time: O(n * k)   Extra space: O(1)
     public static int maxSumBruteForce(int[] arr, int k) {
         if (arr == null || arr.length < k || k <= 0) {
             return 0;
@@ -32,10 +35,9 @@ public class MaximumSumOfKElements {
         return best;
     }
 
-    // -------------------------------------------------------------------------
-    // Approach 2 — Optimal: fixed sliding window
-    // Time: O(n)   Space: O(1)
-    // -------------------------------------------------------------------------
+    // APPROACH 2: FIXED SLIDING WINDOW — ADD ENTER, SUBTRACT LEAVE (OPTIMAL)
+    // Why: each slide updates sum in O(1) instead of rescanning k cells.
+    // Time: O(n)   Extra space: O(1)
     public static int maxSumFixedWindow(int[] arr, int k) {
         if (arr == null || arr.length < k || k <= 0) {
             return 0;
@@ -49,14 +51,16 @@ public class MaximumSumOfKElements {
         int best = windowSum;
 
         for (int right = k; right < arr.length; right++) {
-            windowSum += arr[right];       // new element enters
-            windowSum -= arr[right - k];   // old element leaves
+            windowSum += arr[right];
+            windowSum -= arr[right - k];
             best = Math.max(best, windowSum);
         }
         return best;
     }
 
-    // Same style as older files: grow with right, shrink left when full
+    // APPROACH 3: GROW WITH RIGHT, SHRINK LEFT WHEN LENGTH == k
+    // Why: same O(n) idea using left/right — matches variable-window mental model.
+    // Time: O(n)   Extra space: O(1)
     public static int maxSumGrowShrink(int[] arr, int k) {
         if (arr == null || arr.length < k || k <= 0) {
             return 0;
@@ -83,13 +87,13 @@ public class MaximumSumOfKElements {
         int k = 3;
 
         System.out.println("Array: " + Arrays.toString(nums) + ", k = " + k);
-        System.out.println("Brute Force:     " + maxSumBruteForce(nums, k));
-        System.out.println("Fixed Window:    " + maxSumFixedWindow(nums, k));
-        System.out.println("Grow / Shrink:   " + maxSumGrowShrink(nums, k));
+        System.out.println("Brute:         " + maxSumBruteForce(nums, k));
+        System.out.println("Fixed window:  " + maxSumFixedWindow(nums, k));
+        System.out.println("Grow / shrink: " + maxSumGrowShrink(nums, k));
         System.out.println();
 
         int[] nums2 = { 2, 3, 4, 1 };
         System.out.println("Array: " + Arrays.toString(nums2) + ", k = 2");
-        System.out.println("Fixed Window:    " + maxSumFixedWindow(nums2, 2));
+        System.out.println("Fixed window:  " + maxSumFixedWindow(nums2, 2));
     }
 }

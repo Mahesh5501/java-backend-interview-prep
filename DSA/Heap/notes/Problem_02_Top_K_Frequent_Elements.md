@@ -58,9 +58,9 @@ Can you recognise the stack/structure pattern, state invariants clearly, impleme
 
 Bucket sort variant possible O(n).
 
-### Key method
+### Java method
 
-`topKFrequent()` in `../TopKFrequent.java`
+`topKFrequentSort` in `TopKFrequent.java`
 
 ### Dry run (summary)
 
@@ -93,9 +93,9 @@ State the loop invariant.
 Maintain auxiliary structure.
 Return aggregated answer.
 
-### Key method
+### Java method
 
-`topKFrequent()` in `../TopKFrequent.java`
+`topKFrequent` in `TopKFrequent.java`
 
 ```java
 public static List<Integer> topKFrequent(int[] nums, int k) {
@@ -290,6 +290,15 @@ Fill five rows from the matching Java main example in the sibling .java file.
 
 **Q: In-place?** Only if allowed.  
 **Q: Unsorted input?** State preprocessing.
+
+## 15. Link to Java — which method is which
+
+| Approach | Method in `TopKFrequent.java` |
+|---|---|
+| Brute — sort by frequency | `topKFrequentSort` |
+| Optimal — min-heap size k | `topKFrequent` |
+
+---
 
 ## 16. Quick revision
 

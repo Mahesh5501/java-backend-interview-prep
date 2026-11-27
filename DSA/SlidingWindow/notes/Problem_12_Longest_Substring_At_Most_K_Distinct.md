@@ -2,7 +2,8 @@
 
 > **Pattern:** Variable-size sliding window — **at most K distinct** characters  
 > **Sources:** Classic interview / LintCode 386 / LeetCode Premium (159)  
-> **Goal:** Length of the **longest substring** of `s` with **at most `k` distinct** characters.
+> **Goal:** Length of the **longest substring** of `s` with **at most `k` distinct** characters.  
+> **Java file:** `../LongestSubstringAtMostKDistinct.java`  
 
 ---
 
@@ -69,6 +70,10 @@ k = 2,  s = e c e b a
 
 ## 4. Approach 1 — Brute force
 
+### Java method
+
+`lengthAtMostKDistinctBruteForce`
+
 ### Idea
 
 Every start index, extend end while at most `k` distinct characters.
@@ -83,6 +88,10 @@ Every start index, extend end while at most `k` distinct characters.
 ---
 
 ## 5. Approach 2 — Optimal sliding window + HashMap counts
+
+### Java method
+
+`lengthAtMostKDistinct`
 
 ### Step-by-step
 
@@ -234,9 +243,20 @@ A: Problem 11 — shortest valid, `need`/`formed` counters.
 
 ---
 
-## 15. Complete runnable Java class
+## Link to Java
 
-`LongestSubstringAtMostKDistinct.java` — brute + optimal + `main`.
+| Approach | Method |
+|---|---|
+| Brute force | `lengthAtMostKDistinctBruteForce` |
+| Sliding window + map (optimal) | `lengthAtMostKDistinct` |
+
+Run `main` in the Java class to exercise every approach.
+
+---
+
+## 15. Runnable Java
+
+Use **Link to Java** above; open the file and run `main`.
 
 ---
 

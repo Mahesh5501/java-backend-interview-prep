@@ -58,9 +58,9 @@ Can you recognise the stack/structure pattern, state invariants clearly, impleme
 
 Sort descending pick index k-1.
 
-### Key method
+### Java method
 
-`findKthLargestSort()` in `../KthLargestElement.java`
+`findKthLargestSort` in `KthLargestElement.java`
 
 ### Dry run (summary)
 
@@ -93,9 +93,9 @@ State the loop invariant.
 Maintain auxiliary structure.
 Return aggregated answer.
 
-### Key method
+### Java method
 
-`findKthLargest()` in `../KthLargestElement.java`
+`findKthLargest` in `KthLargestElement.java`
 
 ```java
 public static int findKthLargest(int[] nums, int k) {
@@ -288,6 +288,17 @@ Fill five rows from the matching Java main example in the sibling .java file.
 
 **Q: In-place?** Only if allowed.  
 **Q: Unsorted input?** State preprocessing.
+
+## 15. Link to Java — which method is which
+
+| Approach | Method in `KthLargestElement.java` |
+|---|---|
+| Brute — full sort | `findKthLargestSort` |
+| Optimal — size-k min-heap | `findKthLargest` |
+
+Run `main` to compare sort vs heap on sample arrays.
+
+---
 
 ## 16. Quick revision
 

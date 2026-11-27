@@ -1,7 +1,8 @@
 # Problem 02 — Maximum Average Subarray I
 
 > **Pattern:** Fixed-size Sliding Window  
-> **Goal:** Return the **maximum average** of any contiguous subarray of length **k** (LeetCode 643).
+> **Goal:** Return the **maximum average** of any contiguous subarray of length **k** (LeetCode 643).  
+> **Java file:** `../MaximumAverageSubarray.java`  
 
 ---
 
@@ -61,6 +62,10 @@ Average = sum ÷ k. **k is fixed**, so the window with **max sum** also has **ma
 
 ## 4. Approach 1 — Brute force
 
+### Java method
+
+`findMaxAverageBruteForce`
+
 Sum every window of size `k`, compute `sum/k`, keep the max.
 
 ```java
@@ -79,6 +84,10 @@ for (int start = 0; start <= nums.length - k; start++) {
 ---
 
 ## 5. Approach 2 — Optimal
+
+### Java method
+
+`findMaxAverage`
 
 ### Key insight
 
@@ -112,6 +121,16 @@ Same complexity.
 | [1,12,-5,-6] | 2 | 0.5 |
 | [12,-5,-6,50] | 51 | **12.75** |
 | [-5,-6,50,3] | 42 | 10.5 |
+
+---
+
+## 5b. Approach 3 — Update max average each full window
+
+Grow with `right`; when window length is `k`, compare `(double) sum / k`.
+
+### Java method
+
+`findMaxAveragePerStep`
 
 ---
 
@@ -215,6 +234,18 @@ public class MaximumAverageSubarray {
 nums: [1, 12, -5, -6, 50, 3], k = 4
 Optimal: 12.75
 ```
+
+---
+
+## Link to Java
+
+| Approach | Method |
+|---|---|
+| Brute force | `findMaxAverageBruteForce` |
+| Track max sum, divide once (optimal) | `findMaxAverage` |
+| Per-step average compare | `findMaxAveragePerStep` |
+
+Run `main` in the Java class to exercise every approach.
 
 ---
 

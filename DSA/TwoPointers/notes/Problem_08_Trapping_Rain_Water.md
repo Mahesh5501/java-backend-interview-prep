@@ -99,10 +99,12 @@ For every index `i` (except edges in practice — edges trap 0 water):
 
 Water height at `i` is exactly the gap between the bar and the water line. The water line is `min(leftMax, rightMax)`.
 
-### Java
+### Java method
+
+`trapBruteForce` in `TrappingRainWater.java`
 
 ```java
-public int trapBruteForce(int[] height) {
+public static int trapBruteForce(int[] height) {
     int water = 0;
 
     for (int i = 1; i < height.length - 1; i++) {
@@ -160,6 +162,10 @@ We teach **two** optimal-speed methods: prefix arrays (easier to trust) and two 
 
 ### 5A. Prefix maximum arrays (`O(n)` time, `O(n)` space)
 
+#### Java method
+
+`trapPrefixMax` in `TrappingRainWater.java`
+
 #### Step-by-step
 
 1. Build `leftMax[i]` = max height from `0` to `i`
@@ -187,6 +193,10 @@ There are no sliding pointers yet — only **forward** and **backward** sweeps t
 ---
 
 ### 5B. Two pointers (`O(n)` time, `O(1)` space)
+
+#### Java method
+
+`trapTwoPointers` in `TrappingRainWater.java`
 
 #### Step-by-step
 
@@ -544,7 +554,19 @@ Hints: draw the histogram; mark three main dips; sum unit squares.
 
 ---
 
-## 18. Pattern used in this problem + next problem
+## 18. Link to Java — which method is which
+
+| Approach | Method in `TrappingRainWater.java` |
+|---|---|
+| Brute force (per index) | `trapBruteForce` |
+| Prefix max arrays | `trapPrefixMax` |
+| Two pointers (optimal space) | `trapTwoPointers` |
+
+Run `main` to print all approaches on sample input.
+
+---
+
+## 19. Pattern used in this problem + next problem
 
 **Opposite-direction two pointers with running left / right maximums** (after understanding the prefix-max version).
 

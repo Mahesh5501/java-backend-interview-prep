@@ -6,25 +6,21 @@ import java.util.List;
 
 /*
 Problem: Find All Anagrams in a String (LeetCode 438)
-Given strings s and p, return all start indices of p's anagrams in s.
 
-Example:
-s = "cbaebabacd", p = "abc" → [0, 6]
+Return all start indices where a window of s is an anagram of p.
 
-Expected Approach:
-Same fixed window + frequency match as Permutation in String — collect indices.
+Examples:
+  s = "cbaebabacd", p = "abc" → [0, 6]
+
+See notes/Problem_09_Find_All_Anagrams.md — every approach below matches the note.
 */
 
 public class FindAllAnagramsInAString {
 
-    // =====================================================
     // APPROACH 1: BRUTE FORCE (sort each window)
-    // Time Complexity: O(n * k log k)
-    // Auxiliary Space: O(k)
-    // =====================================================
-
-  public static List<Integer> findAnagramsBruteForce(String s, String p) {
-
+    // Why: same as Permutation in String — collect all matching starts.
+    // Time: O(n * k log k)   Extra space: O(k)
+    public static List<Integer> findAnagramsBruteForce(String s, String p) {
         List<Integer> answer = new ArrayList<>();
         if (p.length() > s.length()) {
             return answer;
@@ -45,15 +41,10 @@ public class FindAllAnagramsInAString {
         return answer;
     }
 
-
-    // =====================================================
-    // APPROACH 2: FIXED WINDOW + FREQUENCY (OPTIMAL)
-    // Time Complexity: O(n)
-    // Auxiliary Space: O(1) — int[26]
-    // =====================================================
-
-  public static List<Integer> findAnagrams(String s, String p) {
-
+    // APPROACH 2: FIXED WINDOW + int[26] FREQUENCY (OPTIMAL)
+    // Why: on match, record window left index; slide counts in O(1).
+    // Time: O(n)   Extra space: O(1)
+    public static List<Integer> findAnagrams(String s, String p) {
         List<Integer> answer = new ArrayList<>();
         if (p.length() > s.length()) {
             return answer;
@@ -69,7 +60,6 @@ public class FindAllAnagramsInAString {
         int k = p.length();
 
         for (int right = 0; right < s.length(); right++) {
-
             window[s.charAt(right) - 'a']++;
 
             int left = right - k + 1;
@@ -96,18 +86,12 @@ public class FindAllAnagramsInAString {
         return true;
     }
 
-
-    // =====================================================
-    // MAIN METHOD
-    // =====================================================
-
     public static void main(String[] args) {
-
         String s = "cbaebabacd";
         String p = "abc";
 
         System.out.println("s = \"" + s + "\", p = \"" + p + "\"");
         System.out.println("Brute:  " + findAnagramsBruteForce(s, p));
-        System.out.println("Window: " + findAnagrams(s, p)); // [0, 6]
+        System.out.println("Window: " + findAnagrams(s, p));
     }
 }

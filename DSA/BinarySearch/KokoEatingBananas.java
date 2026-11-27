@@ -9,8 +9,7 @@ Return minimum integer k so Koko can finish within h hours.
 Example:
   piles = [3,6,7,11], h = 8  →  k = 4
 
-Approach: BS on k from 1 to max(piles); feasible(k) = sum of ceil(pile/k) <= h
-Time: O(n log M), M = max pile   Space: O(1)
+See notes/Problem_08_Koko_Eating_Bananas.md — every approach below matches the note.
 */
 
 public class KokoEatingBananas {
@@ -23,6 +22,10 @@ public class KokoEatingBananas {
         return hours;
     }
 
+    // APPROACH 1: LINEAR SEARCH ON SPEED k
+    // Try k = 1, 2, … until hoursNeeded(k) <= h.
+    // Why: proves the feasibility predicate before speeding up with BS.
+    // Time: O(n * M) where M = max pile   Extra space: O(1)
     public static int minEatingSpeedBrute(int[] piles, int h) {
         int maxPile = 0;
         for (int p : piles) {
@@ -36,6 +39,10 @@ public class KokoEatingBananas {
         return maxPile;
     }
 
+    // APPROACH 2: BINARY SEARCH ON ANSWER k (OPTIMAL)
+    // Monotonic: if k works, any larger k works. Search smallest feasible k.
+    // Why BS: predicate "can finish in h hours" is monotone over speed.
+    // Time: O(n log M)   Extra space: O(1)
     public static int minEatingSpeed(int[] piles, int h) {
         int low = 1;
         int high = 0;

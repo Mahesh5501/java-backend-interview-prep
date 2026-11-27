@@ -1,5 +1,7 @@
 # Problem 08 — Intersection of Two Linked Lists
 
+> **Java file:** `../IntersectionOfTwoLinkedLists.java`
+
 > **Pattern:** Length align or two-switch walk
 > **Goal:** Return shared node or null.
 > **LeetCode:** 160
@@ -137,10 +139,17 @@ a walks A+B, b walks B+A → meet at intersection
 
 ---
 
-## 7b. Extra variants in the Java file
+## 6. Approach 3 — Length alignment
 
-- getIntersectionNodeByLength
+### Idea
 
+Count both lists; advance the longer head by the difference, then walk in parallel.
+
+### Key method
+
+`getIntersectionNodeByLength()` in `../IntersectionOfTwoLinkedLists.java`
+
+---
 ---
 
 ## 7c. Paper-trace template
@@ -226,6 +235,18 @@ Brute is `bruteForce()` at `O(n·m)`. I use `getIntersectionNode()` at `O(n+m)` 
 **Why space `O(1)`?**  Auxiliary structure size dominates (stack, heap, or recursion depth).
 
 **Can we beat `O(n+m)`?**  Usually not for this model of the problem; follow-ups may allow linear or O(n log k) only.
+
+---
+
+## Link to Java — which method is which
+
+| Approach | Method in `IntersectionOfTwoLinkedLists` |
+|---|---|
+| Brute force | `bruteForce` |
+| Two-pointer swap (optimal) | `getIntersectionNode` |
+| Length alignment | `getIntersectionNodeByLength` |
+
+Run `main` to print all approaches on sample inputs.
 
 ---
 

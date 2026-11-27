@@ -2,7 +2,8 @@
 
 > **Pattern:** Variable-size sliding window — **at most 2 distinct** types  
 > **LeetCode:** 904  
-> **Goal:** Longest contiguous subarray containing at most **2 different** fruit types.
+> **Goal:** Longest contiguous subarray containing at most **2 different** fruit types.  
+> **Java file:** `../FruitIntoBaskets.java`  
 
 ---
 
@@ -70,6 +71,10 @@ Map tracks **how many** of each type sit in the window (so you know when a type 
 
 ## 4. Approach 1 — Brute force
 
+### Java method
+
+`totalFruitBruteForce`
+
 ### Idea
 
 Every start index, extend end while at most 2 distinct types (use a small map or set).
@@ -86,6 +91,10 @@ Good for understanding; not for large `n`.
 ---
 
 ## 5. Approach 2 — Optimal sliding window + map
+
+### Java method
+
+`totalFruit`
 
 ### Step-by-step
 
@@ -233,9 +242,20 @@ A: For K=2 only, you can track two type IDs and counts with variables — map is
 
 ---
 
-## 15. Complete runnable Java class
+## Link to Java
 
-`FruitIntoBaskets.java` — brute + optimal + `main`.
+| Approach | Method |
+|---|---|
+| Brute force | `totalFruitBruteForce` |
+| Sliding window + map (optimal) | `totalFruit` |
+
+Run `main` in the Java class to exercise every approach.
+
+---
+
+## 15. Runnable Java
+
+Use **Link to Java** above; open the file and run `main`.
 
 ---
 

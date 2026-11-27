@@ -239,6 +239,8 @@ are the same answer. Sorting them all into `[-1, 0, 1]` lets the set treat them 
 
 ### Java method
 
+`threeSumBruteForce` in `ThreeSum.java`
+
 ```java
 public static List<List<Integer>> threeSumBruteForce(int[] nums) {
 
@@ -353,6 +355,8 @@ visit  2 → need 2? no
 No pair found for `-4`. Then move `i` to the next useful value and repeat.
 
 ### Java method
+
+`threeSumHashSet` in `ThreeSum.java`
 
 ```java
 public static List<List<Integer>> threeSumHashSet(int[] nums) {
@@ -673,7 +677,9 @@ It means “do not report the same finished triplet more than once”.
 
 ---
 
-## 9. Optimal Java method
+## 9. Java method (optimal)
+
+`threeSumTwoPointers` in `ThreeSum.java`
 
 ```java
 public static List<List<Integer>> threeSumTwoPointers(int[] nums) {
@@ -1281,7 +1287,19 @@ There is no additional pattern file for this problem.
 
 ---
 
-## 22. Next problem
+## 22. Link to Java — which method is which
+
+| Approach | Method in `ThreeSum.java` |
+|---|---|
+| Brute force (every triple) | `threeSumBruteForce` |
+| Sort + HashSet | `threeSumHashSet` |
+| Sort + two pointers (optimal) | `threeSumTwoPointers` |
+
+Run `main` to print all approaches on sample input.
+
+---
+
+## 23. Next problem
 
 When you are ready, the next roadmap item is:
 

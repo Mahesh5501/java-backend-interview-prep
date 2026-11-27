@@ -1,7 +1,8 @@
 # Problem 01 — Valid Parentheses
 
-> **Pattern:** Bracket validation stack (LIFO)
-> **Goal:** Return whether the bracket string is valid.
+> **Pattern:** Bracket validation stack (LIFO)  
+> **Java file:** `../ValidParentheses.java`  
+> **Goal:** Understand every approach — what it does, why we pick it, and which Java method is which.  
 > **LeetCode:** 20
 
 ---
@@ -142,8 +143,11 @@ Pop only when closer matches; empty stack at end.
 
 ## 7b. Extra variants in the Java file
 
-- isValidOpeners
-- isValidWithMap
+| Approach | Java method |
+|---|---|
+| Stack — push openers | `isValidOpeners` |
+| Stack — push expected closer (interview favourite) | `isValid` |
+| Map + stack explicit pairs | `isValidWithMap` |
 
 ---
 

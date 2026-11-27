@@ -1,7 +1,8 @@
 # Problem 03 — Minimum Size Subarray Sum
 
 > **Pattern:** Variable-size Sliding Window (shortest valid window)  
-> **Goal:** Smallest length of a contiguous subarray with sum ≥ `target` (LeetCode 209).
+> **Goal:** Smallest length of a contiguous subarray with sum ≥ `target` (LeetCode 209).  
+> **Java file:** `../MinimumSizeSubarraySum.java`  
 
 ---
 
@@ -65,6 +66,10 @@ Window size is **not** fixed.
 
 ## 4. Approach 1 — Brute force
 
+### Java method
+
+`minSubArrayLenBruteForce`
+
 ```text
 for each start:
   for each end from start:
@@ -89,6 +94,10 @@ for (int right = 0; right < n; right++) {
 }
 return best == INF ? 0 : best;
 ```
+
+### Java method
+
+`minSubArrayLen`
 
 ### Why `while` not `if`?
 
@@ -197,32 +206,16 @@ A: Still tricky with only positives — related but not identical.
 
 ---
 
-## 14. Complete Java
+## Link to Java
 
-`../MinimumSizeSubarraySum.java`
+| Approach | Method |
+|---|---|
+| Brute force | `minSubArrayLenBruteForce` |
+| Sliding window (optimal) | `minSubArrayLen` |
 
-```java
-package DSA.SlidingWindow;
+Run `main` in the Java class to exercise every approach.
 
-public class MinimumSizeSubarraySum {
-
-    public static int minSubArrayLen(int target, int[] nums) {
-        int left = 0, sum = 0, best = Integer.MAX_VALUE;
-        for (int right = 0; right < nums.length; right++) {
-            sum += nums[right];
-            while (sum >= target) {
-                best = Math.min(best, right - left + 1);
-                sum -= nums[left++];
-            }
-        }
-        return best == Integer.MAX_VALUE ? 0 : best;
-    }
-
-    public static void main(String[] args) {
-        System.out.println(minSubArrayLen(7, new int[] { 2, 3, 1, 2, 4, 3 })); // 2
-    }
-}
-```
+---
 
 ```text
 target=7 → 2

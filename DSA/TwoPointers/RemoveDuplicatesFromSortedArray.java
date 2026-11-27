@@ -1,5 +1,11 @@
 package DSA.TwoPointers;
 
+/*
+Problem: Remove Duplicates from Sorted Array
+
+See notes/Problem_06_Remove_Duplicates_From_Sorted_Array.md
+*/
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
