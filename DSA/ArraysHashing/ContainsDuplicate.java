@@ -14,19 +14,33 @@ Return true if any value appears at least twice; otherwise false.
 Examples:
   [1, 2, 3, 1]     → true
   [1, 2, 3, 4]     → false
-  [1, 1, 1, 3, 3]  → true
 
-See notes/Problem_02_Contains_Duplicate.md for full approach explanations.
+See notes/Problem_02_Contains_Duplicate.md — every approach below matches the note.
 */
 
 public class ContainsDuplicate {
 
-    // APPROACH 1: SORT + COMPARE NEIGHBORS
+    // APPROACH 1: BRUTE FORCE — nested scan
+    // Why: for each i, scan later j looking for nums[i] == nums[j].
+    // Use when: tiny arrays / explain first in interview.
+    // Time: O(n^2)   Extra space: O(1)
+    public static boolean containsDuplicateBrute(int[] nums) {
+        for (int i = 0; i < nums.length; i++) {
+            for (int j = i + 1; j < nums.length; j++) {
+                if (nums[i] == nums[j]) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    // APPROACH 2: SORT + COMPARE NEIGHBORS
     // Why: after sorting, duplicates sit next to each other.
-    // Use when: interviewer wants less memory and allows mutating the array.
-    // Time: O(n log n)   Extra space: O(1) if in-place sort is allowed
+    // Use when: interviewer wants less memory and allows mutating / copying.
+    // Time: O(n log n)   Extra space: O(n) here (we copy to keep original intact)
     public static boolean containsDuplicateSort(int[] nums) {
-        int[] copy = Arrays.copyOf(nums, nums.length); // keep original intact for demos
+        int[] copy = Arrays.copyOf(nums, nums.length);
         Arrays.sort(copy);
         for (int i = 1; i < copy.length; i++) {
             if (copy[i] == copy[i - 1]) {
@@ -36,9 +50,8 @@ public class ContainsDuplicate {
         return false;
     }
 
-    // APPROACH 2: HASHSET (OPTIMAL — what we use in interviews)
+    // APPROACH 3: HASHSET (OPTIMAL — what we use in interviews)
     // Why Set: we only ask "have I seen this value before?" — no counts needed.
-    // Why not List.contains: that would be O(n) per check → O(n^2) overall.
     // seen.add(x) returns false when x was already present.
     // Time: O(n) average   Extra space: O(n)
     public static boolean containsDuplicateSet(int[] nums) {
@@ -51,7 +64,7 @@ public class ContainsDuplicate {
         return false;
     }
 
-    // APPROACH 3: FREQUENCY MAP
+    // APPROACH 4: FREQUENCY MAP
     // Why it works: count++ and stop when count > 1.
     // Why we usually skip it here: Set already answers presence with less noise.
     // Use when: problem later asks for counts / top frequent / etc.
@@ -72,8 +85,9 @@ public class ContainsDuplicate {
         int[] a = { 1, 2, 3, 1 };
         int[] b = { 1, 2, 3, 4 };
 
-        System.out.println("Set:  " + containsDuplicateSet(a) + " / " + containsDuplicateSet(b));
-        System.out.println("Sort: " + containsDuplicateSort(a) + " / " + containsDuplicateSort(b));
-        System.out.println("Freq: " + containsDuplicateFreq(a) + " / " + containsDuplicateFreq(b));
+        System.out.println("Brute: " + containsDuplicateBrute(a) + " / " + containsDuplicateBrute(b));
+        System.out.println("Sort:  " + containsDuplicateSort(a) + " / " + containsDuplicateSort(b));
+        System.out.println("Set:   " + containsDuplicateSet(a) + " / " + containsDuplicateSet(b));
+        System.out.println("Freq:  " + containsDuplicateFreq(a) + " / " + containsDuplicateFreq(b));
     }
 }

@@ -7,12 +7,11 @@ import java.util.Map;
 Problem: Subarray Sum Equals K
 
 Count contiguous subarrays whose sum equals k.
-(Negatives allowed — do not use sliding window for the general case.)
 
-Example:
-  [1,1,1], k = 2 → 2
+See notes/Problem_08_Subarray_Sum_Equals_K.md — every approach below matches the note.
 
-See notes/Problem_08_Subarray_Sum_Equals_K.md for approach explanations.
+IMPORTANT: sliding window only works when all numbers are non-negative.
+LeetCode allows negatives → use prefix + map as the real answer.
 */
 
 public class SubarraySumEqualsK {
@@ -35,12 +34,38 @@ public class SubarraySumEqualsK {
         return count;
     }
 
-    // APPROACH 2: PREFIX SUM + FREQUENCY MAP (OPTIMAL — what we use)
+    // APPROACH 2: SLIDING WINDOW — ONLY SAFE WHEN ALL nums[i] >= 0
+    // Why it can work then: growing the right end increases sum; shrinking left decreases it.
+    // Why NOT for LeetCode general case: negatives break that assumption.
+    // Included so you can see the pattern and its limitation.
+    // Time: O(n)   Extra space: O(1)
+    public static int subarraySumSlidingWindowNonNegative(int[] nums, int k) {
+        int count = 0;
+        int left = 0;
+        int sum = 0;
+
+        for (int right = 0; right < nums.length; right++) {
+            if (nums[right] < 0) {
+                throw new IllegalArgumentException(
+                    "Sliding window version requires all nums[i] >= 0");
+            }
+            sum += nums[right];
+            while (left <= right && sum > k) {
+                sum -= nums[left];
+                left++;
+            }
+            if (sum == k) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    // APPROACH 3: PREFIX SUM + FREQUENCY MAP (OPTIMAL — what we use)
     // Why: subarray (left..right) sum = prefix[right] - prefix[left-1].
     // Want that == k → look for earlier prefixes equal to (prefix - k).
     // Why map of counts (not Set): same prefix can appear multiple times.
     // Why map.put(0, 1): empty prefix so subarrays starting at index 0 are counted.
-    // Why not sliding window: negatives break window grow/shrink assumptions.
     // Time: O(n)   Extra space: O(n)
     public static int subarraySum(int[] nums, int k) {
         Map<Integer, Integer> prefixCount = new HashMap<>();
@@ -60,12 +85,14 @@ public class SubarraySumEqualsK {
     public static void main(String[] args) {
         int[] a = { 1, 1, 1 };
         System.out.println("Brute:   " + subarraySumBrute(a, 2));
+        System.out.println("Window:  " + subarraySumSlidingWindowNonNegative(a, 2));
         System.out.println("Optimal: " + subarraySum(a, 2));
 
         int[] b = { 1, 2, 3 };
         System.out.println("Optimal: " + subarraySum(b, 3)); // [1,2] and [3]
 
         int[] neg = { 1, -1, 0 };
-        System.out.println("Neg:     " + subarraySum(neg, 0));
+        System.out.println("Neg map: " + subarraySum(neg, 0));
+        // Do NOT call sliding window on neg — it throws on purpose.
     }
 }

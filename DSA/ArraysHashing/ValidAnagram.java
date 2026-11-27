@@ -1,6 +1,8 @@
 package DSA.ArraysHashing;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 /*
 Problem: Valid Anagram
@@ -11,8 +13,7 @@ Examples:
   s = "anagram", t = "nagaram" → true
   s = "rat", t = "car"         → false
 
-See notes/Problem_03_Valid_Anagram.md for full approach explanations.
-Assumption for count approach: lowercase English letters a–z.
+See notes/Problem_03_Valid_Anagram.md — every approach below matches the note.
 */
 
 public class ValidAnagram {
@@ -32,10 +33,9 @@ public class ValidAnagram {
         return Arrays.equals(a, b);
     }
 
-    // APPROACH 2: FREQUENCY COUNT int[26] (OPTIMAL — what we use)
+    // APPROACH 2: FREQUENCY COUNT int[26] (OPTIMAL — what we use for a–z)
     // Why int[26]: alphabet is fixed lowercase a–z → O(1) extra space.
     // Why ++ on s and -- on t: leftovers cancel; any non-zero means mismatch.
-    // Why not HashMap here: Map is for Unicode / unknown alphabet follow-ups.
     // Time: O(n)   Extra space: O(1)
     public static boolean isAnagram(String s, String t) {
         if (s.length() != t.length()) {
@@ -54,10 +54,46 @@ public class ValidAnagram {
         return true;
     }
 
+    // APPROACH 3: HASHMAP FREQUENCY (Unicode / unknown alphabet)
+    // Why Map: works when characters are not limited to a–z.
+    // Count chars in s, then decrement with t; any leftover or missing → false.
+    // Time: O(n)   Extra space: O(k) where k = distinct characters
+    public static boolean isAnagramMap(String s, String t) {
+        if (s.length() != t.length()) {
+            return false;
+        }
+        Map<Character, Integer> freq = new HashMap<>();
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            freq.put(c, freq.getOrDefault(c, 0) + 1);
+        }
+        for (int i = 0; i < t.length(); i++) {
+            char c = t.charAt(i);
+            int remaining = freq.getOrDefault(c, 0) - 1;
+            if (remaining < 0) {
+                return false;
+            }
+            if (remaining == 0) {
+                freq.remove(c);
+            } else {
+                freq.put(c, remaining);
+            }
+        }
+        return freq.isEmpty();
+    }
+
     public static void main(String[] args) {
-        System.out.println("Count: " + isAnagram("anagram", "nagaram"));
-        System.out.println("Count: " + isAnagram("rat", "car"));
-        System.out.println("Sort:  " + isAnagramSort("listen", "silent"));
-        System.out.println("Sort:  " + isAnagramSort("hello", "bello"));
+        String[][] cases = {
+            { "anagram", "nagaram" },
+            { "rat", "car" },
+            { "listen", "silent" },
+            { "hello", "bello" }
+        };
+        for (String[] c : cases) {
+            System.out.println(c[0] + " / " + c[1]
+                + "  sort=" + isAnagramSort(c[0], c[1])
+                + "  count26=" + isAnagram(c[0], c[1])
+                + "  map=" + isAnagramMap(c[0], c[1]));
+        }
     }
 }

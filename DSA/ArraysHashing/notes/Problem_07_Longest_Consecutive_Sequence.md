@@ -54,7 +54,23 @@ set = {100, 4, 200, 1, 3, 2}
 
 ---
 
-## 4. Approach 1 — Sort then scan
+## 4. Approach 1 — Brute force (walk forward with linear search)
+
+### Idea
+
+For each number, keep asking “is `current + 1` somewhere in the array?” and grow the streak.
+
+### Java method
+
+`longestConsecutiveBrute`
+
+### Complexity
+
+About `O(n²)`–`O(n³)` depending on search — too slow.
+
+---
+
+## 5. Approach 2 — Sort then scan
 
 ### Idea
 
@@ -74,7 +90,7 @@ Simple and correct. Good if `O(n)` is not required. LeetCode asks for `O(n)` →
 
 ---
 
-## 5. Approach 2 — HashSet + start only when `x-1` missing (optimal — what we use)
+## 6. Approach 3 — HashSet + start only when `x-1` missing (optimal — what we use)
 
 ### Idea
 
@@ -119,16 +135,17 @@ public static int longestConsecutive(int[] nums) {
 
 ---
 
-## 6. What we use and why
+## 7. What we use and why
 
 | Approach | Java method | Time | Use |
 |---|---|---|---|
+| Brute walk | `longestConsecutiveBrute` | `O(n²)+` | Baseline |
 | Sort + streak | `longestConsecutiveSort` | `O(n log n)` | Simple backup |
 | **Set + start heads** | `longestConsecutive` | `O(n)` | **Required interview answer** |
 
 ---
 
-## 7. Hardest part
+## 8. Hardest part
 
 ### Mistake — Walking forward from every number
 
@@ -144,15 +161,18 @@ Return `0`.
 
 ---
 
-## 8. Interview explanation — say this aloud
+## 9. Interview explanation — say this aloud
 
-“Sorting then scanning streaks is `O(n log n)`. For `O(n)`, I put numbers in a HashSet. I only start a forward walk when `x-1` is not in the set — that means `x` is the start of a consecutive run. I walk with `contains(x+len)` and track the max length. Each number is visited constantly many times overall, so time is `O(n)`.”
+“Brute force walks forward from every number with linear search — too slow. Sorting then scanning streaks is `O(n log n)`. For `O(n)`, I put numbers in a HashSet. I only start a forward walk when `x-1` is not in the set — that means `x` is the start of a consecutive run. I walk with `contains(x+len)` and track the max length. Each number is visited a constant number of times overall, so time is `O(n)`.”
 
 ---
 
-## 9. Link to Java
+## 10. Link to Java
 
 | Approach | Method |
 |---|---|
+| Brute | `longestConsecutiveBrute` |
 | Sort | `longestConsecutiveSort` |
 | HashSet optimal | `longestConsecutive` |
+
+Run `main` to compare all three.

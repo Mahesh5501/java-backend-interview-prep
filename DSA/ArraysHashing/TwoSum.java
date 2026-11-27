@@ -15,7 +15,7 @@ Examples:
   [3, 2, 4], target = 6       →  [1, 2]
   [3, 3], target = 6          →  [0, 1]
 
-See notes/Problem_01_Two_Sum.md for full explanation of each approach.
+See notes/Problem_01_Two_Sum.md — every approach below matches the note.
 */
 
 public class TwoSum {
@@ -39,8 +39,6 @@ public class TwoSum {
     // Store value → index. At each i, look up complement = target - nums[i].
     // Why HashMap: need fast "have I seen this value?" AND its index.
     // Why check before put: avoid reusing the same index (e.g. [3,3], target 6).
-    // Why not Set: Set cannot return the partner index.
-    // Why not sort+two pointers here: sorting loses indices unless we keep pairs.
     // Time: O(n)   Extra space: O(n)
     public static int[] twoSum(int[] nums, int target) {
         Map<Integer, Integer> valueToIndex = new HashMap<>();
@@ -57,15 +55,46 @@ public class TwoSum {
         return new int[] { -1, -1 };
     }
 
+    // APPROACH 3: SORT + TWO POINTERS (keeps original indices via pairs)
+    // Why: after sorting by value, left/right can find a pair summing to target.
+    // Why we usually prefer HashMap for Two Sum I: simpler for indices, O(n).
+    // Use when: O(1) extra space besides the index pairs array, or array is sorted.
+    // Time: O(n log n)   Extra space: O(n) for (value, index) pairs
+    public static int[] twoSumSortTwoPointers(int[] nums, int target) {
+        int n = nums.length;
+        int[][] pairs = new int[n][2]; // [value, originalIndex]
+        for (int i = 0; i < n; i++) {
+            pairs[i][0] = nums[i];
+            pairs[i][1] = i;
+        }
+        Arrays.sort(pairs, (a, b) -> Integer.compare(a[0], b[0]));
+
+        int left = 0;
+        int right = n - 1;
+        while (left < right) {
+            int sum = pairs[left][0] + pairs[right][0];
+            if (sum == target) {
+                return new int[] { pairs[left][1], pairs[right][1] };
+            } else if (sum < target) {
+                left++;
+            } else {
+                right--;
+            }
+        }
+        return new int[] { -1, -1 };
+    }
+
     public static void main(String[] args) {
         int[] a = { 2, 7, 11, 15 };
-        System.out.println("Brute:   " + Arrays.toString(twoSumBruteForce(a, 9)));
-        System.out.println("Optimal: " + Arrays.toString(twoSum(a, 9)));
+        System.out.println("Brute:  " + Arrays.toString(twoSumBruteForce(a, 9)));
+        System.out.println("Map:    " + Arrays.toString(twoSum(a, 9)));
+        System.out.println("SortTP: " + Arrays.toString(twoSumSortTwoPointers(a, 9)));
 
         int[] b = { 3, 2, 4 };
-        System.out.println("Optimal: " + Arrays.toString(twoSum(b, 6)));
+        System.out.println("Map:    " + Arrays.toString(twoSum(b, 6)));
+        System.out.println("SortTP: " + Arrays.toString(twoSumSortTwoPointers(b, 6)));
 
         int[] c = { 3, 3 };
-        System.out.println("Dupes:   " + Arrays.toString(twoSum(c, 6)));
+        System.out.println("Dupes:  " + Arrays.toString(twoSum(c, 6)));
     }
 }

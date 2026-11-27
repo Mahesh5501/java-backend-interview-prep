@@ -95,10 +95,14 @@ For every start, expand end and keep a running sum; count when sum == k.
 
 ---
 
-## 5. Approach 2 — Sliding window (NOT for general case)
+## 5. Approach 2 — Sliding window (ONLY if all nums ≥ 0)
 
-Works for “positive numbers only” variants.  
-If `nums` can have **negatives or zeros**, window size rules break — **do not use** for this LeetCode problem.
+Works for “non-negative numbers only” variants.  
+If `nums` can have **negatives**, window grow/shrink rules break — **do not use** for the general LeetCode problem.
+
+### Java method
+
+`subarraySumSlidingWindowNonNegative` — throws if it sees a negative, on purpose.
 
 ---
 
@@ -157,7 +161,7 @@ Total count = 2.
 | Approach | Java method | Works with negatives? | Time | Use |
 |---|---|---|---|---|
 | Brute | `subarraySumBrute` | yes | `O(n²)` | Baseline |
-| Sliding window | — | **no** (not always) | `O(n)` | Only all ≥ 0 problems |
+| Sliding window | `subarraySumSlidingWindowNonNegative` | **no** | `O(n)` | Only all ≥ 0 |
 | **Prefix + map** | `subarraySum` | **yes** | `O(n)` | **Interview answer** |
 
 ---
@@ -191,4 +195,7 @@ This problem asks for **count**, not length — hence frequency map, not just fi
 | Approach | Method |
 |---|---|
 | Brute | `subarraySumBrute` |
+| Sliding window (non-negative only) | `subarraySumSlidingWindowNonNegative` |
 | Prefix + map | `subarraySum` |
+
+Run `main` to compare. Do not call the window method on arrays with negatives.

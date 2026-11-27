@@ -53,6 +53,10 @@ Step 2: pick the `k` keys with largest counts — either:
 
 Count, put entries in a list, sort by frequency descending, take first `k`.
 
+### Java method
+
+`topKFrequentSort` in `TopKFrequentElements.java`
+
 ### Complexity
 
 `O(n log n)` — fine, but not the sharpest answer.
@@ -137,7 +141,7 @@ Linear time after counting — no heap log factors.
 
 | Approach | Java method | Time | Use when |
 |---|---|---|---|
-| Sort by freq | *(verbal)* | `O(n log n)` | Quick |
+| Sort by freq | `topKFrequentSort` | `O(n log n)` | Quick |
 | Min-heap size k | `topKFrequentHeap` | `O(n log k)` | Heap follow-up / small k |
 | **Buckets** | `topKFrequentBucket` | `O(n)` | **Best default here** |
 
@@ -171,5 +175,8 @@ Multiple numbers can share the same frequency — bucket holds a **list**.
 
 | Approach | Method |
 |---|---|
+| Sort by frequency | `topKFrequentSort` |
+| Min-heap size k | `topKFrequentHeap` |
 | Bucket | `topKFrequentBucket` |
-| Heap | `topKFrequentHeap` |
+
+Run `main` to print all three.

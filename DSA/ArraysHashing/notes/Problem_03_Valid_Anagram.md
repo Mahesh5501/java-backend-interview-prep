@@ -192,7 +192,9 @@ public static boolean isAnagram(String s, String t) {
 
 LeetCode Valid Anagram is usually lowercase English → `int[26]` is simpler and `O(1)` space.
 
-*(Map version can be added later if you practise Unicode follow-ups; core file keeps sort + int[26].)*
+### Java method
+
+`isAnagramMap` in `ValidAnagram.java`
 
 ---
 
@@ -201,8 +203,8 @@ LeetCode Valid Anagram is usually lowercase English → `int[26]` is simpler and
 | Approach | Java method | Time | Space | Use when |
 |---|---|---|---|---|
 | Sort + equals | `isAnagramSort` | `O(n log n)` | `O(n)` | Quick / backup |
-| **Count int[26]** | `isAnagram` | `O(n)` | `O(1)` | **Default interview** |
-| HashMap counts | *(follow-up)* | `O(n)` | `O(k)` alphabet | Unicode / unknown alphabet |
+| **Count int[26]** | `isAnagram` | `O(n)` | `O(1)` | **Default interview (a–z)** |
+| HashMap counts | `isAnagramMap` | `O(n)` | `O(k)` alphabet | Unicode / unknown alphabet |
 
 ---
 
@@ -244,6 +246,7 @@ After sorting char arrays, use `Arrays.equals`, not `==`.
 | Approach | Method |
 |---|---|
 | Sort | `isAnagramSort` |
-| Count int[26] (preferred) | `isAnagram` |
+| Count int[26] (preferred for a–z) | `isAnagram` |
+| HashMap (Unicode / any alphabet) | `isAnagramMap` |
 
-Run `main` to try both.
+Run `main` to try all three.

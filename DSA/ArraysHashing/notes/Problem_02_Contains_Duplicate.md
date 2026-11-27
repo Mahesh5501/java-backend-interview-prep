@@ -100,9 +100,13 @@ Shows you understand “duplicate = same value at two indices”.
 
 Too slow for `n = 10^5`.
 
+### Java method
+
+`containsDuplicateBrute` in `ContainsDuplicate.java`
+
 ### When to use
 
-Tiny arrays only. We do **not** keep this as a separate method in Java for interview practice — focus on the three practical approaches below.
+Tiny arrays only / explain first, then improve.
 
 ---
 
@@ -225,7 +229,7 @@ If the problem changes to “return counts” or “elements appearing more than
 
 | Approach | Java method | Time | Space | Use when |
 |---|---|---|---|---|
-| Nested scan | *(verbal only)* | `O(n²)` | `O(1)` | Explain first |
+| Nested scan | `containsDuplicateBrute` | `O(n²)` | `O(1)` | Explain first |
 | Sort + adjacent | `containsDuplicateSort` | `O(n log n)` | `O(1)` / `O(n)` copy | Memory tight |
 | **HashSet** | `containsDuplicateSet` | `O(n)` | `O(n)` | **Default interview answer** |
 | Freq map | `containsDuplicateFreq` | `O(n)` | `O(n)` | Need counts later |
@@ -282,8 +286,9 @@ Returning as soon as a duplicate appears is correct and faster in practice.
 
 | Approach | Method |
 |---|---|
+| Brute nested | `containsDuplicateBrute` |
 | Sort + adjacent | `containsDuplicateSort` |
 | HashSet (preferred) | `containsDuplicateSet` |
 | Frequency map | `containsDuplicateFreq` |
 
-Run `main` to compare Set vs Sort on sample arrays.
+Run `main` to compare all four.

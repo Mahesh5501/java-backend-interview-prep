@@ -15,23 +15,64 @@ Example:
   ["eat","tea","tan","ate","nat","bat"]
   → groups like [["bat"],["nat","tan"],["ate","eat","tea"]]
 
-See notes/Problem_04_Group_Anagrams.md for approach explanations.
+See notes/Problem_04_Group_Anagrams.md — every approach below matches the note.
 */
 
 public class GroupAnagrams {
 
-    // Helper for APPROACH 1: sorted characters as canonical key
-    // Why sorted key: anagrams become the identical string after sort.
+    // Shared helper: are two words anagrams? (used by brute force)
+    private static boolean isAnagramPair(String a, String b) {
+        if (a.length() != b.length()) {
+            return false;
+        }
+        int[] count = new int[26];
+        for (int i = 0; i < a.length(); i++) {
+            count[a.charAt(i) - 'a']++;
+            count[b.charAt(i) - 'a']--;
+        }
+        for (int c : count) {
+            if (c != 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // APPROACH 1: BRUTE FORCE — pairwise anagram checks
+    // Why mention it: shows the definition; too slow as final answer.
+    // For each ungrouped word, scan the rest and pull matching anagrams.
+    // Time: O(n^2 * k)   Extra space: O(n * k) for output
+    public static List<List<String>> groupAnagramsBrute(String[] strs) {
+        boolean[] used = new boolean[strs.length];
+        List<List<String>> result = new ArrayList<>();
+
+        for (int i = 0; i < strs.length; i++) {
+            if (used[i]) {
+                continue;
+            }
+            List<String> group = new ArrayList<>();
+            group.add(strs[i]);
+            used[i] = true;
+            for (int j = i + 1; j < strs.length; j++) {
+                if (!used[j] && isAnagramPair(strs[i], strs[j])) {
+                    group.add(strs[j]);
+                    used[j] = true;
+                }
+            }
+            result.add(group);
+        }
+        return result;
+    }
+
+    // Helper for APPROACH 2: sorted characters as canonical key
     private static String sortedKey(String word) {
         char[] chars = word.toCharArray();
         Arrays.sort(chars);
         return new String(chars);
     }
 
-    // APPROACH 1: SORTED KEY → MAP OF LISTS (what we use)
+    // APPROACH 2: SORTED KEY → MAP OF LISTS (clear interview default)
     // Why map: one pass groups words that share a fingerprint.
-    // Why not pairwise anagram checks: that is ~O(n^2 * k).
-    // Alternative (follow-up): count-signature key for O(n * k) instead of O(n * k log k).
     // Time: O(n * k log k)   Extra space: O(n * k)
     public static List<List<String>> groupAnagrams(String[] strs) {
         Map<String, List<String>> groups = new HashMap<>();
@@ -43,7 +84,7 @@ public class GroupAnagrams {
         return new ArrayList<>(groups.values());
     }
 
-    // APPROACH 2: COUNT SIGNATURE KEY (faster for long words)
+    // APPROACH 3: COUNT SIGNATURE KEY (faster for long words)
     // Key example for "eat": "#1#0#0#0#1#0...#1..." (26 counts)
     // Why use it: avoids sorting each word → O(n * k).
     // Time: O(n * k)   Extra space: O(n * k)
@@ -64,17 +105,17 @@ public class GroupAnagrams {
         return new ArrayList<>(groups.values());
     }
 
+    private static void printGroups(String label, List<List<String>> groups) {
+        System.out.println(label);
+        for (List<String> group : groups) {
+            System.out.println("  " + group);
+        }
+    }
+
     public static void main(String[] args) {
         String[] input = { "eat", "tea", "tan", "ate", "nat", "bat" };
-
-        System.out.println("Sorted key:");
-        for (List<String> group : groupAnagrams(input)) {
-            System.out.println("  " + group);
-        }
-
-        System.out.println("Count key:");
-        for (List<String> group : groupAnagramsCountKey(input)) {
-            System.out.println("  " + group);
-        }
+        printGroups("Brute:", groupAnagramsBrute(input));
+        printGroups("Sorted key:", groupAnagrams(input));
+        printGroups("Count key:", groupAnagramsCountKey(input));
     }
 }

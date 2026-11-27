@@ -209,16 +209,27 @@ public static int[] twoSum(int[] nums, int target) {
 
 ---
 
-## 6. What else could we use? (and why we usually don’t)
+## 6. Approach 3 — Sort + two pointers (keeps indices via pairs)
 
-| Approach | Time | Space | Use when? |
-|---|---|---|---|
-| Brute force nested loops | `O(n²)` | `O(1)` | Tiny n; explain first |
-| **HashMap one pass (our choice)** | `O(n)` | `O(n)` | Need indices; unordered array |
-| Sort + two pointers | `O(n log n)` | `O(n)` if keep indices | OK if allowed; messier for indices |
-| HashSet of values | `O(n)` | `O(n)` | Only if you need values, **not** indices |
+### Idea
 
-**Interview default for Two Sum I:** HashMap one pass.
+Build `(value, originalIndex)` pairs, sort by value, then move `left` / `right` until the sum equals `target`.
+
+### Java method
+
+`twoSumSortTwoPointers` in `TwoSum.java`
+
+### Complexity
+
+| Time | Extra space |
+|---|---|
+| `O(n log n)` | `O(n)` for pairs |
+
+### When to use
+
+Interviewer wants two pointers / lower hash memory; or the array is already sorted (Two Sum II — then no pairs needed).
+
+**Interview default for Two Sum I:** still HashMap one pass (`twoSum`).
 
 ---
 
@@ -262,6 +273,7 @@ If no earlier index works, we store `nums[i]` and continue. The unique solution 
 |---|---|---|---|---|
 | Brute force | `twoSumBruteForce` | `O(n²)` | `O(1)` | Start here verbally |
 | HashMap one pass | `twoSum` | `O(n)` | `O(n)` | **Final answer** |
+| Sort + two pointers | `twoSumSortTwoPointers` | `O(n log n)` | `O(n)` | Alternative |
 
 ---
 
@@ -330,5 +342,6 @@ Sort a copy of (value, index) pairs, then two pointers — `O(n log n)` time.
 |---|---|
 | Brute force | `twoSumBruteForce` |
 | Optimal HashMap | `twoSum` |
+| Sort + two pointers | `twoSumSortTwoPointers` |
 
-Run `main` to print both approaches on sample inputs.
+Run `main` to print all approaches on sample inputs.

@@ -65,13 +65,17 @@ bat → key "abt"
 
 For each ungrouped word, scan remaining words and pull anagrams into a group.
 
+### Java method
+
+`groupAnagramsBrute` in `GroupAnagrams.java`
+
 ### Complexity
 
 Roughly `O(n² * k)` where `k` = word length — too slow for interviews as final answer.
 
 ### When to mention
 
-Only as the “naive” starting point verbally.
+Start here verbally, then switch to a map key.
 
 ---
 
@@ -148,17 +152,19 @@ Long words (`k` large): counting beats sorting.
 
 Simpler to write under pressure. Mention count-key as the follow-up optimization.
 
-*(Optional: add a second method later; core file keeps sorted key for clarity.)*
+### Java method
+
+`groupAnagramsCountKey` in `GroupAnagrams.java`
 
 ---
 
 ## 7. What we use and why
 
-| Approach | Time | Use when |
-|---|---|---|
-| Pairwise grouping | `O(n²·k)` | Verbal only |
-| **Sorted key + map** | `O(n·k log k)` | **Default in our Java** — clear |
-| Count signature + map | `O(n·k)` | Follow-up / long strings |
+| Approach | Java method | Time | Use when |
+|---|---|---|---|
+| Pairwise grouping | `groupAnagramsBrute` | `O(n²·k)` | Baseline |
+| **Sorted key + map** | `groupAnagrams` | `O(n·k log k)` | **Default — clear** |
+| Count signature + map | `groupAnagramsCountKey` | `O(n·k)` | Follow-up / long strings |
 
 ---
 
@@ -188,4 +194,8 @@ They are valid groups — empty key `""` is fine.
 
 | Approach | Method |
 |---|---|
+| Brute pairwise | `groupAnagramsBrute` |
 | Sorted key grouping | `groupAnagrams` / `sortedKey` |
+| Count signature key | `groupAnagramsCountKey` |
+
+Run `main` to print all three.

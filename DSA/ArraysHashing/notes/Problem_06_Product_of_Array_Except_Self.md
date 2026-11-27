@@ -80,7 +80,7 @@ Explain first only.
 
 ---
 
-## 5. Approach 2 — Why division fails (know this)
+## 5. Approach 2 — Division (educational — do not use in interview)
 
 ```text
 output[i] = (product of all) / nums[i]
@@ -89,13 +89,27 @@ output[i] = (product of all) / nums[i]
 Problems:
 
 1. Problem forbids division.
-2. Zeros: division by zero / wrong counts of zeros need special cases.
+2. Zeros need special-case counting (see Java).
 
-Do **not** use this in the final answer.
+### Java method
+
+`productExceptSelfDivision` — included only so you can see the fragile path.
 
 ---
 
-## 6. Approach 3 — Prefix then suffix into output (optimal — what we use)
+## 6. Approach 3 — Left[] and Right[] arrays (clear learning version)
+
+### Idea
+
+Build `left[i]` and `right[i]`, then `out[i] = left[i] * right[i]`. Same math as optimal; uses `O(n)` extra so the picture is obvious.
+
+### Java method
+
+`productExceptSelfLeftRight`
+
+---
+
+## 7. Approach 4 — Prefix then suffix into output (optimal — what we use)
 
 ### Idea
 
@@ -164,19 +178,18 @@ Result `[24,12,8,6]`.
 
 ---
 
-## 7. What we use and why
+## 8. What we use and why
 
 | Approach | Java method | Time | Space | Use |
 |---|---|---|---|---|
-| Brute multiply | `productExceptSelfBrute` | `O(n²)` | `O(1)` | Verbal |
-| Division | — | `O(n)` | `O(1)` | **Forbidden / fragile** |
-| **Prefix×suffix** | `productExceptSelf` | `O(n)` | `O(1)` | **Interview answer** |
-
-Alternative: two arrays `left[]` and `right[]` — clearer to learn, same idea, uses `O(n)` extra. Then compress into one `out[]` for the follow-up.
+| Brute multiply | `productExceptSelfBrute` | `O(n²)` | `O(1)` | Baseline |
+| Division | `productExceptSelfDivision` | `O(n)` | `O(1)` | **Forbidden / fragile** |
+| Left[] × Right[] | `productExceptSelfLeftRight` | `O(n)` | `O(n)` | Learn the idea |
+| **Prefix×suffix in out[]** | `productExceptSelf` | `O(n)` | `O(1)` | **Interview answer** |
 
 ---
 
-## 8. Hardest part
+## 9. Hardest part
 
 ### Zeros
 
@@ -190,15 +203,19 @@ Write `out[i] = prefix` **first**, then `prefix *= nums[i]`.
 
 ---
 
-## 9. Interview explanation — say this aloud
+## 10. Interview explanation — say this aloud
 
-“Brute force is `O(n²)`. Division is not allowed and breaks with zeros. Instead, `output[i]` is left product times right product. I fill the output with prefix products left to right, then multiply suffix products right to left. Time `O(n)`, extra space `O(1)` besides the output.”
+“Brute force is `O(n²)`. Division is not allowed and breaks with zeros. Instead, `output[i]` is left product times right product. I can build `left[]` and `right[]` first to learn it, then compress into one output array: fill prefix products left to right, then multiply suffix products right to left. Time `O(n)`, extra space `O(1)` besides the output.”
 
 ---
 
-## 10. Link to Java
+## 11. Link to Java
 
 | Approach | Method |
 |---|---|
 | Brute | `productExceptSelfBrute` |
-| Prefix × suffix | `productExceptSelf` |
+| Division (do not use) | `productExceptSelfDivision` |
+| Left[] × Right[] | `productExceptSelfLeftRight` |
+| Prefix × suffix (optimal) | `productExceptSelf` |
+
+Run `main` to compare all four.
