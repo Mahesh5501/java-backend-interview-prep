@@ -28,12 +28,14 @@ public class MaxLogOverlap {
 
             // Process starts at 'start', so active count goes up by +1 here.
             events.put(start, events.getOrDefault(start, 0) + 1);
+        
+            // Process is still running at 'end' (inclusive), so it stops at 'end + 1'. Subtract 1 at 'end + 1' to mark that it is no longer running.
+            events.put(end + 1, events.getOrDefault(end + 1, 0) - 1);
 
-            // Process is still running at 'end' (inclusive), so it stops at 'end + 1'.
-            // Subtract 1 at 'end + 1' to mark that it is no longer running.
-            if (end < Integer.MAX_VALUE) {
-                events.put(end + 1, events.getOrDefault(end + 1, 0) - 1);
-            }
+            // Below is same as above but to eliminate the int overflow issue when end is close to Integer.MAX_VALUE
+            // if (end < Integer.MAX_VALUE) {
+            //     events.put(end + 1, events.getOrDefault(end + 1, 0) - 1);
+            // }
         }
 
         int active = 0;     // How many processes are running right now
